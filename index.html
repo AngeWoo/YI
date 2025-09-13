@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>土地交易漲跌看板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .market-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .summary-card h3 {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .summary-card .value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .summary-card .change {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .dashboard {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        select, input {
+            padding: 8px 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .land-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .land-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .land-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .land-card.rising {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fff8 100%);
+        }
+
+        .land-card.falling {
+            border-color: #f44336;
+            background: linear-gradient(135deg, #ffffff 0%, #fff8f8 100%);
+        }
+
+        .land-card.stable {
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #ffffff 0%, #fffdf8 100%);
+        }
+
+        .land-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .land-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .price-change {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .current-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .change-amount {
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .change-amount.up {
+            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .change-amount.down {
+            color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .change-amount.neutral {
+            color: #FF9800;
+            background: rgba(255, 152, 0, 0.1);
+        }
+
+        .land-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .trading-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #f5f5f5;
+        }
+
+        .volume-info {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .trend-arrow {
+            font-size: 1.2rem;
+        }
+
+        .trend-up { color: #4CAF50; }
+        .trend-down { color: #f44336; }
+        .trend-stable { color: #FF9800; }
+
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-hot {
+            background: #ff4757;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .status-new {
+            background: #2ed573;
+            color: white;
+        }
+
+        .status-popular {
+            background: #ffa502;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding-left: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .land-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏞️ 土地交易漲跌看板</h1>
+        <p>即時追蹤土地價格變動 • 掌握市場脈動</p>
+    </div>
+
+    <div class="market-summary">
+        <div class="summary-card">
+            <h3>今日交易筆數</h3>
+            <div class="value" style="color: #2196F3;">247</div>
+            <div class="change trend-up">+23 (+10.3%)</div>
+        </div>
+        <div class="summary-card">
+            <h3>平均漲幅</h3>
+            <div class="value" style="color: #4CAF50;">+2.3%</div>
+            <div class="change trend-up">+0.8%</div>
+        </div>
+        <div class="summary-card">
+            <h3>成交總額</h3>
+            <div class="value" style="color: #FF9800;">12.4億</div>
+            <div class="change trend-up">+1.2億 (+10.7%)</div>
+        </div>
+        <div class="summary-card">
+            <h3>熱門區域</h3>
+            <div class="value" style="color: #9C27B0;">台北市</div>
+            <div class="change" style="color: #666;">大安區領漲</div>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <div class="filters">
+            <div class="filter-group">
+                <label>地區:</label>
+                <select id="regionFilter">
+                    <option value="">全部地區</option>
+                    <option value="台北市">台北市</option>
+                    <option value="新北市">新北市</option>
+                    <option value="桃園市">桃園市</option>
+                    <option value="台中市">台中市</option>
+                    <option value="台南市">台南市</option>
+                    <option value="高雄市">高雄市</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>漲跌:</label>
+                <select id="trendFilter">
+                    <option value="">全部</option>
+                    <option value="rising">上漲</option>
+                    <option value="falling">下跌</option>
+                    <option value="stable">持平</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>價格範圍:</label>
+                <select id="priceFilter">
+                    <option value="">全部價格</option>
+                    <option value="0-1000">1000萬以下</option>
+                    <option value="1000-5000">1000-5000萬</option>
+                    <option value="5000-10000">5000萬-1億</option>
+                    <option value="10000+">1億以上</option>
+                </select>
+            </div>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="搜尋土地標題或地址...">
+            </div>
+        </div>
+
+        <div class="land-grid" id="landGrid">
+            <!-- 土地卡片將由JavaScript動態生成 -->
+        </div>
+    </div>
+
+    <script>
+        // 模擬土地資料
+        const landData = [
+            {
+                id: 1,
+                title: "【重劃不動產】實況~古亭捷運方正土地",
+                region: "台北市",
+                district: "中正區",
+                address: "古亭站商圈",
+                area: "33.06坪",
+                currentPrice: 3998,
+                previousPrice: 3800,
+                totalPrice: "3,998萬",
+                pricePerPing: "120.9萬/坪",
+                volume: 5,
+                status: "hot",
+                trend: "rising"
+            },
+            {
+                id: 2,
+                title: "北市科園實況廣義重劃影響12逕道實質倍增厚厚",
+                region: "台北市",
+                district: "內湖區",
+                address: "內湖科技園區",
+                area: "258.14坪",
+                currentPrice: 36865,
+                previousPrice: 38200,
+                totalPrice: "3.68億",
+                pricePerPing: "142.8萬/坪",
+                volume: 12,
+                status: "popular",
+                trend: "falling"
+            },
+            {
+                id: 3,
+                title: "住宅用地特殊來歷臨棟住宅專用區土地三德街二建坪",
+                region: "新北市",
+                district: "板橋區",
+                address: "三德街",
+                area: "55.93坪",
+                currentPrice: 9600,
+                previousPrice: 9600,
+                totalPrice: "9,600萬",
+                pricePerPing: "171.7萬/坪",
+                volume: 3,
+                status: "new",
+                trend: "stable"
+            },
+            {
+                id: 4,
+                title: "基金內分設置基台設置棟",
+                region: "台北市",
+                district: "大安區",
+                address: "基金路",
+                area: "8.19坪",
+                currentPrice: 850,
+                previousPrice: 820,
+                totalPrice: "850萬",
+                pricePerPing: "103.8萬/坪",
+                volume: 8,
+                status: "hot",
+                trend: "rising"
+            },
+            {
+                id: 5,
+                title: "住宅建築專家設置－附建大廈實實房客另空土地",
+                region: "台中市",
+                district: "西屯區",
+                address: "惠來路",
+                area: "43.92坪",
+                currentPrice: 12500,
+                previousPrice: 12200,
+                totalPrice: "1.25億",
+                pricePerPing: "284.6萬/坪",
+                volume: 6,
+                status: "popular",
+                trend: "rising"
+            },
+            {
+                id: 6,
+                title: "人文雙捷3鐵路土地",
+                region: "新北市",
+                district: "新莊區",
+                address: "中正路",
+                area: "67.8坪",
+                currentPrice: 9080,
+                previousPrice: 9350,
+                totalPrice: "9,080萬",
+                pricePerPing: "133.9萬/坪",
+                volume: 4,
+                status: "new",
+                trend: "falling"
+            },
+            {
+                id: 7,
+                title: "基地下1高麗軍的分讓土地",
+                region: "桃園市",
+                district: "中壢區",
+                address: "青埔",
+                area: "23.4坪",
+                currentPrice: 888,
+                previousPrice: 880,
+                totalPrice: "888萬",
+                pricePerPing: "38.0萬/坪",
+                volume: 15,
+                status: "hot",
+                trend: "rising"
+            },
+            {
+                id: 8,
+                title: "神門景觀皇室大文建產住宅土地 台北農主要",
+                region: "台北市",
+                district: "士林區",
+                address: "文林路",
+                area: "33.33坪",
+                currentPrice: 910,
+                previousPrice: 915,
+                totalPrice: "910萬",
+                pricePerPing: "27.3萬/坪",
+                volume: 2,
+                status: "popular",
+                trend: "falling"
+            },
+            {
+                id: 9,
+                title: "信義區建設的上上住宅來木地貨Ÿ",
+                region: "台北市",
+                district: "信義區",
+                address: "信義路五段",
+                area: "24.8坪",
+                currentPrice: 2180,
+                previousPrice: 2100,
+                totalPrice: "2,180萬",
+                pricePerPing: "87.9萬/坪",
+                volume: 7,
+                status: "hot",
+                trend: "rising"
+            },
+            {
+                id: 10,
+                title: "後公園島基地的資實看明山品城的交通系住宅小庫",
+                region: "台中市",
+                district: "北屯區",
+                address: "崇德路",
+                area: "27.1坪",
+                currentPrice: 1380,
+                previousPrice: 1420,
+                totalPrice: "1,380萬",
+                pricePerPing: "50.9萬/坪",
+                volume: 9,
+                status: "new",
+                trend: "falling"
+            },
+            {
+                id: 11,
+                title: "格里愛夏政運園天產開展",
+                region: "高雄市",
+                district: "鼓山區",
+                address: "美術館區",
+                area: "11.8坪",
+                currentPrice: 1600,
+                previousPrice: 1580,
+                totalPrice: "1,600萬",
+                pricePerPing: "135.6萬/坪",
+                volume: 11,
+                status: "popular",
+                trend: "rising"
+            }
+        ];
+
+        let filteredData = [...landData];
+
+        function renderLandCards(data) {
+            const landGrid = document.getElementById('landGrid');
+            landGrid.innerHTML = '';
+
+            data.forEach(land => {
+                const changeAmount = land.currentPrice - land.previousPrice;
+                const changePercent = ((changeAmount / land.previousPrice) * 100).toFixed(1);
+                
+                const trendClass = land.trend;
+                const changeClass = changeAmount > 0 ? 'up' : changeAmount < 0 ? 'down' : 'neutral';
+                const trendSymbol = changeAmount > 0 ? '▲' : changeAmount < 0 ? '▼' : '●';
+                const trendText = land.trend === 'rising' ? '上漲' : land.trend === 'falling' ? '下跌' : '持平';
+
+                const statusText = {
+                    'hot': '🔥 熱門',
+                    'new': '🆕 新案',
+                    'popular': '⭐ 推薦'
+                };
+
+                const card = document.createElement('div');
+                card.className = `land-card ${trendClass}`;
+                card.innerHTML = `
+                    <div class="status-badge status-${land.status}">
+                        ${statusText[land.status]}
+                    </div>
+                    <div class="land-header">
+                        <div class="land-title">${land.title}</div>
+                        <div class="price-change">
+                            <div class="current-price">$${land.totalPrice}</div>
+                            <div class="change-amount ${changeClass}">
+                                ${changeAmount > 0 ? '+' : ''}${changeAmount}萬 (${changeAmount > 0 ? '+' : ''}${changePercent}%)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="land-details">
+                        <div class="detail-item">
+                            <span class="detail-label">地區</span>
+                            <span class="detail-value">${land.region} ${land.district}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">坪數</span>
+                            <span class="detail-value">${land.area}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">單價</span>
+                            <span class="detail-value">${land.pricePerPing}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">地址</span>
+                            <span class="detail-value">${land.address}</span>
+                        </div>
+                    </div>
+                    <div class="trading-info">
+                        <div class="volume-info">
+                            今日成交 ${land.volume} 筆
+                        </div>
+                        <div class="trend-indicator trend-${trendClass}">
+                            <span class="trend-arrow">${trendSymbol}</span>
+                            <span>${trendText}</span>
+                        </div>
+                    </div>
+                `;
+                landGrid.appendChild(card);
+            });
+        }
+
+        function filterData() {
+            const regionFilter = document.getElementById('regionFilter').value;
+            const trendFilter = document.getElementById('trendFilter').value;
+            const priceFilter = document.getElementById('priceFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredData = landData.filter(land => {
+                let matches = true;
+
+                if (regionFilter && land.region !== regionFilter) {
+                    matches = false;
+                }
+
+                if (trendFilter && land.trend !== trendFilter) {
+                    matches = false;
+                }
+
+                if (priceFilter) {
+                    const price = land.currentPrice;
+                    switch (priceFilter) {
+                        case '0-1000':
+                            if (price >= 1000) matches = false;
+                            break;
+                        case '1000-5000':
+                            if (price < 1000 || price >= 5000) matches = false;
+                            break;
+                        case '5000-10000':
+                            if (price < 5000 || price >= 10000) matches = false;
+                            break;
+                        case '10000+':
+                            if (price < 10000) matches = false;
+                            break;
+                    }
+                }
+
+                if (searchTerm && !land.title.toLowerCase().includes(searchTerm) && 
+                    !land.address.toLowerCase().includes(searchTerm)) {
+                    matches = false;
+                }
+
+                return matches;
+            });
+
+            renderLandCards(filteredData);
+        }
+
+        // 事件監聽器
+        document.getElementById('regionFilter').addEventListener('change', filterData);
+        document.getElementById('trendFilter').addEventListener('change', filterData);
+        document.getElementById('priceFilter').addEventListener('change', filterData);
+        document.getElementById('searchInput').addEventListener('input', filterData);
+
+        // 初始化
+        renderLandCards(landData);
+
+        // 模擬即時更新
+        setInterval(() => {
+            landData.forEach(land => {
+                const randomChange = (Math.random() - 0.5) * 100;
+                land.previousPrice = land.currentPrice;
+                land.currentPrice = Math.max(100, Math.round(land.currentPrice + randomChange));
+                
+                const changePercent = ((land.currentPrice - land.previousPrice) / land.previousPrice) * 100;
+                if (changePercent > 1) {
+                    land.trend = 'rising';
+                } else if (changePercent < -1) {
+                    land.trend = 'falling';
+                } else {
+                    land.trend = 'stable';
+                }
+                
+                land.volume = Math.max(1, land.volume + Math.floor((Math.random() - 0.5) * 3));
+            });
+            
+            filterData();
+        }, 10000); // 每10秒更新一次
+    </script>
+</body>
+</html>
