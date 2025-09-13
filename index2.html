@@ -185,7 +185,7 @@
         .land-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1500px; /* Adjusted min-width for new column */
+            min-width: 1600px; /* Adjusted min-width for new column and colspan headers */
             font-size: 13px;
             background: white;
         }
@@ -297,6 +297,53 @@
             line-height: 1.2;
             font-weight: 500;
             font-size: 11px;
+        }
+
+        /* Styles for grouped headers */
+        .seller-info-header {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%); /* Red gradient for seller */
+            color: white;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 0;
+            border-right: 1px solid rgba(255,255,255,0.2);
+            box-shadow: inset 0 -3px 0 rgba(255,255,255,0.3);
+        }
+
+        .buyer-info-header {
+            background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); /* Blue gradient for buyer */
+            color: white;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 0;
+            border-right: 1px solid rgba(255,255,255,0.2);
+            box-shadow: inset 0 -3px 0 rgba(255,255,255,0.3);
+        }
+
+        .seller-header-sub {
+            background: #fca5a5; /* Lighter red for sub-headers */
+            color: #450a0a;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .buyer-header-sub {
+            background: #93c5fd; /* Lighter blue for sub-headers */
+            color: #1e3a8a;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        .seller-header-sub:last-child, .buyer-header-sub:last-child {
+            border-right: none;
+        }
+
+        /* For table cells, apply subtle backgrounds to differentiate */
+        .seller-cell-group {
+            background-color: #fef2f2; /* Very light red */
+        }
+
+        .buyer-cell-group {
+            background-color: #eff6ff; /* Very light blue */
         }
 
         /* 按鈕容器和按鈕樣式 */
@@ -483,20 +530,24 @@
             <table class="land-table" id="landTable">
                 <thead>
                     <tr>
-                        <th class="status-column">持分/全部</th>
-                        <th class="district-column">地段號</th>
-                        <th class="area-column">坪數</th>
-                        <th class="price-column">賣價坪單價(萬元)</th>
-                        <th class="price-column">總價(萬元)</th>
-                        <th class="percentage-column">漲跌幅(賣價)</th>
-                        <th class="price-column">買價坪單價(萬元)</th>
-                        <th class="price-column">總價(萬元)</th>
-                        <th class="percentage-column">漲跌幅(買價)</th>
-                        <th class="status-column">出售難度</th>
-                        <th class="status-column">狀態</th>
-                        <th class="market-price-column">鄰近實價平均坪價(萬元)</th> <!-- Added new class -->
-                        <th class="last-update-column">近期異動時間</th> <!-- Added new column -->
-                        <th class="actions-column">操作</th>
+                        <th rowspan="2" class="status-column">持分/全部</th>
+                        <th rowspan="2" class="district-column">地段號</th>
+                        <th rowspan="2" class="area-column">坪數</th>
+                        <th colspan="3" class="seller-info-header">賣方資訊</th> <!-- New colspan header -->
+                        <th colspan="3" class="buyer-info-header">買方資訊</th>   <!-- New colspan header -->
+                        <th rowspan="2" class="status-column">出售難度</th>
+                        <th rowspan="2" class="status-column">狀態</th>
+                        <th rowspan="2" class="market-price-column">鄰近實價平均坪價(萬元)</th>
+                        <th rowspan="2" class="last-update-column">近期異動時間</th> <!-- New column -->
+                        <th rowspan="2" class="actions-column">操作</th>
+                    </tr>
+                    <tr>
+                        <th class="price-column seller-header-sub">坪單價(萬元)</th>
+                        <th class="price-column seller-header-sub">總價(萬元)</th>
+                        <th class="percentage-column seller-header-sub">漲跌幅</th>
+                        <th class="price-column buyer-header-sub">坪單價(萬元)</th>
+                        <th class="price-column buyer-header-sub">總價(萬元)</th>
+                        <th class="percentage-column buyer-header-sub">漲跌幅</th>
                     </tr>
                 </thead>
                 <tbody id="landTableBody">
@@ -542,7 +593,6 @@
             let status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
             let dealPrice = null;
             let bidCount = Math.floor(Math.random() * 20) + 1;
-            // Added lastUpdate
             const lastUpdate = lastUpdateOptions[Math.floor(Math.random() * lastUpdateOptions.length)];
 
 
@@ -570,7 +620,7 @@
                 bidCount: bidCount,
                 status: status,
                 pricePerPing: parseFloat(pricePerPing.toFixed(1)),
-                lastUpdate: lastUpdate // Added lastUpdate
+                lastUpdate: lastUpdate
             };
         }
 
@@ -587,7 +637,7 @@
                 bidCount: 6,
                 status: "bidding",
                 pricePerPing: 130.5,
-                lastUpdate: "2分鐘前" // Added lastUpdate
+                lastUpdate: "2分鐘前"
             },
             {
                 id: 2,
@@ -601,7 +651,7 @@
                 bidCount: 0,
                 status: "sold",
                 pricePerPing: 94.5,
-                lastUpdate: "今天" // Added lastUpdate
+                lastUpdate: "今天"
             },
             {
                 id: 3,
@@ -615,7 +665,7 @@
                 bidCount: 0,
                 status: "overpriced",
                 pricePerPing: 63,
-                lastUpdate: "昨天" // Added lastUpdate
+                lastUpdate: "昨天"
             },
             {
                 id: 4,
@@ -629,7 +679,7 @@
                 bidCount: 10,
                 status: "negotiating",
                 pricePerPing: 80,
-                lastUpdate: "10分鐘前" // Added lastUpdate
+                lastUpdate: "10分鐘前"
             }
         ];
 
@@ -642,6 +692,7 @@
         let filteredData = [...landData];
 
         function formatPrice(price) {
+            if (price === 0) return ''; // For no buyer price when overpriced
             if (price >= 10000) {
                 return (price / 10000).toFixed(1) + '億';
             } else if (price >= 1000) {
@@ -661,11 +712,12 @@
                 const buyerUnitPrice = land.buyerPrice > 0 ? (land.buyerPrice / land.area) : 0;
                 const buyerTotalPrice = land.buyerPrice;
                 
+                // Simulate a market price for comparison
                 const marketPrice = Math.round(sellerUnitPrice * (0.8 + Math.random() * 0.3));
                 
-                const sellerChangePercent = land.pricePerPing > 0 ? 
+                const sellerChangePercent = sellerUnitPrice > 0 ? 
                     (((sellerUnitPrice - marketPrice) / marketPrice) * 100).toFixed(1) : 0;
-                const buyerChangePercent = land.buyerPrice > 0 && buyerUnitPrice > 0 ? 
+                const buyerChangePercent = buyerUnitPrice > 0 && marketPrice > 0 ? 
                     (((buyerUnitPrice - marketPrice) / marketPrice) * 100).toFixed(1) : 0;
                 
                 let difficulty = '';
@@ -702,26 +754,24 @@
                         <div class="land-title" title="${land.title}">${land.title}</div>
                     </td>
                     <td class="area-column">${land.area}</td>
-                    <td class="price-column red">${sellerUnitPrice.toFixed(1)}</td>
-                    <td class="price-column red">${formatPrice(sellerTotalPrice)}</td>
-                    <td class="percentage-column ${parseFloat(sellerChangePercent) >= 0 ? 'positive' : 'negative'}">
+                    <td class="price-column red seller-cell-group">${sellerUnitPrice.toFixed(1)}</td>
+                    <td class="price-column red seller-cell-group">${formatPrice(sellerTotalPrice)}</td>
+                    <td class="percentage-column seller-cell-group ${parseFloat(sellerChangePercent) >= 0 ? 'positive' : 'negative'}">
                         ${parseFloat(sellerChangePercent) >= 0 ? '+' : ''}${sellerChangePercent}%
                     </td>
-                    <td class="price-column blue">${land.buyerPrice > 0 ? buyerUnitPrice.toFixed(1) : ''}</td>
-                    <td class="price-column blue">${land.buyerPrice > 0 ? formatPrice(buyerTotalPrice) : (land.status === 'overpriced' ? '無人出價' : '')}</td>
-                    <td class="percentage-column ${parseFloat(buyerChangePercent) >= 0 ? 'positive' : 'negative'}">
+                    <td class="price-column blue buyer-cell-group">${land.buyerPrice > 0 ? buyerUnitPrice.toFixed(1) : ''}</td>
+                    <td class="price-column blue buyer-cell-group">${land.buyerPrice > 0 ? formatPrice(buyerTotalPrice) : (land.status === 'overpriced' ? '無人出價' : '')}</td>
+                    <td class="percentage-column buyer-cell-group ${parseFloat(buyerChangePercent) >= 0 ? 'positive' : 'negative'}">
                         ${land.buyerPrice > 0 ? (parseFloat(buyerChangePercent) >= 0 ? '+' : '') + buyerChangePercent + '%' : ''}
                     </td>
                     <td class="status-column">${difficulty}</td>
                     <td class="status-column">${statusText}</td>
-                    <td class="market-price-column">${marketPrice}</td> <!-- Used new class -->
-                    <td class="last-update-column">${land.lastUpdate}</td> <!-- Added new cell -->
+                    <td class="market-price-column">${marketPrice}</td>
+                    <td class="last-update-column">${land.lastUpdate}</td>
                     <td class="actions-column">
                         <div class="button-group">
-                            ${land.status === 'bidding' ? 
+                            ${land.status === 'bidding' || land.status === 'overpriced' ? 
                                 `<button class="action-btn bid-btn" onclick="placeBid(${land.id})">我要出價</button>` : 
-                                land.status === 'overpriced' ?
-                                `<button class="action-btn bid-btn" onclick="placeBid(${land.id})">我要出價</button>` :
                                 land.status === 'negotiating' ?
                                 `<button class="action-btn bid-btn negotiating-disabled" onclick="placeBid(${land.id})" disabled>協商中</button>` :
                                 `<button class="action-btn bid-btn" disabled>已成交</button>`
@@ -901,12 +951,14 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
         // 模擬即時更新
         setInterval(() => {
             landData.forEach(land => {
+                let updated = false;
                 if (land.status === 'bidding') {
                     if (Math.random() > 0.85) {
                         const increase = Math.floor(Math.random() * 500) + 50;
                         land.buyerPrice += increase;
                         land.bidCount += 1;
                         land.lastUpdate = "剛剛"; // Update lastUpdate on activity
+                        updated = true;
                         
                         if (land.buyerPrice >= land.sellerPrice * 0.95) {
                             const randomChoice = Math.random();
@@ -919,10 +971,60 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
                         }
                     }
                 }
+                // Simulate negotiation results for negotiating lands
+                if (land.status === 'negotiating' && Math.random() > 0.9) {
+                    const negotiationResult = Math.random();
+                    if (negotiationResult > 0.6) { // 成功協商
+                        land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
+                        land.status = 'sold';
+                        land.lastUpdate = "剛剛";
+                        updated = true;
+                    } else if (negotiationResult < 0.2) { // 協商失敗，重新競價
+                        land.status = 'bidding';
+                        land.lastUpdate = "剛剛";
+                        updated = true;
+                    }
+                }
+
+                // Simulate seller adjusting price for overpriced lands
+                if (land.status === 'overpriced' && Math.random() > 0.8) {
+                    land.sellerPrice = Math.round(land.sellerPrice * 0.95); // Drop price by 5%
+                    land.lastUpdate = "剛剛";
+                    updated = true;
+                    if (land.sellerPrice <= land.buyerPrice * 1.05) { // If seller price becomes within 5% of buyer price
+                        land.status = 'bidding';
+                    }
+                }
             });
             
             filterData();
-        }, 15000);
+        }, 15000); // 每15秒更新一次
+
+        // 模擬新土地上架
+        setInterval(() => {
+            if (Math.random() > 0.8) {
+                const statusOptions = ['bidding', 'negotiating'];
+                const selectedStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
+                
+                const newLand = generateRandomLand(Date.now()); // Use Date.now() for unique IDs
+                newLand.lastUpdate = "剛剛";
+                
+                // Adjust for new listings (might not have bids or deal price yet)
+                if (selectedStatus === 'bidding') {
+                    newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.7 + Math.random() * 0.2));
+                    newLand.bidCount = Math.floor(Math.random() * 5) + 1;
+                } else if (selectedStatus === 'negotiating') {
+                    // For new negotiating listings, ensure price difference is less than 5%
+                    newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.95 + Math.random() * 0.04));
+                    newLand.bidCount = Math.floor(Math.random() * 8) + 3;
+                }
+                newLand.dealPrice = null; // New listings shouldn't have deal price initially
+                newLand.status = selectedStatus;
+                
+                landData.unshift(newLand);
+                filterData();
+            }
+        }, 20000); // 每20秒可能有新土地
     </script>
 </body>
 </html>
