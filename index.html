@@ -24,9 +24,21 @@
             margin-bottom: 30px;
         }
 
+        .title-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-container svg {
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
+        }
+
         .header h1 {
             font-size: 2.5rem;
-            margin-bottom: 10px;
+            margin: 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
@@ -152,6 +164,7 @@
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 15px;
+            margin-top: 30px;
         }
 
         .land-title {
@@ -316,17 +329,21 @@
 
         .time-info {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            font-size: 0.75rem;
+            top: 10px;
+            right: 10px;
+            font-size: 0.7rem;
             color: #666;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 4px 8px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            z-index: 10;
+            max-width: 70px;
+            text-align: center;
         }
 
         .bid-button {
-            width: 100%;
+            flex: 1;
             padding: 10px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -335,7 +352,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-right: 8px;
         }
 
         .bid-button:hover {
@@ -348,6 +365,30 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+
+        .detail-button {
+            flex: 1;
+            padding: 10px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .detail-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0;
+            margin-top: 15px;
         }
 
         @keyframes pulse {
@@ -380,6 +421,11 @@
                 font-size: 2rem;
             }
             
+            .title-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
             .land-grid {
                 grid-template-columns: 1fr;
             }
@@ -396,7 +442,30 @@
 </head>
 <body>
     <div class="header">
-        <h1>🏞️ 土地交易競價看板</h1>
+        <div class="title-container">
+            <div class="logo-container">
+                <svg width="60" height="75" viewBox="0 0 100 125" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 外圓框 -->
+                    <ellipse cx="50" cy="45" rx="45" ry="40" stroke="#DC2626" stroke-width="4" fill="none"/>
+                    
+                    <!-- 上方橫線 -->
+                    <line x1="15" y1="20" x2="85" y2="20" stroke="#DC2626" stroke-width="4"/>
+                    
+                    <!-- 左側垂直線和b字母 -->
+                    <line x1="25" y1="40" x2="25" y2="70" stroke="#DC2626" stroke-width="4"/>
+                    <circle cx="35" cy="50" r="10" stroke="#DC2626" stroke-width="4" fill="none"/>
+                    <circle cx="35" cy="65" r="8" stroke="#DC2626" stroke-width="4" fill="none"/>
+                    
+                    <!-- 右側n字母 -->
+                    <line x1="65" y1="45" x2="65" y2="75" stroke="#DC2626" stroke-width="4"/>
+                    <path d="M 65 45 Q 75 40 85 45 Q 85 50 85 75" stroke="#DC2626" stroke-width="4" fill="none"/>
+                    
+                    <!-- 底部文字 YIRU -->
+                    <text x="50" y="110" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#DC2626" letter-spacing="3px">YIRU</text>
+                </svg>
+            </div>
+            <h1>一如土地交易競價看板</h1>
+        </div>
         <p>即時追蹤賣方定價 • 買方出價 • 成交價格</p>
     </div>
 
@@ -559,81 +628,6 @@
                 lastUpdate: "8分鐘前",
                 status: "bidding",
                 pricePerPing: "140.1萬/坪"
-            },
-            {
-                id: 7,
-                title: "基地下1高麗軍的分讓土地",
-                region: "桃園市",
-                district: "中壢區",
-                address: "青埔",
-                area: "23.4坪",
-                sellerPrice: 950,
-                buyerPrice: 880,
-                dealPrice: 915,
-                bidCount: 18,
-                lastUpdate: "3分鐘前",
-                status: "sold",
-                pricePerPing: "39.1萬/坪"
-            },
-            {
-                id: 8,
-                title: "神門景觀皇室大文建產住宅土地 台北農主要",
-                region: "台北市",
-                district: "士林區",
-                address: "文林路",
-                area: "33.33坪",
-                sellerPrice: 1000,
-                buyerPrice: 720,
-                dealPrice: null,
-                bidCount: 1,
-                lastUpdate: "2小時前",
-                status: "overpriced",
-                pricePerPing: "30.0萬/坪"
-            },
-            {
-                id: 9,
-                title: "信義區建設的上上住宅來木地貨",
-                region: "台北市",
-                district: "信義區",
-                address: "信義路五段",
-                area: "24.8坪",
-                sellerPrice: 2300,
-                buyerPrice: 2180,
-                dealPrice: null,
-                bidCount: 14,
-                lastUpdate: "30秒前",
-                status: "bidding",
-                pricePerPing: "92.7萬/坪"
-            },
-            {
-                id: 10,
-                title: "後公園島基地的資實看明山品城的交通系住宅小庫",
-                region: "台中市",
-                district: "北屯區",
-                address: "崇德路",
-                area: "27.1坪",
-                sellerPrice: 1450,
-                buyerPrice: 1380,
-                dealPrice: 1415,
-                bidCount: 7,
-                lastUpdate: "15分鐘前",
-                status: "sold",
-                pricePerPing: "52.2萬/坪"
-            },
-            {
-                id: 11,
-                title: "格里愛夏政運園天產開展",
-                region: "高雄市",
-                district: "鼓山區",
-                address: "美術館區",
-                area: "11.8坪",
-                sellerPrice: 1650,
-                buyerPrice: 1580,
-                dealPrice: null,
-                bidCount: 5,
-                lastUpdate: "20分鐘前",
-                status: "bidding",
-                pricePerPing: "139.8萬/坪"
             }
         ];
 
@@ -651,6 +645,73 @@
             const diff = price1 - price2;
             const percent = ((diff / price2) * 100).toFixed(1);
             return { diff, percent };
+        }
+
+        function showDetails(landId) {
+            const land = landData.find(l => l.id === landId);
+            if (land) {
+                const dealInfo = land.dealPrice ? 
+                    `成交價格: $${formatPrice(land.dealPrice)}\n` : 
+                    `目前競價中\n`;
+                
+                const detailInfo = `
+═══════════════════════════════════════
+                詳細土地資料                
+═══════════════════════════════════════
+土地標題: ${land.title}
+
+📍 地理位置:
+• 地區: ${land.region} ${land.district}
+• 地址: ${land.address}
+• 坪數: ${land.area}
+• 單價: ${land.pricePerPing}
+
+💰 價格資訊:
+• 賣方定價: $${formatPrice(land.sellerPrice)}
+• 最高出價: $${formatPrice(land.buyerPrice)}
+• ${dealInfo}• 出價次數: ${land.bidCount} 次
+• 最後更新: ${land.lastUpdate}
+
+📈 交易狀態:
+• ${land.status === 'bidding' ? '🔥 競價進行中' : 
+    land.status === 'sold' ? '✅ 交易已完成' : 
+    '📉 乏人問津'}
+
+🏷️ 土地特色:
+• 位於${land.district}精華地段
+• 交通便利，投資潛力佳
+• 周邊生活機能完善
+═══════════════════════════════════════
+                `;
+                
+                alert(detailInfo);
+            }
+        }
+
+        function placeBid(landId) {
+            const land = landData.find(l => l.id === landId);
+            if (land) {
+                const newBid = prompt(`目前最高出價: $${formatPrice(land.buyerPrice)}\n請輸入您的出價 (萬元):`);
+                if (newBid && !isNaN(newBid) && parseInt(newBid) > land.buyerPrice) {
+                    land.buyerPrice = parseInt(newBid);
+                    land.bidCount += 1;
+                    land.lastUpdate = "剛剛";
+                    
+                    // 模擬可能成交
+                    if (land.buyerPrice >= land.sellerPrice * 0.95) {
+                        const shouldDeal = Math.random() > 0.3;
+                        if (shouldDeal) {
+                            land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
+                            land.status = 'sold';
+                        }
+                    }
+                    
+                    filterData();
+                    alert('出價成功！');
+                } else if (newBid) {
+                    alert('出價必須高於目前最高出價！');
+                }
+            }
         }
 
         function renderLandCards(data) {
@@ -751,41 +812,18 @@
                         </div>
                     </div>
                     
-                    ${land.status === 'bidding' ? 
-                        `<button class="bid-button" onclick="placeBid(${land.id})">我要出價</button>` : 
-                        land.status === 'overpriced' ?
-                        `<button class="bid-button" onclick="placeBid(${land.id})">我要出價</button>` :
-                        `<button class="bid-button" disabled>已成交</button>`
-                    }
+                    <div class="button-group">
+                        ${land.status === 'bidding' ? 
+                            `<button class="bid-button" onclick="placeBid(${land.id})">我要出價</button>` : 
+                            land.status === 'overpriced' ?
+                            `<button class="bid-button" onclick="placeBid(${land.id})">我要出價</button>` :
+                            `<button class="bid-button" disabled>已成交</button>`
+                        }
+                        <button class="detail-button" onclick="showDetails(${land.id})">詳細土地資料</button>
+                    </div>
                 `;
                 landGrid.appendChild(card);
             });
-        }
-
-        function placeBid(landId) {
-            const land = landData.find(l => l.id === landId);
-            if (land) {
-                const newBid = prompt(`目前最高出價: $${formatPrice(land.buyerPrice)}\n請輸入您的出價 (萬元):`);
-                if (newBid && !isNaN(newBid) && parseInt(newBid) > land.buyerPrice) {
-                    land.buyerPrice = parseInt(newBid);
-                    land.bidCount += 1;
-                    land.lastUpdate = "剛剛";
-                    
-                    // 模擬可能成交
-                    if (land.buyerPrice >= land.sellerPrice * 0.95) {
-                        const shouldDeal = Math.random() > 0.3;
-                        if (shouldDeal) {
-                            land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
-                            land.status = 'sold';
-                        }
-                    }
-                    
-                    filterData();
-                    alert('出價成功！');
-                } else if (newBid) {
-                    alert('出價必須高於目前最高出價！');
-                }
-            }
         }
 
         function filterData() {
