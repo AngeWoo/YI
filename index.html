@@ -161,6 +161,11 @@
             background: linear-gradient(135deg, #ffffff 0%, #fff8f8 100%);
         }
 
+        .land-card.negotiating {
+            border-color: #9C27B0;
+            background: linear-gradient(135deg, #ffffff 0%, #faf8ff 100%);
+        }
+
         .land-header {
             display: flex;
             justify-content: space-between;
@@ -217,6 +222,17 @@
             color: white;
         }
 
+        .status-negotiating {
+            background: #9C27B0;
+            color: white;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(156, 39, 176, 0.5); }
+            100% { box-shadow: 0 0 15px rgba(156, 39, 176, 0.8); }
+        }
+
         .pricing-section {
             background: #f8f9fa;
             border-radius: 12px;
@@ -253,6 +269,7 @@
         .seller-price { color: #dc3545; }
         .buyer-price { color: #007bff; }
         .deal-price { color: #28a745; }
+        .negotiating-price { color: #9C27B0; }
 
         .bid-info {
             display: flex;
@@ -263,6 +280,14 @@
         .bid-count {
             background: #e9ecef;
             color: #495057;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .negotiating-badge {
+            background: #9C27B0;
+            color: white;
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 0.8rem;
@@ -331,6 +356,7 @@
         .trend-up { color: #4CAF50; }
         .trend-down { color: #f44336; }
         .trend-stable { color: #FF9800; }
+        .trend-negotiating { color: #9C27B0; }
 
         .time-info {
             position: absolute;
@@ -372,6 +398,12 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+
+        .bid-button.negotiating-disabled {
+            background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%);
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .detail-button {
@@ -474,14 +506,19 @@
             </div>
             <h1>一如土地交易競價看板</h1>
         </div>
-        <p>即時追蹤賣方定價 • 買方出價 • 成交價格</p>
+        <p>即時追蹤賣方定價 • 買方出價 • 成交價格 • 協商狀態</p>
     </div>
 
     <div class="market-summary">
         <div class="summary-card">
             <h3>進行中競價</h3>
-            <div class="value" style="color: #FF9800;">34</div>
-            <div class="change trend-up">+5 筆新增</div>
+            <div class="value" style="color: #FF9800;">28</div>
+            <div class="change trend-down">-6 筆減少</div>
+        </div>
+        <div class="summary-card">
+            <h3>一如協商中</h3>
+            <div class="value" style="color: #9C27B0;">6</div>
+            <div class="change trend-up">+6 筆新增</div>
         </div>
         <div class="summary-card">
             <h3>今日成交</h3>
@@ -493,11 +530,6 @@
             <div class="value" style="color: #2196F3;">+8.2%</div>
             <div class="change trend-up">+2.1%</div>
         </div>
-        <div class="summary-card">
-            <h3>總成交額</h3>
-            <div class="value" style="color: #9C27B0;">15.7億</div>
-            <div class="change trend-up">+3.2億</div>
-        </div>
     </div>
 
     <div class="dashboard">
@@ -507,6 +539,7 @@
                 <select id="statusFilter">
                     <option value="">全部狀態</option>
                     <option value="bidding">競價中</option>
+                    <option value="negotiating">一如協商</option>
                     <option value="sold">已成交</option>
                     <option value="overpriced">乏人問津</option>
                 </select>
@@ -549,7 +582,7 @@
         const landData = [
             {
                 id: 1,
-                title: "【重劃不動產】實況~古亭捷運方正土地",
+                title: "【重劃不動產】實泰~古亭捷運方正土地",
                 region: "台北市",
                 district: "中正區",
                 address: "古亭站商圈",
@@ -564,7 +597,7 @@
             },
             {
                 id: 2,
-                title: "北市科園實況廣義重劃影響12逕道實質倍增厚厚",
+                title: "北市科園實泰廣義重劃影響12逕道實質倍增厚厚",
                 region: "台北市",
                 district: "內湖區",
                 address: "內湖科技園區",
@@ -594,7 +627,7 @@
             },
             {
                 id: 4,
-                title: "基金內分設置基台設置棟",
+                title: "基金內分設置基地設置棟",
                 region: "台北市",
                 district: "大安區",
                 address: "基金路",
@@ -604,12 +637,12 @@
                 dealPrice: null,
                 bidCount: 12,
                 lastUpdate: "1分鐘前",
-                status: "bidding",
+                status: "negotiating",
                 pricePerPing: "112.3萬/坪"
             },
             {
                 id: 5,
-                title: "住宅建築專家設置－附建大廈實實房客另空土地",
+                title: "住宅建築專家設置！附建大廈實實房客如空土地",
                 region: "台中市",
                 district: "西屯區",
                 address: "惠來路",
@@ -624,7 +657,7 @@
             },
             {
                 id: 6,
-                title: "人文雙捷3鐵路土地",
+                title: "人文雙港3臨路土地",
                 region: "新北市",
                 district: "新莊區",
                 address: "中正路",
@@ -634,8 +667,23 @@
                 dealPrice: null,
                 bidCount: 6,
                 lastUpdate: "8分鐘前",
-                status: "bidding",
+                status: "negotiating",
                 pricePerPing: "140.1萬/坪"
+            },
+            {
+                id: 7,
+                title: "精華地段優質投資標的",
+                region: "台北市",
+                district: "信義區",
+                address: "信義計畫區",
+                area: "24.5坪",
+                sellerPrice: 8900,
+                buyerPrice: 8600,
+                dealPrice: null,
+                bidCount: 18,
+                lastUpdate: "30秒前",
+                status: "negotiating",
+                pricePerPing: "363.3萬/坪"
             }
         ];
 
@@ -658,14 +706,32 @@
         function showDetails(landId) {
             const land = landData.find(l => l.id === landId);
             if (land) {
-                const dealInfo = land.dealPrice ? 
-                    `成交價格: $${formatPrice(land.dealPrice)}\n` : 
-                    `目前競價中\n`;
+                let statusDescription = "";
+                let dealInfo = "";
+                
+                switch(land.status) {
+                    case 'sold':
+                        statusDescription = "✅ 交易已完成";
+                        dealInfo = `成交價格: $${formatPrice(land.dealPrice)}\n`;
+                        break;
+                    case 'negotiating':
+                        statusDescription = "🤝 一如協商中";
+                        dealInfo = "目前一如協商中，暫停競價\n";
+                        break;
+                    case 'bidding':
+                        statusDescription = "🔥 競價進行中";
+                        dealInfo = "目前競價中\n";
+                        break;
+                    case 'overpriced':
+                        statusDescription = "📉 乏人問津";
+                        dealInfo = "目前乏人問津\n";
+                        break;
+                }
                 
                 const detailInfo = `
-═══════════════════════════════════════
+╔══════════════════════════════════════╗
                 詳細土地資料                
-═══════════════════════════════════════
+╚══════════════════════════════════════╝
 土地標題: ${land.title}
 
 📍 地理位置:
@@ -681,15 +747,14 @@
 • 最後更新: ${land.lastUpdate}
 
 📈 交易狀態:
-• ${land.status === 'bidding' ? '🔥 競價進行中' : 
-    land.status === 'sold' ? '✅ 交易已完成' : 
-    '📉 乏人問津'}
+• ${statusDescription}
 
 🏷️ 土地特色:
 • 位於${land.district}精華地段
 • 交通便利，投資潛力佳
 • 周邊生活機能完善
-═══════════════════════════════════════
+${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫停公開競價' : ''}
+╔══════════════════════════════════════╗
                 `;
                 
                 alert(detailInfo);
@@ -699,23 +764,39 @@
         function placeBid(landId) {
             const land = landData.find(l => l.id === landId);
             if (land) {
+                if (land.status === 'negotiating') {
+                    alert('此土地目前為一如協商狀態，暫停公開競價！\n\n如有興趣請聯繫一如不動產進行私下協商。');
+                    return;
+                }
+                
+                if (land.status === 'sold') {
+                    alert('此土地已完成交易！');
+                    return;
+                }
+                
                 const newBid = prompt(`目前最高出價: $${formatPrice(land.buyerPrice)}\n請輸入您的出價 (萬元):`);
                 if (newBid && !isNaN(newBid) && parseInt(newBid) > land.buyerPrice) {
                     land.buyerPrice = parseInt(newBid);
                     land.bidCount += 1;
                     land.lastUpdate = "剛剛";
                     
-                    // 模擬可能成交
+                    // 模擬可能成交或進入協商
                     if (land.buyerPrice >= land.sellerPrice * 0.95) {
-                        const shouldDeal = Math.random() > 0.3;
-                        if (shouldDeal) {
+                        const randomChoice = Math.random();
+                        if (randomChoice > 0.6) {
                             land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
                             land.status = 'sold';
+                        } else if (randomChoice > 0.3) {
+                            land.status = 'negotiating';
                         }
                     }
                     
                     filterData();
-                    alert('出價成功！');
+                    if (land.status === 'negotiating') {
+                        alert('您的出價已提交！\n\n由於價格接近賣方期望，此土地已轉為一如協商狀態。我們將為您安排專人聯繫進行進一步協商。');
+                    } else {
+                        alert('出價成功！');
+                    }
                 } else if (newBid) {
                     alert('出價必須高於目前最高出價！');
                 }
@@ -730,7 +811,8 @@
                 const statusInfo = {
                     'bidding': { text: '🔥 競價中', class: 'status-hot' },
                     'sold': { text: '✅ 已成交', class: 'status-sold' },
-                    'overpriced': { text: '📉 乏人問津', class: 'status-bidding' }
+                    'overpriced': { text: '📉 乏人問津', class: 'status-bidding' },
+                    'negotiating': { text: '🤝 一如協商', class: 'status-negotiating' }
                 };
 
                 const currentStatus = statusInfo[land.status];
@@ -752,7 +834,9 @@
                             <span class="price-label">最高出價</span>
                             <div class="bid-info">
                                 <span class="price-value buyer-price">$${formatPrice(land.buyerPrice)}</span>
-                                <span class="bid-count">${land.bidCount}次出價</span>
+                                ${land.status === 'negotiating' ? 
+                                    '<span class="negotiating-badge">協商中</span>' :
+                                    `<span class="bid-count">${land.bidCount}次出價</span>`}
                                 <span class="price-difference negative">-${formatPrice(sellerBuyerDiff.diff)} (${sellerBuyerDiff.percent}%)</span>
                             </div>
                         </div>
@@ -763,7 +847,7 @@
                         <div class="price-row">
                             <span class="price-label">成交價格</span>
                             <div class="bid-info">
-                                <span class="price-value deal-price">$${formatPrice(land.dealPrice)}</span>
+                                <span class="price-value deal-price">${formatPrice(land.dealPrice)}</span>
                                 <span class="price-difference ${dealDiff.diff >= 0 ? 'positive' : 'negative'}">
                                     ${dealDiff.diff >= 0 ? '+' : ''}${formatPrice(Math.abs(dealDiff.diff))} (${dealDiff.percent}%)
                                 </span>
@@ -808,13 +892,17 @@
                     
                     <div class="trading-activity">
                         <div class="activity-info">
-                            ${land.status === 'sold' ? '成交完成' : `${land.bidCount} 次出價競爭`}
+                            ${land.status === 'sold' ? '成交完成' : 
+                              land.status === 'negotiating' ? '一如協商進行中' :
+                              `${land.bidCount} 次出價競爭`}
                         </div>
                         <div class="trend-indicator">
                             ${land.status === 'bidding' ? 
                                 `<span class="trend-arrow trend-up">🔥</span><span>競價中</span>` :
                                 land.status === 'sold' ? 
                                 `<span class="trend-arrow trend-up">✅</span><span>已成交</span>` :
+                                land.status === 'negotiating' ?
+                                `<span class="trend-arrow trend-negotiating">🤝</span><span>協商中</span>` :
                                 `<span class="trend-arrow trend-down">📉</span><span>冷清</span>`
                             }
                         </div>
@@ -825,6 +913,8 @@
                             `<button class="bid-button" onclick="placeBid(${land.id})">我要出價</button>` : 
                             land.status === 'overpriced' ?
                             `<button class="bid-button" onclick="placeBid(${land.id})">我要出價</button>` :
+                            land.status === 'negotiating' ?
+                            `<button class="bid-button negotiating-disabled" onclick="placeBid(${land.id})" disabled>協商中 禁止出價</button>` :
                             `<button class="bid-button" disabled>已成交</button>`
                         }
                         <button class="detail-button" onclick="showDetails(${land.id})">詳細土地資料</button>
@@ -900,11 +990,31 @@
                         land.bidCount += 1;
                         land.lastUpdate = "剛剛";
                         
-                        // 檢查是否成交
-                        if (land.buyerPrice >= land.sellerPrice * 0.9 && Math.random() > 0.5) {
-                            land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
-                            land.status = 'sold';
+                        // 檢查是否成交或進入協商
+                        if (land.buyerPrice >= land.sellerPrice * 0.9) {
+                            const randomChoice = Math.random();
+                            if (randomChoice > 0.6) {
+                                land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
+                                land.status = 'sold';
+                            } else if (randomChoice > 0.3) {
+                                land.status = 'negotiating';
+                            }
                         }
+                    }
+                }
+                
+                // 模擬協商結果
+                if (land.status === 'negotiating' && Math.random() > 0.9) {
+                    const negotiationResult = Math.random();
+                    if (negotiationResult > 0.6) {
+                        // 協商成功
+                        land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
+                        land.status = 'sold';
+                        land.lastUpdate = "剛剛";
+                    } else if (negotiationResult < 0.2) {
+                        // 協商失敗，重新競價
+                        land.status = 'bidding';
+                        land.lastUpdate = "剛剛";
                     }
                 }
                 
@@ -919,14 +1029,17 @@
             });
             
             filterData();
-        }, 8000); // 每8秒更新一次
+        }, 12000); // 每12秒更新一次
 
         // 模擬新土地上架
         setInterval(() => {
-            if (Math.random() > 0.7) {
+            if (Math.random() > 0.8) {
+                const statusOptions = ['bidding', 'negotiating'];
+                const selectedStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
+                
                 const newLand = {
                     id: Date.now(),
-                    title: `新上架土地 - ${['精華地段', '捷運旁', '重劃區', '學區內'][Math.floor(Math.random() * 4)]}`,
+                    title: `新上架土地 - ${['精華地段', '捷運旁', '重劃區', '學區內', '協商標的'][Math.floor(Math.random() * 5)]}`,
                     region: ['台北市', '新北市', '桃園市', '台中市'][Math.floor(Math.random() * 4)],
                     district: '新區域',
                     address: '新地址',
@@ -936,18 +1049,23 @@
                     dealPrice: null,
                     bidCount: 0,
                     lastUpdate: "剛剛",
-                    status: "bidding",
+                    status: selectedStatus,
                     pricePerPing: `${(Math.random() * 200 + 50).toFixed(1)}萬/坪`
                 };
                 
                 // 設定初始出價
-                newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.7 + Math.random() * 0.2));
-                newLand.bidCount = Math.floor(Math.random() * 5) + 1;
+                if (selectedStatus === 'bidding') {
+                    newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.7 + Math.random() * 0.2));
+                    newLand.bidCount = Math.floor(Math.random() * 5) + 1;
+                } else if (selectedStatus === 'negotiating') {
+                    newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.85 + Math.random() * 0.1));
+                    newLand.bidCount = Math.floor(Math.random() * 8) + 3;
+                }
                 
                 landData.unshift(newLand);
                 filterData();
             }
-        }, 15000); // 每15秒可能有新土地
+        }, 20000); // 每20秒可能有新土地
     </script>
 </body>
 </html>
