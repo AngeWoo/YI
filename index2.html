@@ -185,14 +185,13 @@
         .land-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1600px; /* Adjusted min-width for new column and colspan headers */
+            min-width: 1700px; /* Adjusted min-width for new '編號' column */
             font-size: 14px; /* Increased base font size */
             background: white;
         }
 
+        /* No general thead background - will apply to th directly */
         .land-table thead {
-            /* Changed from purple gradient to deep teal/green gradient */
-            background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); 
             color: white;
         }
 
@@ -206,6 +205,9 @@
             font-size: 13px; /* Adjusted font size for sub-headers */
             line-height: 1.3;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            /* Default background for top-level headers (non-colspan) */
+            background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); 
+            color: white;
         }
 
         .land-table th:last-child {
@@ -246,6 +248,12 @@
         }
 
         /* 欄位樣式 */
+        .id-column { /* New column style */
+            width: 60px;
+            font-weight: bold;
+            color: #444;
+        }
+
         .status-column {
             width: 70px;
         }
@@ -326,16 +334,16 @@
         }
 
         .seller-header-sub {
-            background: #f8d7da; /* Lighter red for sub-headers (bootstrap danger-light) */
-            color: #58181F; /* Darker red text for contrast */
-            border-right: 1px solid rgba(0,0,0,0.1);
+            background: #d45f62; /* A slightly darker red for sub-headers */
+            color: white; /* Ensure text is white for contrast */
+            border-right: 1px solid rgba(255,255,255,0.1);
             font-weight: 600; /* Ensure sub-headers are bold */
         }
 
         .buyer-header-sub {
-            background: #d1ecf1; /* Lighter blue for sub-headers (bootstrap info-light) */
-            color: #0c5460; /* Darker blue text for contrast */
-            border-right: 1px solid rgba(0,0,0,0.1);
+            background: #5d9ee7; /* A slightly darker blue for sub-headers */
+            color: white; /* Ensure text is white for contrast */
+            border-right: 1px solid rgba(255,255,255,0.1);
             font-weight: 600; /* Ensure sub-headers are bold */
         }
         .seller-header-sub:last-child, .buyer-header-sub:last-child {
@@ -437,7 +445,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             width: 90%;
-            max-width: 500px;
+            max-width: 550px; /* Slightly wider for more buttons */
             position: relative;
             transform: translateY(-20px);
             transition: transform 0.3s ease;
@@ -477,19 +485,24 @@
             margin-bottom: 8px;
             font-size: 1.1rem;
             color: #666;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-content p strong {
+            color: #333;
         }
 
+
         .canned-bid-buttons, .seller-action-buttons {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid; /* Use grid for better layout */
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Auto-fit columns */
             gap: 10px;
             margin-top: 15px;
             margin-bottom: 20px;
         }
 
         .canned-bid-buttons button, .seller-action-buttons button {
-            flex: 1;
-            min-width: 120px;
             padding: 10px 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -498,6 +511,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s ease;
+            white-space: nowrap; /* Prevent text wrapping inside buttons */
         }
 
         .canned-bid-buttons button:hover:not(:disabled), .seller-action-buttons button:hover:not(:disabled) {
@@ -662,15 +676,16 @@
             <table class="land-table" id="landTable">
                 <thead>
                     <tr>
+                        <th rowspan="2" class="id-column">編號</th> <!-- New ID column header -->
                         <th rowspan="2" class="status-column">持分/全部</th>
                         <th rowspan="2" class="district-column">地段號</th>
                         <th rowspan="2" class="area-column">坪數</th>
-                        <th colspan="3" class="seller-info-header">賣方資訊</th> <!-- New colspan header -->
-                        <th colspan="3" class="buyer-info-header">買方資訊</th>   <!-- New colspan header -->
+                        <th colspan="3" class="seller-info-header">賣方資訊</th>
+                        <th colspan="3" class="buyer-info-header">買方資訊</th>
                         <th rowspan="2" class="status-column">出售難度</th>
                         <th rowspan="2" class="status-column">狀態</th>
                         <th rowspan="2" class="market-price-column">鄰近實價平均坪價(萬元)</th>
-                        <th rowspan="2" class="last-update-column">近期異動時間</th> <!-- New column -->
+                        <th rowspan="2" class="last-update-column">近期異動時間</th>
                         <th rowspan="2" class="actions-column">操作</th>
                     </tr>
                     <tr>
@@ -694,27 +709,44 @@
         <div class="modal-content">
             <span class="close-button" onclick="closeBidModal()">&times;</span>
             <h2>土地競價 / 狀態更新</h2>
-            <div id="bidUserSection" style="margin-bottom: 15px;">
-                <label for="bidUserName">您的名稱:</label>
-                <input type="text" id="bidUserName" placeholder="請輸入您的名稱" style="width: calc(100% - 100px); margin-right: 5px;" onblur="saveUserName()">
-                <button onclick="clearUserName()" style="background: #ccc; color: #333; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">清除</button>
+            <div id="bidUserSection" style="margin-bottom: 15px; display: flex; align-items: center;">
+                <label for="bidUserName" style="font-weight: bold; margin-right: 10px; min-width: 80px;">您的名稱:</label>
+                <input type="text" id="bidUserName" placeholder="請輸入您的名稱" style="flex-grow: 1; margin-right: 5px;">
+                <button onclick="clearUserName()" style="background: #e0e0e0; color: #555; border: 1px solid #ccc; padding: 5px 10px; border-radius: 5px; cursor: pointer;">清除</button>
             </div>
 
             <div id="bidInfoSection">
                 <h3 id="modalLandTitle"></h3>
-                <p>賣方定價: <span id="modalSellerPrice" class="seller-price"></span></p>
-                <p>目前最高出價: <span id="modalBuyerPrice" class="blue"></span></p>
-                <p>您的目前出價: <span id="modalYourBid" class="blue">0萬</span></p>
+                <p><strong>賣方定價:</strong> <span id="modalSellerPrice" class="seller-price"></span></p>
+                <p><strong>目前最高出價:</strong> <span id="modalBuyerPrice" class="blue"></span></p>
+                <p><strong>您的目前提案出價:</strong> <span id="modalYourBid" class="blue">0萬</span></p>
 
                 <div id="buyerBidControls" style="margin-top: 20px;">
                     <h4>選擇您的出價金額:</h4>
                     <div class="canned-bid-buttons">
-                        <button onclick="setBidAmount(10)">加 10 萬</button>
-                        <button onclick="setBidAmount(50)">加 50 萬</button>
-                        <button onclick="setBidAmount(100)">加 100 萬</button>
-                        <button onclick="setBidAmount('plus1percent')">最高出價+1%</button>
+                        <!-- 增加相對目前最高出價的選項 -->
+                        <button id="bidBtnPlus10" onclick="setBidAmount('plus', 10)">加 10 萬</button>
+                        <button id="bidBtnPlus20" onclick="setBidAmount('plus', 20)">加 20 萬</button>
+                        <button id="bidBtnPlus50" onclick="setBidAmount('plus', 50)">加 50 萬</button>
+                        <button id="bidBtnPlus100" onclick="setBidAmount('plus', 100)">加 100 萬</button>
+                        <button id="bidBtnPlus1Percent" onclick="setBidAmount('percent', 1)">最高出價 +1%</button>
+                        <button id="bidBtnPlus2Percent" onclick="setBidAmount('percent', 2)">最高出價 +2%</button>
+
+                        <!-- 減少相對目前提案出價的選項 -->
+                        <button id="bidBtnMinus10" onclick="setBidAmount('minus', 10)">減 10 萬</button>
+                        <button id="bidBtnMinus20" onclick="setBidAmount('minus', 20)">減 20 萬</button>
+                        <button id="bidBtnMinus50" onclick="setBidAmount('minus', 50)">減 50 萬</button>
+                        <button id="bidBtnMinus1Percent" onclick="setBidAmount('percentMinus', 1)">最高出價 -1%</button>
+                        <button id="bidBtnMinus2Percent" onclick="setBidAmount('percentMinus', 2)">最高出價 -2%</button>
+
+                        <!-- 相對賣方定價的選項 -->
+                        <button id="bidBtnSellerMinus2Percent" onclick="setBidAmount('sellerMinus', 2)">比賣方定價少 2%</button>
+                        <button id="bidBtnSellerMinus5Percent" onclick="setBidAmount('sellerMinus', 5)">比賣方定價少 5%</button>
+                        <button id="bidBtnSellerPlus2Percent" onclick="setBidAmount('sellerPlus', 2)">比賣方定價多 2%</button>
+                        <button id="bidBtnSellerPlus5Percent" onclick="setBidAmount('sellerPlus', 5)">比賣方定價多 5%</button>
+                        <button id="bidBtnMatchSeller" onclick="setBidAmount('matchSeller')">直達賣方定價</button>
                     </div>
-                    <button class="action-btn bid-modal-submit-btn" onclick="submitBid()">確認出價</button>
+                    <button class="action-btn bid-modal-submit-btn" id="confirmBidBtn" onclick="submitBid()" disabled>確認出價</button>
                 </div>
 
                 <div id="sellerActions" style="margin-top: 20px; display: none;">
@@ -735,9 +767,10 @@
         // Global variables for modal state
         let currentBiddingLandId = null;
         let loggedInUserName = localStorage.getItem('bidUserName') || ''; // Load from localStorage
-        let currentBidAmount = 0; // The amount the user is *proposing* to bid
+        let currentProposedBidAmount = 0; // The amount the user is *proposing* to bid
 
-        function generateRandomLand(idOffset) {
+        // Modified generateRandomLand to take a simple sequential ID
+        function generateRandomLand(id) { // Changed signature
             const regions = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市"];
             const districtsMap = {
                 "台北市": ["中正區", "大安區", "信義區", "內湖區", "士林區", "松山區"],
@@ -782,10 +815,10 @@
                 bidCount = Math.floor(Math.random() * 3) + 1;
             }
 
-            const title = `${region}${district}${titleFragments[Math.floor(Math.random() * titleFragments.length)]}${1000 + idOffset}地號`;
+            const title = `${region}${district}${titleFragments[Math.floor(Math.random() * titleFragments.length)]}${id}地號`; // Use id directly
 
             return {
-                id: Date.now() + idOffset,
+                id: id, // Use the passed id directly
                 title: title,
                 region: region,
                 district: district,
@@ -859,9 +892,11 @@
             }
         ];
 
-        const newLands = [];
+        // Generate 15 new land entries with sequential IDs
+        const newLands = []; // Define newLands array
+        let nextId = landData.length + 1; // Start IDs after existing ones
         for (let i = 0; i < 15; i++) {
-            newLands.push(generateRandomLand(i + 100));
+            newLands.push(generateRandomLand(nextId++)); // Pass sequential ID
         }
         landData = [...landData, ...newLands];
 
@@ -879,7 +914,36 @@
         }
         
         function updateModalYourBidDisplay() {
-            document.getElementById('modalYourBid').textContent = formatPrice(currentBidAmount) + (currentBidAmount > 0 ? '萬' : '');
+            const confirmBtn = document.getElementById('confirmBidBtn');
+            const land = landData.find(l => l.id === currentBiddingLandId);
+            
+            if (land.status === 'sold' || land.status === 'negotiating') {
+                document.getElementById('modalYourBid').textContent = land.status === 'sold' ? '已成交' : '協商中';
+                confirmBtn.disabled = true;
+                return;
+            }
+
+            document.getElementById('modalYourBid').textContent = formatPrice(currentProposedBidAmount) + '萬';
+
+            if (currentProposedBidAmount > land.buyerPrice) {
+                confirmBtn.disabled = false;
+            } else {
+                document.getElementById('modalYourBid').textContent += ' (需高於目前最高出價)';
+                confirmBtn.disabled = true;
+            }
+            
+            const cannedBidButtons = document.querySelectorAll('.canned-bid-buttons button');
+            if (!loggedInUserName || loggedInUserName === "賣方") {
+                cannedBidButtons.forEach(btn => btn.disabled = true);
+            } else {
+                cannedBidButtons.forEach(btn => {
+                    if (land.status === 'bidding' || land.status === 'overpriced') {
+                        btn.disabled = false;
+                    } else {
+                        btn.disabled = true;
+                    }
+                });
+            }
         }
 
 
@@ -930,6 +994,7 @@
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
+                    <td class="id-column">${land.id}</td> <!-- Display sequential ID -->
                     <td class="status-column">${holdingType}</td>
                     <td class="district-column">
                         <div class="land-title" title="${land.title}">${land.title}</div>
@@ -952,9 +1017,9 @@
                     <td class="actions-column">
                         <div class="button-group">
                             ${land.status === 'bidding' || land.status === 'overpriced' ? 
-                                `<button class="action-btn bid-btn" onclick="placeBid(${land.id})">我要出價</button>` : 
+                                `<button class="action-btn bid-btn" onclick="openBidModal(${land.id})">我要出價</button>` : 
                                 land.status === 'negotiating' ?
-                                `<button class="action-btn bid-btn negotiating-disabled" onclick="placeBid(${land.id})" disabled>協商中</button>` :
+                                `<button class="action-btn bid-btn negotiating-disabled" onclick="openBidModal(${land.id})" disabled>協商中</button>` :
                                 `<button class="action-btn bid-btn" disabled>已成交</button>`
                             }
                             <button class="action-btn detail-btn" onclick="showDetails(${land.id})">詳細資料</button>
@@ -1028,7 +1093,6 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
             const land = landData.find(l => l.id === landId);
             if (!land) return;
 
-            // Set user name input
             const userNameInput = document.getElementById('bidUserName');
             if (loggedInUserName) {
                 userNameInput.value = loggedInUserName;
@@ -1038,25 +1102,25 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
                 userNameInput.disabled = false;
             }
 
-            // Populate land info
             document.getElementById('modalLandTitle').textContent = land.title;
             document.getElementById('modalSellerPrice').textContent = formatPrice(land.sellerPrice) + '萬';
             document.getElementById('modalBuyerPrice').textContent = formatPrice(land.buyerPrice) + '萬';
             
-            // Reset proposed bid amount
-            currentBidAmount = land.buyerPrice; // Initialize with current highest bid
+            // Initialize currentProposedBidAmount based on land status
+            if (land.status === 'bidding' || land.status === 'overpriced') {
+                // If there's an existing highest bid, start from there, otherwise a minimum
+                currentProposedBidAmount = land.buyerPrice > 0 ? land.buyerPrice : 1; 
+            } else {
+                currentProposedBidAmount = 0; // Not applicable for sold/negotiating, will be handled by display
+            }
             updateModalYourBidDisplay();
 
-            // Show/hide buyer/seller controls
             const buyerBidControls = document.getElementById('buyerBidControls');
             const sellerActions = document.getElementById('sellerActions');
             const bidUserSection = document.getElementById('bidUserSection');
-            const bidSubmitBtn = document.querySelector('.bid-modal-submit-btn');
             const cannedBidButtons = document.querySelectorAll('.canned-bid-buttons button');
 
-
-            // Always show user name input first, then determine actions
-            bidUserSection.style.display = 'block';
+            bidUserSection.style.display = 'flex';
 
             if (loggedInUserName === "賣方") {
                 buyerBidControls.style.display = 'none';
@@ -1066,26 +1130,19 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
                 sellerActions.style.display = 'none';
 
                 if (land.status === 'sold' || land.status === 'negotiating') {
-                    // Disable bidding if already sold or negotiating
-                    bidSubmitBtn.disabled = true;
                     cannedBidButtons.forEach(btn => btn.disabled = true);
-                    document.getElementById('modalYourBid').textContent = land.status === 'sold' ? '已成交' : '協商中';
-                    // Optional: alert user immediately
-                    // alert(`此土地目前為${land.status === 'sold' ? '已成交' : '一如協商狀態'}，暫停公開競價！`);
                 } else {
-                    bidSubmitBtn.disabled = false;
                     cannedBidButtons.forEach(btn => btn.disabled = false);
                 }
             }
             
-            // Show modal
             document.getElementById('bidModal').classList.add('active');
         }
 
         function closeBidModal() {
             document.getElementById('bidModal').classList.remove('active');
             currentBiddingLandId = null;
-            currentBidAmount = 0; // Reset proposed bid
+            currentProposedBidAmount = 0; // Reset proposed bid
         }
 
         function saveUserName() {
@@ -1095,12 +1152,10 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
                 loggedInUserName = name;
                 localStorage.setItem('bidUserName', name);
                 userNameInput.disabled = true;
-                // Re-open modal to apply seller logic if name is "賣方"
-                if (currentBiddingLandId) { // Check if a land is currently open
+                if (currentBiddingLandId) { 
                     openBidModal(currentBiddingLandId);
                 }
             } else {
-                // If name is cleared or empty, prompt for it
                 alert('請輸入您的名稱才能繼續操作。');
                 userNameInput.focus();
             }
@@ -1113,39 +1168,53 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
             userNameInput.value = '';
             userNameInput.disabled = false;
             userNameInput.focus();
-            // Re-open modal to reset view
             if (currentBiddingLandId) {
                 openBidModal(currentBiddingLandId);
             }
         }
 
-        function setBidAmount(amount) {
+        function setBidAmount(type, value = 0) {
             const land = landData.find(l => l.id === currentBiddingLandId);
             if (!land) return;
 
-            // Ensure a user name is entered before setting bid amounts
             if (!loggedInUserName || loggedInUserName === "賣方") {
                 alert('請輸入您的名稱，並且非賣方身份才能出價。');
                 return;
             }
 
             if (land.status === 'sold' || land.status === 'negotiating') {
-                 // Already handled by disabling buttons, but good for double check
-                 return;
+                 return; 
             }
 
-            let newProposedAmount;
-            if (amount === 'plus1percent') {
-                newProposedAmount = Math.round(land.buyerPrice * 1.01);
-            } else {
-                newProposedAmount = land.buyerPrice + amount;
+            let newProposedAmount = currentProposedBidAmount;
+
+            switch (type) {
+                case 'plus': 
+                    newProposedAmount = currentProposedBidAmount + value;
+                    break;
+                case 'minus': 
+                    newProposedAmount = currentProposedBidAmount - value;
+                    break;
+                case 'percent': // Add a percentage to the *current highest bid*
+                    newProposedAmount = Math.round(land.buyerPrice * (1 + value / 100));
+                    break;
+                case 'percentMinus': // Subtract a percentage from the *current highest bid*
+                    newProposedAmount = Math.round(land.buyerPrice * (1 - value / 100));
+                    break;
+                case 'sellerMinus': 
+                    newProposedAmount = Math.round(land.sellerPrice * (1 - value / 100));
+                    break;
+                case 'sellerPlus': 
+                    newProposedAmount = Math.round(land.sellerPrice * (1 + value / 100));
+                    break;
+                case 'matchSeller': 
+                    newProposedAmount = land.sellerPrice;
+                    break;
+                default:
+                    return;
             }
             
-            // Ensure proposed bid is strictly higher than current highest bid
-            if (newProposedAmount <= land.buyerPrice) {
-                 newProposedAmount = land.buyerPrice + 1; // Minimum increase if calculation is too low
-            }
-            currentBidAmount = newProposedAmount;
+            currentProposedBidAmount = Math.max(0, newProposedAmount); // Ensure not negative
             updateModalYourBidDisplay();
         }
 
@@ -1161,52 +1230,47 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
 
             if (land.status === 'sold') {
                 alert('此土地已完成交易！');
-                closeBidModal();
                 return;
             }
+            
             if (land.status === 'negotiating') {
                 alert('此土地目前為一如協商狀態，暫停公開競價！\n\n如有興趣請聯繫一如不動產進行私下協商。');
-                closeBidModal();
                 return;
             }
 
-            // Check if currentBidAmount was actually set by a button click
-            if (currentBidAmount <= land.buyerPrice) {
-                alert(`您的出價(${formatPrice(currentBidAmount)}萬)必須高於目前最高出價(${formatPrice(land.buyerPrice)}萬)！`);
+            if (currentProposedBidAmount <= land.buyerPrice) {
+                alert('您的出價必須高於目前的最高出價！');
                 return;
             }
-            // currentBidAmount is initialized with land.buyerPrice, so if no button is clicked, it would be equal.
-            if (!currentBidAmount || currentBidAmount === land.buyerPrice) {
-                 alert('請選擇一個有效的出價金額。');
-                 return;
-            }
-
-            land.buyerPrice = currentBidAmount;
+            
+            land.buyerPrice = currentProposedBidAmount;
             land.bidCount += 1;
-            land.lastUpdate = "剛剛"; // Update lastUpdate on bid
-
-            // Check if sold or negotiating
+            land.lastUpdate = "剛剛";
+            
             if (land.buyerPrice >= land.sellerPrice * 0.95) { 
                 const randomChoice = Math.random();
-                if (randomChoice > 0.6) { // 40% chance of sold if within 5%
+                if (randomChoice > 0.6) { 
                     land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
                     land.status = 'sold';
-                    alert('您的出價已提交！\n\n恭喜！此土地已成功交易！');
-                } else { // 60% chance of negotiating if within 5% and not sold
+                } else { 
                     land.status = 'negotiating';
-                    alert('您的出價已提交！\n\n由於價格接近賣方期望，此土地已轉為一如協商狀態。我們將為您安排專人聯繫進行進一步協商。');
                 }
+            }
+            
+            filterData();
+            closeBidModal();
+            if (land.status === 'negotiating') {
+                alert('您的出價已提交！\n\n由於價格接近賣方期望，此土地已轉為一如協商狀態。我們將為您安排專人聯繫進行進一步協商。');
+            } else if (land.status === 'sold') {
+                 alert('您的出價已提交！\n\n恭喜！此土地已成功交易！');
             } else {
                 alert('出價成功！');
             }
-            
-            closeBidModal();
-            filterData(); // Re-render table to show updated status/price
         }
 
         function handleSellerAction(actionType) {
             if (loggedInUserName !== "賣方") {
-                alert('您必須是「賣方」才能執行此操作。');
+                alert('只有賣方身份才能執行此操作。');
                 return;
             }
 
@@ -1214,41 +1278,34 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
             if (!land) return;
 
             if (actionType === 'sold') {
-                if (!confirm('確認將此土地標記為「已成交」嗎？此操作不可逆。')) return;
-                land.dealPrice = land.buyerPrice > 0 ? Math.round((land.sellerPrice + land.buyerPrice) / 2) : land.sellerPrice; // If no buyer bid, deal price is seller price
-                land.status = 'sold';
-                land.lastUpdate = "剛剛";
-                alert('土地狀態已更新為「已成交」！');
-            } else if (actionType === 'negotiating') {
-                if (land.status === 'negotiating') {
-                    alert('此土地已處於「一如協商」狀態。');
+                if (land.status === 'sold') {
+                    alert('此土地已成交。');
                     return;
                 }
-                if (!confirm('確認將此土地標記為「一如協商」嗎？這將暫停公開競價。')) return;
-                land.status = 'negotiating';
-                land.lastUpdate = "剛剛";
-                alert('土地狀態已更新為「一如協商」！');
+                const confirmSell = confirm(`確定要以目前最高出價 ${formatPrice(land.buyerPrice)}萬 成交此土地嗎？`);
+                if (confirmSell) {
+                    land.dealPrice = land.buyerPrice;
+                    land.status = 'sold';
+                    land.lastUpdate = "剛剛";
+                    alert('土地已成功成交！');
+                    filterData();
+                    closeBidModal();
+                }
+            } else if (actionType === 'negotiating') {
+                if (land.status === 'negotinegotiating') {
+                    alert('此土地已在協商中。');
+                    return;
+                }
+                const confirmNegotiate = confirm(`確定要將此土地設定為「一如協商中」狀態嗎？設定後將暫停公開競價。`);
+                if (confirmNegotiate) {
+                    land.status = 'negotiating';
+                    land.lastUpdate = "剛剛";
+                    alert('土地已進入一如協商狀態。');
+                    filterData();
+                    closeBidModal();
+                }
             }
-            
-            closeBidModal();
-            filterData(); // Re-render table
         }
-
-        // Initialize user name if stored on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const userNameInput = document.getElementById('bidUserName');
-            if (loggedInUserName) {
-                userNameInput.value = loggedInUserName;
-                userNameInput.disabled = true;
-            }
-        });
-
-        // Override the original placeBid function to open the modal
-        // Store original (though not strictly needed if only one placeBid exists)
-        // const originalPlaceBid = placeBid; 
-        placeBid = function(landId) { // Override
-            openBidModal(landId);
-        };
 
 
         function filterData() {
@@ -1286,7 +1343,8 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
                     }
                 }
 
-                if (searchTerm && !land.title.toLowerCase().includes(searchTerm)) {
+                if (searchTerm && !land.title.toLowerCase().includes(searchTerm) && 
+                    !land.district.toLowerCase().includes(searchTerm)) { // Also search district for title
                     matches = false;
                 }
 
@@ -1301,95 +1359,90 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
         }
 
         function switchToTableView() {
-            // 保持當前狀態
+            // Already on table view, just ensure active class
+            document.querySelector('.view-toggle button:first-child').classList.remove('active');
+            document.querySelector('.view-toggle button:last-child').classList.add('active');
         }
 
-        // 事件監聽器
+        // Event Listeners
         document.getElementById('statusFilter').addEventListener('change', filterData);
         document.getElementById('regionFilter').addEventListener('change', filterData);
         document.getElementById('priceFilter').addEventListener('change', filterData);
         document.getElementById('searchInput').addEventListener('input', filterData);
+        document.getElementById('bidUserName').addEventListener('change', saveUserName); // Save name on change
 
-        // 初始化
+        // Initialize table
         renderLandTable(landData);
 
-        // 模擬即時更新
+        // Simulate real-time updates
         setInterval(() => {
             landData.forEach(land => {
-                let updated = false;
                 if (land.status === 'bidding') {
-                    if (Math.random() > 0.85) {
-                        const increase = Math.floor(Math.random() * 500) + 50;
+                    if (Math.random() > 0.7) { // 30% chance for a bid
+                        const increase = Math.floor(Math.random() * 50) + 5; // 5-55 万
                         land.buyerPrice += increase;
                         land.bidCount += 1;
-                        land.lastUpdate = "剛剛"; // Update lastUpdate on activity
-                        updated = true;
+                        land.lastUpdate = "剛剛";
                         
-                        if (land.buyerPrice >= land.sellerPrice * 0.95) {
+                        if (land.buyerPrice >= land.sellerPrice * 0.95) { 
                             const randomChoice = Math.random();
-                            if (randomChoice > 0.6) {
+                            if (randomChoice > 0.6) { 
                                 land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
                                 land.status = 'sold';
-                            } else {
+                            } else { 
                                 land.status = 'negotiating';
                             }
                         }
                     }
                 }
-                // Simulate negotiation results for negotiating lands
-                if (land.status === 'negotiating' && Math.random() > 0.9) {
+                
+                if (land.status === 'negotiating' && Math.random() > 0.9) { // 10% chance for negotiation resolution
                     const negotiationResult = Math.random();
-                    if (negotiationResult > 0.6) { // 成功協商
+                    if (negotiationResult > 0.6) {
                         land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
                         land.status = 'sold';
                         land.lastUpdate = "剛剛";
-                        updated = true;
-                    } else if (negotiationResult < 0.2) { // 協商失敗，重新競價
+                    } else if (negotiationResult < 0.3) { // Slightly higher chance to fail and re-enter bidding
                         land.status = 'bidding';
                         land.lastUpdate = "剛剛";
-                        updated = true;
                     }
                 }
-
-                // Simulate seller adjusting price for overpriced lands
-                if (land.status === 'overpriced' && Math.random() > 0.8) {
-                    land.sellerPrice = Math.round(land.sellerPrice * 0.95); // Drop price by 5%
+                
+                if (land.status === 'overpriced' && Math.random() > 0.85) { // 15% chance for seller to adjust price
+                    land.sellerPrice = Math.round(land.sellerPrice * (0.95 + Math.random() * 0.03)); // Reduce price by 2-5%
                     land.lastUpdate = "剛剛";
-                    updated = true;
-                    if (land.sellerPrice <= land.buyerPrice * 1.05) { // If seller price becomes within 5% of buyer price
+                    if (land.sellerPrice <= land.buyerPrice * 1.05) { 
                         land.status = 'bidding';
                     }
                 }
             });
             
             filterData();
-        }, 15000); // 每15秒更新一次
+        }, 12000); // Update every 12 seconds
 
-        // 模擬新土地上架
+        // Simulate new land listings
         setInterval(() => {
-            if (Math.random() > 0.8) {
-                const statusOptions = ['bidding', 'negotiating'];
+            if (Math.random() > 0.8) { // 20% chance to add a new land
+                const statusOptions = ['bidding', 'overpriced']; // New lands are typically bidding or overpriced
                 const selectedStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
                 
-                const newLand = generateRandomLand(Date.now()); // Use Date.now() for unique IDs
+                const newLand = generateRandomLand(++nextId); // Use incremented nextId
                 newLand.lastUpdate = "剛剛";
                 
-                // Adjust for new listings (might not have bids or deal price yet)
                 if (selectedStatus === 'bidding') {
                     newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.7 + Math.random() * 0.2));
                     newLand.bidCount = Math.floor(Math.random() * 5) + 1;
-                } else if (selectedStatus === 'negotiating') {
-                    // For new negotiating listings, ensure price difference is less than 5%
-                    newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.95 + Math.random() * 0.04));
-                    newLand.bidCount = Math.floor(Math.random() * 8) + 3;
+                } else if (selectedStatus === 'overpriced') {
+                    newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.6 + Math.random() * 0.1));
+                    newLand.bidCount = 0; // Starts with no bids
                 }
-                newLand.dealPrice = null; // New listings shouldn't have deal price initially
+                newLand.dealPrice = null; 
                 newLand.status = selectedStatus;
                 
-                landData.unshift(newLand);
+                landData.unshift(newLand); // Add to the beginning
                 filterData();
             }
-        }, 20000); // 每20秒可能有新土地
+        }, 20000); // Every 20 seconds, there's a chance for a new land.
     </script>
 </body>
 </html>
