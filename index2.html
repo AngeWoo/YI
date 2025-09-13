@@ -186,12 +186,13 @@
             width: 100%;
             border-collapse: collapse;
             min-width: 1600px; /* Adjusted min-width for new column and colspan headers */
-            font-size: 13px;
+            font-size: 14px; /* Increased base font size */
             background: white;
         }
 
         .land-table thead {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            /* Changed from purple gradient to deep teal/green gradient */
+            background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); 
             color: white;
         }
 
@@ -202,7 +203,7 @@
             border-right: 1px solid rgba(255,255,255,0.2);
             white-space: nowrap;
             vertical-align: middle;
-            font-size: 12px;
+            font-size: 13px; /* Adjusted font size for sub-headers */
             line-height: 1.3;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
@@ -218,7 +219,7 @@
             border-right: 1px solid #e2e8f0;
             vertical-align: middle;
             white-space: nowrap;
-            font-size: 12px;
+            font-size: 13px; /* Adjusted font size for table data */
             transition: background-color 0.2s ease;
         }
 
@@ -296,7 +297,7 @@
             word-wrap: break-word;
             line-height: 1.2;
             font-weight: 500;
-            font-size: 11px;
+            font-size: 12px; /* Adjusted font size for title */
         }
 
         /* Styles for grouped headers */
@@ -309,6 +310,7 @@
             padding: 10px 0;
             border-right: 1px solid rgba(255,255,255,0.2);
             box-shadow: inset 0 -3px 0 rgba(255,255,255,0.3);
+            font-weight: bold; /* Make bold */
         }
 
         .buyer-info-header {
@@ -320,18 +322,21 @@
             padding: 10px 0;
             border-right: 1px solid rgba(255,255,255,0.2);
             box-shadow: inset 0 -3px 0 rgba(255,255,255,0.3);
+            font-weight: bold; /* Make bold */
         }
 
         .seller-header-sub {
-            background: #fca5a5; /* Lighter red for sub-headers */
-            color: #450a0a;
-            border-right: 1px solid rgba(255,255,255,0.2);
+            background: #f8d7da; /* Lighter red for sub-headers (bootstrap danger-light) */
+            color: #58181F; /* Darker red text for contrast */
+            border-right: 1px solid rgba(0,0,0,0.1);
+            font-weight: 600; /* Ensure sub-headers are bold */
         }
 
         .buyer-header-sub {
-            background: #93c5fd; /* Lighter blue for sub-headers */
-            color: #1e3a8a;
-            border-right: 1px solid rgba(255,255,255,0.2);
+            background: #d1ecf1; /* Lighter blue for sub-headers (bootstrap info-light) */
+            color: #0c5460; /* Darker blue text for contrast */
+            border-right: 1px solid rgba(0,0,0,0.1);
+            font-weight: 600; /* Ensure sub-headers are bold */
         }
         .seller-header-sub:last-child, .buyer-header-sub:last-child {
             border-right: none;
@@ -339,12 +344,13 @@
 
         /* For table cells, apply subtle backgrounds to differentiate */
         .seller-cell-group {
-            background-color: #fef2f2; /* Very light red */
+            background-color: #fffafa; /* Very light red */
         }
 
         .buyer-cell-group {
-            background-color: #eff6ff; /* Very light blue */
+            background-color: #f0f8ff; /* Very light blue */
         }
+
 
         /* 按鈕容器和按鈕樣式 */
         .button-group {
