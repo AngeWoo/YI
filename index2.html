@@ -33,7 +33,7 @@
         }
 
         .logo-container svg {
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
+            filter: drop_shadow(0 2px 8px rgba(0,0,0,0.1));
         }
 
         .header h1 {
@@ -409,39 +409,165 @@
             cursor: not-allowed;
         }
 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .filters {
-                flex-direction: column;
-            }
-            
-            .search-box {
-                max-width: none;
-            }
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden; /* Hidden by default */
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s ease;
+        }
 
-            .view-toggle {
-                margin-left: 0;
-                margin-top: 10px;
-            }
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
 
-            .land-table {
-                font-size: 11px;
-                min-width: 1200px;
-            }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
 
-            .land-table th,
-            .land-table td {
-                padding: 8px 4px;
-            }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
 
-            .action-btn {
-                font-size: 8px;
-                width: 70px;
-                padding: 2px 4px;
-            }
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .close-button:hover {
+            color: #333;
+        }
+
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .modal-content p {
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .canned-bid-buttons, .seller-action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .canned-bid-buttons button, .seller-action-buttons button {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f0f8ff;
+            color: #4f46e5;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .canned-bid-buttons button:hover:not(:disabled), .seller-action-buttons button:hover:not(:disabled) {
+            background: #e0e7ff;
+            border-color: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .canned-bid-buttons button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .bid-modal-submit-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bid-modal-submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+        }
+        .bid-modal-submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .sell-button {
+            background: linear-gradient(135deg, #4CAF50 0%, #28a745 100%) !important;
+            color: white !important;
+        }
+        .sell-button:hover {
+            background: linear-gradient(135deg, #28a745 0%, #4CAF50 100%) !important;
+        }
+
+        .negotiate-button {
+            background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%) !important;
+            color: white !important;
+        }
+        .negotiate-button:hover {
+            background: linear-gradient(135deg, #673AB7 0%, #9C27B0 100%) !important;
+        }
+
+        #bidUserName {
+            padding: 8px 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        #bidUserName:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        #bidUserName:disabled {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -563,9 +689,53 @@
         </div>
     </div>
 
+    <!-- Bid Modal Structure -->
+    <div id="bidModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeBidModal()">&times;</span>
+            <h2>土地競價 / 狀態更新</h2>
+            <div id="bidUserSection" style="margin-bottom: 15px;">
+                <label for="bidUserName">您的名稱:</label>
+                <input type="text" id="bidUserName" placeholder="請輸入您的名稱" style="width: calc(100% - 100px); margin-right: 5px;" onblur="saveUserName()">
+                <button onclick="clearUserName()" style="background: #ccc; color: #333; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">清除</button>
+            </div>
+
+            <div id="bidInfoSection">
+                <h3 id="modalLandTitle"></h3>
+                <p>賣方定價: <span id="modalSellerPrice" class="seller-price"></span></p>
+                <p>目前最高出價: <span id="modalBuyerPrice" class="blue"></span></p>
+                <p>您的目前出價: <span id="modalYourBid" class="blue">0萬</span></p>
+
+                <div id="buyerBidControls" style="margin-top: 20px;">
+                    <h4>選擇您的出價金額:</h4>
+                    <div class="canned-bid-buttons">
+                        <button onclick="setBidAmount(10)">加 10 萬</button>
+                        <button onclick="setBidAmount(50)">加 50 萬</button>
+                        <button onclick="setBidAmount(100)">加 100 萬</button>
+                        <button onclick="setBidAmount('plus1percent')">最高出價+1%</button>
+                    </div>
+                    <button class="action-btn bid-modal-submit-btn" onclick="submitBid()">確認出價</button>
+                </div>
+
+                <div id="sellerActions" style="margin-top: 20px; display: none;">
+                    <h4>賣方操作:</h4>
+                    <div class="seller-action-buttons">
+                        <button class="action-btn sell-button" onclick="handleSellerAction('sold')">✅ 確認成交</button>
+                        <button class="action-btn negotiate-button" onclick="handleSellerAction('negotiating')">🤝 進入一如協商</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Options for last update time
         const lastUpdateOptions = ["剛剛", "2分鐘前", "10分鐘前", "30分鐘前", "1小時前", "今天", "昨天"];
+
+        // Global variables for modal state
+        let currentBiddingLandId = null;
+        let loggedInUserName = localStorage.getItem('bidUserName') || ''; // Load from localStorage
+        let currentBidAmount = 0; // The amount the user is *proposing* to bid
 
         function generateRandomLand(idOffset) {
             const regions = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市"];
@@ -707,6 +877,11 @@
                 return price.toString();
             }
         }
+        
+        function updateModalYourBidDisplay() {
+            document.getElementById('modalYourBid').textContent = formatPrice(currentBidAmount) + (currentBidAmount > 0 ? '萬' : '');
+        }
+
 
         function renderLandTable(data) {
             const tableBody = document.getElementById('landTableBody');
@@ -848,49 +1023,233 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
             }
         }
 
-        function placeBid(landId) {
+        function openBidModal(landId) {
+            currentBiddingLandId = landId;
             const land = landData.find(l => l.id === landId);
-            if (land) {
-                if (land.status === 'negotiating') {
-                    alert('此土地目前為一如協商狀態，暫停公開競價！\n\n如有興趣請聯繫一如不動產進行私下協商。');
-                    return;
-                }
-                
-                if (land.status === 'sold') {
-                    alert('此土地已完成交易！');
-                    return;
-                }
-                
-                const newBid = prompt(`目前最高出價: ${formatPrice(land.buyerPrice)}萬\n請輸入您的出價 (萬元):`);
-                if (newBid && !isNaN(newBid) && parseInt(newBid) > land.buyerPrice) {
-                    land.buyerPrice = parseInt(newBid);
-                    land.bidCount += 1;
-                    land.lastUpdate = "剛剛"; // Update lastUpdate on bid
-                    
-                    if (land.buyerPrice >= land.sellerPrice * 0.95) { 
-                        const randomChoice = Math.random();
-                        if (randomChoice > 0.6) {
-                            land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
-                            land.status = 'sold';
-                        } else {
-                            land.status = 'negotiating';
-                        }
-                    }
-                    
-                    filterData();
-                    if (land.status === 'negotiating') {
-                        alert('您的出價已提交！\n\n由於價格接近賣方期望，此土地已轉為一如協商狀態。我們將為您安排專人聯繫進行進一步協商。');
-                    } else if (land.status === 'sold') {
-                         alert('您的出價已提交！\n\n恭喜！此土地已成功交易！');
-                    }
-                    else {
-                        alert('出價成功！');
-                    }
-                } else if (newBid) {
-                    alert('出價必須高於目前最高出價！');
+            if (!land) return;
+
+            // Set user name input
+            const userNameInput = document.getElementById('bidUserName');
+            if (loggedInUserName) {
+                userNameInput.value = loggedInUserName;
+                userNameInput.disabled = true;
+            } else {
+                userNameInput.value = '';
+                userNameInput.disabled = false;
+            }
+
+            // Populate land info
+            document.getElementById('modalLandTitle').textContent = land.title;
+            document.getElementById('modalSellerPrice').textContent = formatPrice(land.sellerPrice) + '萬';
+            document.getElementById('modalBuyerPrice').textContent = formatPrice(land.buyerPrice) + '萬';
+            
+            // Reset proposed bid amount
+            currentBidAmount = land.buyerPrice; // Initialize with current highest bid
+            updateModalYourBidDisplay();
+
+            // Show/hide buyer/seller controls
+            const buyerBidControls = document.getElementById('buyerBidControls');
+            const sellerActions = document.getElementById('sellerActions');
+            const bidUserSection = document.getElementById('bidUserSection');
+            const bidSubmitBtn = document.querySelector('.bid-modal-submit-btn');
+            const cannedBidButtons = document.querySelectorAll('.canned-bid-buttons button');
+
+
+            // Always show user name input first, then determine actions
+            bidUserSection.style.display = 'block';
+
+            if (loggedInUserName === "賣方") {
+                buyerBidControls.style.display = 'none';
+                sellerActions.style.display = 'block';
+            } else {
+                buyerBidControls.style.display = 'block';
+                sellerActions.style.display = 'none';
+
+                if (land.status === 'sold' || land.status === 'negotiating') {
+                    // Disable bidding if already sold or negotiating
+                    bidSubmitBtn.disabled = true;
+                    cannedBidButtons.forEach(btn => btn.disabled = true);
+                    document.getElementById('modalYourBid').textContent = land.status === 'sold' ? '已成交' : '協商中';
+                    // Optional: alert user immediately
+                    // alert(`此土地目前為${land.status === 'sold' ? '已成交' : '一如協商狀態'}，暫停公開競價！`);
+                } else {
+                    bidSubmitBtn.disabled = false;
+                    cannedBidButtons.forEach(btn => btn.disabled = false);
                 }
             }
+            
+            // Show modal
+            document.getElementById('bidModal').classList.add('active');
         }
+
+        function closeBidModal() {
+            document.getElementById('bidModal').classList.remove('active');
+            currentBiddingLandId = null;
+            currentBidAmount = 0; // Reset proposed bid
+        }
+
+        function saveUserName() {
+            const userNameInput = document.getElementById('bidUserName');
+            const name = userNameInput.value.trim();
+            if (name) {
+                loggedInUserName = name;
+                localStorage.setItem('bidUserName', name);
+                userNameInput.disabled = true;
+                // Re-open modal to apply seller logic if name is "賣方"
+                if (currentBiddingLandId) { // Check if a land is currently open
+                    openBidModal(currentBiddingLandId);
+                }
+            } else {
+                // If name is cleared or empty, prompt for it
+                alert('請輸入您的名稱才能繼續操作。');
+                userNameInput.focus();
+            }
+        }
+
+        function clearUserName() {
+            loggedInUserName = '';
+            localStorage.removeItem('bidUserName');
+            const userNameInput = document.getElementById('bidUserName');
+            userNameInput.value = '';
+            userNameInput.disabled = false;
+            userNameInput.focus();
+            // Re-open modal to reset view
+            if (currentBiddingLandId) {
+                openBidModal(currentBiddingLandId);
+            }
+        }
+
+        function setBidAmount(amount) {
+            const land = landData.find(l => l.id === currentBiddingLandId);
+            if (!land) return;
+
+            // Ensure a user name is entered before setting bid amounts
+            if (!loggedInUserName || loggedInUserName === "賣方") {
+                alert('請輸入您的名稱，並且非賣方身份才能出價。');
+                return;
+            }
+
+            if (land.status === 'sold' || land.status === 'negotiating') {
+                 // Already handled by disabling buttons, but good for double check
+                 return;
+            }
+
+            let newProposedAmount;
+            if (amount === 'plus1percent') {
+                newProposedAmount = Math.round(land.buyerPrice * 1.01);
+            } else {
+                newProposedAmount = land.buyerPrice + amount;
+            }
+            
+            // Ensure proposed bid is strictly higher than current highest bid
+            if (newProposedAmount <= land.buyerPrice) {
+                 newProposedAmount = land.buyerPrice + 1; // Minimum increase if calculation is too low
+            }
+            currentBidAmount = newProposedAmount;
+            updateModalYourBidDisplay();
+        }
+
+
+        function submitBid() {
+            if (!loggedInUserName || loggedInUserName === "賣方") {
+                alert('請輸入您的名稱，並且非賣方身份才能出價。');
+                return;
+            }
+
+            const land = landData.find(l => l.id === currentBiddingLandId);
+            if (!land) return;
+
+            if (land.status === 'sold') {
+                alert('此土地已完成交易！');
+                closeBidModal();
+                return;
+            }
+            if (land.status === 'negotiating') {
+                alert('此土地目前為一如協商狀態，暫停公開競價！\n\n如有興趣請聯繫一如不動產進行私下協商。');
+                closeBidModal();
+                return;
+            }
+
+            // Check if currentBidAmount was actually set by a button click
+            if (currentBidAmount <= land.buyerPrice) {
+                alert(`您的出價(${formatPrice(currentBidAmount)}萬)必須高於目前最高出價(${formatPrice(land.buyerPrice)}萬)！`);
+                return;
+            }
+            // currentBidAmount is initialized with land.buyerPrice, so if no button is clicked, it would be equal.
+            if (!currentBidAmount || currentBidAmount === land.buyerPrice) {
+                 alert('請選擇一個有效的出價金額。');
+                 return;
+            }
+
+            land.buyerPrice = currentBidAmount;
+            land.bidCount += 1;
+            land.lastUpdate = "剛剛"; // Update lastUpdate on bid
+
+            // Check if sold or negotiating
+            if (land.buyerPrice >= land.sellerPrice * 0.95) { 
+                const randomChoice = Math.random();
+                if (randomChoice > 0.6) { // 40% chance of sold if within 5%
+                    land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
+                    land.status = 'sold';
+                    alert('您的出價已提交！\n\n恭喜！此土地已成功交易！');
+                } else { // 60% chance of negotiating if within 5% and not sold
+                    land.status = 'negotiating';
+                    alert('您的出價已提交！\n\n由於價格接近賣方期望，此土地已轉為一如協商狀態。我們將為您安排專人聯繫進行進一步協商。');
+                }
+            } else {
+                alert('出價成功！');
+            }
+            
+            closeBidModal();
+            filterData(); // Re-render table to show updated status/price
+        }
+
+        function handleSellerAction(actionType) {
+            if (loggedInUserName !== "賣方") {
+                alert('您必須是「賣方」才能執行此操作。');
+                return;
+            }
+
+            const land = landData.find(l => l.id === currentBiddingLandId);
+            if (!land) return;
+
+            if (actionType === 'sold') {
+                if (!confirm('確認將此土地標記為「已成交」嗎？此操作不可逆。')) return;
+                land.dealPrice = land.buyerPrice > 0 ? Math.round((land.sellerPrice + land.buyerPrice) / 2) : land.sellerPrice; // If no buyer bid, deal price is seller price
+                land.status = 'sold';
+                land.lastUpdate = "剛剛";
+                alert('土地狀態已更新為「已成交」！');
+            } else if (actionType === 'negotiating') {
+                if (land.status === 'negotiating') {
+                    alert('此土地已處於「一如協商」狀態。');
+                    return;
+                }
+                if (!confirm('確認將此土地標記為「一如協商」嗎？這將暫停公開競價。')) return;
+                land.status = 'negotiating';
+                land.lastUpdate = "剛剛";
+                alert('土地狀態已更新為「一如協商」！');
+            }
+            
+            closeBidModal();
+            filterData(); // Re-render table
+        }
+
+        // Initialize user name if stored on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const userNameInput = document.getElementById('bidUserName');
+            if (loggedInUserName) {
+                userNameInput.value = loggedInUserName;
+                userNameInput.disabled = true;
+            }
+        });
+
+        // Override the original placeBid function to open the modal
+        // Store original (though not strictly needed if only one placeBid exists)
+        // const originalPlaceBid = placeBid; 
+        placeBid = function(landId) { // Override
+            openBidModal(landId);
+        };
+
 
         function filterData() {
             const statusFilter = document.getElementById('statusFilter').value;
