@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>土地交易漲跌看板</title>
+    <title>土地交易競價看板</title>
     <style>
         * {
             margin: 0;
@@ -112,7 +112,7 @@
 
         .land-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 20px;
         }
 
@@ -122,7 +122,7 @@
             padding: 20px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            border: 3px solid transparent;
             position: relative;
             overflow: hidden;
         }
@@ -132,19 +132,19 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
-        .land-card.rising {
+        .land-card.bidding {
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #ffffff 0%, #fffdf8 100%);
+        }
+
+        .land-card.sold {
             border-color: #4CAF50;
             background: linear-gradient(135deg, #ffffff 0%, #f8fff8 100%);
         }
 
-        .land-card.falling {
+        .land-card.overpriced {
             border-color: #f44336;
             background: linear-gradient(135deg, #ffffff 0%, #fff8f8 100%);
-        }
-
-        .land-card.stable {
-            border-color: #FF9800;
-            background: linear-gradient(135deg, #ffffff 0%, #fffdf8 100%);
         }
 
         .land-header {
@@ -160,42 +160,104 @@
             color: #333;
             flex: 1;
             line-height: 1.4;
+            margin-right: 10px;
         }
 
-        .price-change {
+        .status-indicator {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             gap: 5px;
         }
 
-        .current-price {
-            font-size: 1.3rem;
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: bold;
-            color: #333;
+            text-transform: uppercase;
         }
 
-        .change-amount {
+        .status-hot {
+            background: #ff4757;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .status-bidding {
+            background: #FF9800;
+            color: white;
+        }
+
+        .status-sold {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-new {
+            background: #2ed573;
+            color: white;
+        }
+
+        .pricing-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 8px 0;
+        }
+
+        .price-row:last-child {
+            margin-bottom: 0;
+            border-top: 2px solid #dee2e6;
+            padding-top: 12px;
+            font-weight: bold;
+        }
+
+        .price-label {
             font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .price-value {
+            font-size: 1rem;
             font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 6px;
         }
 
-        .change-amount.up {
-            color: #4CAF50;
-            background: rgba(76, 175, 80, 0.1);
+        .seller-price { color: #dc3545; }
+        .buyer-price { color: #007bff; }
+        .deal-price { color: #28a745; }
+
+        .bid-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .change-amount.down {
-            color: #f44336;
-            background: rgba(244, 67, 54, 0.1);
+        .bid-count {
+            background: #e9ecef;
+            color: #495057;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
         }
 
-        .change-amount.neutral {
-            color: #FF9800;
-            background: rgba(255, 152, 0, 0.1);
+        .price-difference {
+            font-size: 0.8rem;
+            font-weight: normal;
+            margin-left: 8px;
         }
+
+        .positive { color: #28a745; }
+        .negative { color: #dc3545; }
 
         .land-details {
             display: grid;
@@ -222,7 +284,7 @@
             font-weight: bold;
         }
 
-        .trading-info {
+        .trading-activity {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -231,7 +293,7 @@
             border-top: 2px solid #f5f5f5;
         }
 
-        .volume-info {
+        .activity-info {
             font-size: 0.85rem;
             color: #666;
         }
@@ -252,31 +314,40 @@
         .trend-down { color: #f44336; }
         .trend-stable { color: #FF9800; }
 
-        .status-badge {
+        .time-info {
             position: absolute;
             top: 15px;
-            right: 15px;
-            padding: 4px 10px;
-            border-radius: 20px;
+            left: 15px;
             font-size: 0.75rem;
+            color: #666;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .bid-button {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
             font-weight: bold;
-            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
-        .status-hot {
-            background: #ff4757;
-            color: white;
-            animation: pulse 2s infinite;
+        .bid-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .status-new {
-            background: #2ed573;
-            color: white;
-        }
-
-        .status-popular {
-            background: #ffa502;
-            color: white;
+        .bid-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         @keyframes pulse {
@@ -325,35 +396,44 @@
 </head>
 <body>
     <div class="header">
-        <h1>🏞️ 土地交易漲跌看板</h1>
-        <p>即時追蹤土地價格變動 • 掌握市場脈動</p>
+        <h1>🏞️ 土地交易競價看板</h1>
+        <p>即時追蹤賣方定價 • 買方出價 • 成交價格</p>
     </div>
 
     <div class="market-summary">
         <div class="summary-card">
-            <h3>今日交易筆數</h3>
-            <div class="value" style="color: #2196F3;">247</div>
-            <div class="change trend-up">+23 (+10.3%)</div>
+            <h3>進行中競價</h3>
+            <div class="value" style="color: #FF9800;">34</div>
+            <div class="change trend-up">+5 筆新增</div>
         </div>
         <div class="summary-card">
-            <h3>平均漲幅</h3>
-            <div class="value" style="color: #4CAF50;">+2.3%</div>
-            <div class="change trend-up">+0.8%</div>
+            <h3>今日成交</h3>
+            <div class="value" style="color: #4CAF50;">18</div>
+            <div class="change trend-up">+12 (+200%)</div>
         </div>
         <div class="summary-card">
-            <h3>成交總額</h3>
-            <div class="value" style="color: #FF9800;">12.4億</div>
-            <div class="change trend-up">+1.2億 (+10.7%)</div>
+            <h3>平均溢價率</h3>
+            <div class="value" style="color: #2196F3;">+8.2%</div>
+            <div class="change trend-up">+2.1%</div>
         </div>
         <div class="summary-card">
-            <h3>熱門區域</h3>
-            <div class="value" style="color: #9C27B0;">台北市</div>
-            <div class="change" style="color: #666;">大安區領漲</div>
+            <h3>總成交額</h3>
+            <div class="value" style="color: #9C27B0;">15.7億</div>
+            <div class="change trend-up">+3.2億</div>
         </div>
     </div>
 
     <div class="dashboard">
         <div class="filters">
+            <div class="filter-group">
+                <label>狀態:</label>
+                <select id="statusFilter">
+                    <option value="">全部狀態</option>
+                    <option value="bidding">競價中</option>
+                    <option value="sold">已成交</option>
+                    <option value="overpriced">乏人問津</option>
+                </select>
+            </div>
             <div class="filter-group">
                 <label>地區:</label>
                 <select id="regionFilter">
@@ -364,15 +444,6 @@
                     <option value="台中市">台中市</option>
                     <option value="台南市">台南市</option>
                     <option value="高雄市">高雄市</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>漲跌:</label>
-                <select id="trendFilter">
-                    <option value="">全部</option>
-                    <option value="rising">上漲</option>
-                    <option value="falling">下跌</option>
-                    <option value="stable">持平</option>
                 </select>
             </div>
             <div class="filter-group">
@@ -406,13 +477,13 @@
                 district: "中正區",
                 address: "古亭站商圈",
                 area: "33.06坪",
-                currentPrice: 3998,
-                previousPrice: 3800,
-                totalPrice: "3,998萬",
-                pricePerPing: "120.9萬/坪",
-                volume: 5,
-                status: "hot",
-                trend: "rising"
+                sellerPrice: 4200,
+                buyerPrice: 3850,
+                dealPrice: null,
+                bidCount: 8,
+                lastUpdate: "2分鐘前",
+                status: "bidding",
+                pricePerPing: "120.9萬/坪"
             },
             {
                 id: 2,
@@ -421,13 +492,13 @@
                 district: "內湖區",
                 address: "內湖科技園區",
                 area: "258.14坪",
-                currentPrice: 36865,
-                previousPrice: 38200,
-                totalPrice: "3.68億",
-                pricePerPing: "142.8萬/坪",
-                volume: 12,
-                status: "popular",
-                trend: "falling"
+                sellerPrice: 38000,
+                buyerPrice: 36500,
+                dealPrice: 37200,
+                bidCount: 15,
+                lastUpdate: "10分鐘前",
+                status: "sold",
+                pricePerPing: "144.1萬/坪"
             },
             {
                 id: 3,
@@ -436,13 +507,13 @@
                 district: "板橋區",
                 address: "三德街",
                 area: "55.93坪",
-                currentPrice: 9600,
-                previousPrice: 9600,
-                totalPrice: "9,600萬",
-                pricePerPing: "171.7萬/坪",
-                volume: 3,
-                status: "new",
-                trend: "stable"
+                sellerPrice: 10500,
+                buyerPrice: 8900,
+                dealPrice: null,
+                bidCount: 2,
+                lastUpdate: "45分鐘前",
+                status: "overpriced",
+                pricePerPing: "187.8萬/坪"
             },
             {
                 id: 4,
@@ -451,13 +522,13 @@
                 district: "大安區",
                 address: "基金路",
                 area: "8.19坪",
-                currentPrice: 850,
-                previousPrice: 820,
-                totalPrice: "850萬",
-                pricePerPing: "103.8萬/坪",
-                volume: 8,
-                status: "hot",
-                trend: "rising"
+                sellerPrice: 920,
+                buyerPrice: 870,
+                dealPrice: null,
+                bidCount: 12,
+                lastUpdate: "1分鐘前",
+                status: "bidding",
+                pricePerPing: "112.3萬/坪"
             },
             {
                 id: 5,
@@ -466,13 +537,13 @@
                 district: "西屯區",
                 address: "惠來路",
                 area: "43.92坪",
-                currentPrice: 12500,
-                previousPrice: 12200,
-                totalPrice: "1.25億",
-                pricePerPing: "284.6萬/坪",
-                volume: 6,
-                status: "popular",
-                trend: "rising"
+                sellerPrice: 12800,
+                buyerPrice: 12300,
+                dealPrice: 12450,
+                bidCount: 9,
+                lastUpdate: "5分鐘前",
+                status: "sold",
+                pricePerPing: "283.4萬/坪"
             },
             {
                 id: 6,
@@ -481,13 +552,13 @@
                 district: "新莊區",
                 address: "中正路",
                 area: "67.8坪",
-                currentPrice: 9080,
-                previousPrice: 9350,
-                totalPrice: "9,080萬",
-                pricePerPing: "133.9萬/坪",
-                volume: 4,
-                status: "new",
-                trend: "falling"
+                sellerPrice: 9500,
+                buyerPrice: 9100,
+                dealPrice: null,
+                bidCount: 6,
+                lastUpdate: "8分鐘前",
+                status: "bidding",
+                pricePerPing: "140.1萬/坪"
             },
             {
                 id: 7,
@@ -496,13 +567,13 @@
                 district: "中壢區",
                 address: "青埔",
                 area: "23.4坪",
-                currentPrice: 888,
-                previousPrice: 880,
-                totalPrice: "888萬",
-                pricePerPing: "38.0萬/坪",
-                volume: 15,
-                status: "hot",
-                trend: "rising"
+                sellerPrice: 950,
+                buyerPrice: 880,
+                dealPrice: 915,
+                bidCount: 18,
+                lastUpdate: "3分鐘前",
+                status: "sold",
+                pricePerPing: "39.1萬/坪"
             },
             {
                 id: 8,
@@ -511,28 +582,28 @@
                 district: "士林區",
                 address: "文林路",
                 area: "33.33坪",
-                currentPrice: 910,
-                previousPrice: 915,
-                totalPrice: "910萬",
-                pricePerPing: "27.3萬/坪",
-                volume: 2,
-                status: "popular",
-                trend: "falling"
+                sellerPrice: 1000,
+                buyerPrice: 720,
+                dealPrice: null,
+                bidCount: 1,
+                lastUpdate: "2小時前",
+                status: "overpriced",
+                pricePerPing: "30.0萬/坪"
             },
             {
                 id: 9,
-                title: "信義區建設的上上住宅來木地貨Ÿ",
+                title: "信義區建設的上上住宅來木地貨",
                 region: "台北市",
                 district: "信義區",
                 address: "信義路五段",
                 area: "24.8坪",
-                currentPrice: 2180,
-                previousPrice: 2100,
-                totalPrice: "2,180萬",
-                pricePerPing: "87.9萬/坪",
-                volume: 7,
-                status: "hot",
-                trend: "rising"
+                sellerPrice: 2300,
+                buyerPrice: 2180,
+                dealPrice: null,
+                bidCount: 14,
+                lastUpdate: "30秒前",
+                status: "bidding",
+                pricePerPing: "92.7萬/坪"
             },
             {
                 id: 10,
@@ -541,13 +612,13 @@
                 district: "北屯區",
                 address: "崇德路",
                 area: "27.1坪",
-                currentPrice: 1380,
-                previousPrice: 1420,
-                totalPrice: "1,380萬",
-                pricePerPing: "50.9萬/坪",
-                volume: 9,
-                status: "new",
-                trend: "falling"
+                sellerPrice: 1450,
+                buyerPrice: 1380,
+                dealPrice: 1415,
+                bidCount: 7,
+                lastUpdate: "15分鐘前",
+                status: "sold",
+                pricePerPing: "52.2萬/坪"
             },
             {
                 id: 11,
@@ -556,52 +627,97 @@
                 district: "鼓山區",
                 address: "美術館區",
                 area: "11.8坪",
-                currentPrice: 1600,
-                previousPrice: 1580,
-                totalPrice: "1,600萬",
-                pricePerPing: "135.6萬/坪",
-                volume: 11,
-                status: "popular",
-                trend: "rising"
+                sellerPrice: 1650,
+                buyerPrice: 1580,
+                dealPrice: null,
+                bidCount: 5,
+                lastUpdate: "20分鐘前",
+                status: "bidding",
+                pricePerPing: "139.8萬/坪"
             }
         ];
 
         let filteredData = [...landData];
+
+        function formatPrice(price) {
+            if (price >= 10000) {
+                return `${(price / 10000).toFixed(1)}億`;
+            } else {
+                return `${price}萬`;
+            }
+        }
+
+        function calculateDifference(price1, price2) {
+            const diff = price1 - price2;
+            const percent = ((diff / price2) * 100).toFixed(1);
+            return { diff, percent };
+        }
 
         function renderLandCards(data) {
             const landGrid = document.getElementById('landGrid');
             landGrid.innerHTML = '';
 
             data.forEach(land => {
-                const changeAmount = land.currentPrice - land.previousPrice;
-                const changePercent = ((changeAmount / land.previousPrice) * 100).toFixed(1);
-                
-                const trendClass = land.trend;
-                const changeClass = changeAmount > 0 ? 'up' : changeAmount < 0 ? 'down' : 'neutral';
-                const trendSymbol = changeAmount > 0 ? '▲' : changeAmount < 0 ? '▼' : '●';
-                const trendText = land.trend === 'rising' ? '上漲' : land.trend === 'falling' ? '下跌' : '持平';
-
-                const statusText = {
-                    'hot': '🔥 熱門',
-                    'new': '🆕 新案',
-                    'popular': '⭐ 推薦'
+                const statusInfo = {
+                    'bidding': { text: '🔥 競價中', class: 'status-hot' },
+                    'sold': { text: '✅ 已成交', class: 'status-sold' },
+                    'overpriced': { text: '📉 乏人問津', class: 'status-bidding' }
                 };
 
+                const currentStatus = statusInfo[land.status];
+                
+                // 計算價格差異
+                const sellerBuyerDiff = calculateDifference(land.sellerPrice, land.buyerPrice);
+                const dealDiff = land.dealPrice ? calculateDifference(land.dealPrice, land.sellerPrice) : null;
+
                 const card = document.createElement('div');
-                card.className = `land-card ${trendClass}`;
+                card.className = `land-card ${land.status}`;
+                
+                let pricingHTML = `
+                    <div class="pricing-section">
+                        <div class="price-row">
+                            <span class="price-label">賣方定價</span>
+                            <span class="price-value seller-price">$${formatPrice(land.sellerPrice)}</span>
+                        </div>
+                        <div class="price-row">
+                            <span class="price-label">最高出價</span>
+                            <div class="bid-info">
+                                <span class="price-value buyer-price">$${formatPrice(land.buyerPrice)}</span>
+                                <span class="bid-count">${land.bidCount}次出價</span>
+                                <span class="price-difference negative">-${formatPrice(sellerBuyerDiff.diff)} (${sellerBuyerDiff.percent}%)</span>
+                            </div>
+                        </div>
+                `;
+
+                if (land.dealPrice) {
+                    pricingHTML += `
+                        <div class="price-row">
+                            <span class="price-label">成交價格</span>
+                            <div class="bid-info">
+                                <span class="price-value deal-price">$${formatPrice(land.dealPrice)}</span>
+                                <span class="price-difference ${dealDiff.diff >= 0 ? 'positive' : 'negative'}">
+                                    ${dealDiff.diff >= 0 ? '+' : ''}${formatPrice(Math.abs(dealDiff.diff))} (${dealDiff.percent}%)
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                pricingHTML += `</div>`;
+
                 card.innerHTML = `
-                    <div class="status-badge status-${land.status}">
-                        ${statusText[land.status]}
-                    </div>
+                    <div class="time-info">${land.lastUpdate}</div>
                     <div class="land-header">
                         <div class="land-title">${land.title}</div>
-                        <div class="price-change">
-                            <div class="current-price">$${land.totalPrice}</div>
-                            <div class="change-amount ${changeClass}">
-                                ${changeAmount > 0 ? '+' : ''}${changeAmount}萬 (${changeAmount > 0 ? '+' : ''}${changePercent}%)
+                        <div class="status-indicator">
+                            <div class="status-badge ${currentStatus.class}">
+                                ${currentStatus.text}
                             </div>
                         </div>
                     </div>
+                    
+                    ${pricingHTML}
+                    
                     <div class="land-details">
                         <div class="detail-item">
                             <span class="detail-label">地區</span>
@@ -620,39 +736,77 @@
                             <span class="detail-value">${land.address}</span>
                         </div>
                     </div>
-                    <div class="trading-info">
-                        <div class="volume-info">
-                            今日成交 ${land.volume} 筆
+                    
+                    <div class="trading-activity">
+                        <div class="activity-info">
+                            ${land.status === 'sold' ? '成交完成' : `${land.bidCount} 次出價競爭`}
                         </div>
-                        <div class="trend-indicator trend-${trendClass}">
-                            <span class="trend-arrow">${trendSymbol}</span>
-                            <span>${trendText}</span>
+                        <div class="trend-indicator">
+                            ${land.status === 'bidding' ? 
+                                `<span class="trend-arrow trend-up">🔥</span><span>競價中</span>` :
+                                land.status === 'sold' ? 
+                                `<span class="trend-arrow trend-up">✅</span><span>已成交</span>` :
+                                `<span class="trend-arrow trend-down">📉</span><span>冷清</span>`
+                            }
                         </div>
                     </div>
+                    
+                    ${land.status === 'bidding' ? 
+                        `<button class="bid-button" onclick="placeBid(${land.id})">我要出價</button>` : 
+                        land.status === 'overpriced' ?
+                        `<button class="bid-button" onclick="placeBid(${land.id})">我要出價</button>` :
+                        `<button class="bid-button" disabled>已成交</button>`
+                    }
                 `;
                 landGrid.appendChild(card);
             });
         }
 
+        function placeBid(landId) {
+            const land = landData.find(l => l.id === landId);
+            if (land) {
+                const newBid = prompt(`目前最高出價: $${formatPrice(land.buyerPrice)}\n請輸入您的出價 (萬元):`);
+                if (newBid && !isNaN(newBid) && parseInt(newBid) > land.buyerPrice) {
+                    land.buyerPrice = parseInt(newBid);
+                    land.bidCount += 1;
+                    land.lastUpdate = "剛剛";
+                    
+                    // 模擬可能成交
+                    if (land.buyerPrice >= land.sellerPrice * 0.95) {
+                        const shouldDeal = Math.random() > 0.3;
+                        if (shouldDeal) {
+                            land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
+                            land.status = 'sold';
+                        }
+                    }
+                    
+                    filterData();
+                    alert('出價成功！');
+                } else if (newBid) {
+                    alert('出價必須高於目前最高出價！');
+                }
+            }
+        }
+
         function filterData() {
+            const statusFilter = document.getElementById('statusFilter').value;
             const regionFilter = document.getElementById('regionFilter').value;
-            const trendFilter = document.getElementById('trendFilter').value;
             const priceFilter = document.getElementById('priceFilter').value;
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
 
             filteredData = landData.filter(land => {
                 let matches = true;
 
+                if (statusFilter && land.status !== statusFilter) {
+                    matches = false;
+                }
+
                 if (regionFilter && land.region !== regionFilter) {
                     matches = false;
                 }
 
-                if (trendFilter && land.trend !== trendFilter) {
-                    matches = false;
-                }
-
                 if (priceFilter) {
-                    const price = land.currentPrice;
+                    const price = land.sellerPrice;
                     switch (priceFilter) {
                         case '0-1000':
                             if (price >= 1000) matches = false;
@@ -681,35 +835,73 @@
         }
 
         // 事件監聽器
+        document.getElementById('statusFilter').addEventListener('change', filterData);
         document.getElementById('regionFilter').addEventListener('change', filterData);
-        document.getElementById('trendFilter').addEventListener('change', filterData);
         document.getElementById('priceFilter').addEventListener('change', filterData);
         document.getElementById('searchInput').addEventListener('input', filterData);
 
         // 初始化
         renderLandCards(landData);
 
-        // 模擬即時更新
+        // 模擬即時更新競價
         setInterval(() => {
             landData.forEach(land => {
-                const randomChange = (Math.random() - 0.5) * 100;
-                land.previousPrice = land.currentPrice;
-                land.currentPrice = Math.max(100, Math.round(land.currentPrice + randomChange));
-                
-                const changePercent = ((land.currentPrice - land.previousPrice) / land.previousPrice) * 100;
-                if (changePercent > 1) {
-                    land.trend = 'rising';
-                } else if (changePercent < -1) {
-                    land.trend = 'falling';
-                } else {
-                    land.trend = 'stable';
+                if (land.status === 'bidding') {
+                    // 隨機有人出價
+                    if (Math.random() > 0.7) {
+                        const increase = Math.floor(Math.random() * 100) + 10;
+                        land.buyerPrice += increase;
+                        land.bidCount += 1;
+                        land.lastUpdate = "剛剛";
+                        
+                        // 檢查是否成交
+                        if (land.buyerPrice >= land.sellerPrice * 0.9 && Math.random() > 0.5) {
+                            land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
+                            land.status = 'sold';
+                        }
+                    }
                 }
                 
-                land.volume = Math.max(1, land.volume + Math.floor((Math.random() - 0.5) * 3));
+                // 模擬賣方調價
+                if (land.status === 'overpriced' && Math.random() > 0.8) {
+                    land.sellerPrice = Math.round(land.sellerPrice * 0.95);
+                    land.lastUpdate = "剛剛";
+                    if (land.sellerPrice <= land.buyerPrice * 1.1) {
+                        land.status = 'bidding';
+                    }
+                }
             });
             
             filterData();
-        }, 10000); // 每10秒更新一次
+        }, 8000); // 每8秒更新一次
+
+        // 模擬新土地上架
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const newLand = {
+                    id: Date.now(),
+                    title: `新上架土地 - ${['精華地段', '捷運旁', '重劃區', '學區內'][Math.floor(Math.random() * 4)]}`,
+                    region: ['台北市', '新北市', '桃園市', '台中市'][Math.floor(Math.random() * 4)],
+                    district: '新區域',
+                    address: '新地址',
+                    area: `${(Math.random() * 100 + 10).toFixed(1)}坪`,
+                    sellerPrice: Math.floor(Math.random() * 5000) + 500,
+                    buyerPrice: 0,
+                    dealPrice: null,
+                    bidCount: 0,
+                    lastUpdate: "剛剛",
+                    status: "bidding",
+                    pricePerPing: `${(Math.random() * 200 + 50).toFixed(1)}萬/坪`
+                };
+                
+                // 設定初始出價
+                newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.7 + Math.random() * 0.2));
+                newLand.bidCount = Math.floor(Math.random() * 5) + 1;
+                
+                landData.unshift(newLand);
+                filterData();
+            }
+        }, 15000); // 每15秒可能有新土地
     </script>
 </body>
 </html>
