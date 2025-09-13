@@ -185,7 +185,7 @@
         .land-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1500px;
+            min-width: 1500px; /* Adjusted min-width for new column */
             font-size: 13px;
             background: white;
         }
@@ -266,6 +266,17 @@
         .percentage-column {
             width: 70px;
             font-weight: bold;
+        }
+
+        /* Modified: Shrink "鄰近實價平均坪價(萬元)" column width */
+        .market-price-column {
+            width: 90px; /* Adjusted width */
+            font-weight: bold;
+        }
+
+        /* Added: Recent update time column width */
+        .last-update-column {
+            width: 70px; /* Adjusted width */
         }
 
         .actions-column {
@@ -483,7 +494,8 @@
                         <th class="percentage-column">漲跌幅(買價)</th>
                         <th class="status-column">出售難度</th>
                         <th class="status-column">狀態</th>
-                        <th class="price-column">鄰近實價平均坪價(萬元)</th>
+                        <th class="market-price-column">鄰近實價平均坪價(萬元)</th> <!-- Added new class -->
+                        <th class="last-update-column">近期異動時間</th> <!-- Added new column -->
                         <th class="actions-column">操作</th>
                     </tr>
                 </thead>
@@ -495,6 +507,9 @@
     </div>
 
     <script>
+        // Options for last update time
+        const lastUpdateOptions = ["剛剛", "2分鐘前", "10分鐘前", "30分鐘前", "1小時前", "今天", "昨天"];
+
         function generateRandomLand(idOffset) {
             const regions = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市"];
             const districtsMap = {
@@ -527,6 +542,9 @@
             let status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
             let dealPrice = null;
             let bidCount = Math.floor(Math.random() * 20) + 1;
+            // Added lastUpdate
+            const lastUpdate = lastUpdateOptions[Math.floor(Math.random() * lastUpdateOptions.length)];
+
 
             if (status === 'sold') {
                 dealPrice = Math.round(sellerPrice * (0.95 + Math.random() * 0.05));
@@ -551,7 +569,8 @@
                 dealPrice: dealPrice,
                 bidCount: bidCount,
                 status: status,
-                pricePerPing: parseFloat(pricePerPing.toFixed(1))
+                pricePerPing: parseFloat(pricePerPing.toFixed(1)),
+                lastUpdate: lastUpdate // Added lastUpdate
             };
         }
 
@@ -567,7 +586,8 @@
                 dealPrice: null,
                 bidCount: 6,
                 status: "bidding",
-                pricePerPing: 130.5
+                pricePerPing: 130.5,
+                lastUpdate: "2分鐘前" // Added lastUpdate
             },
             {
                 id: 2,
@@ -580,7 +600,8 @@
                 dealPrice: 8239,
                 bidCount: 0,
                 status: "sold",
-                pricePerPing: 94.5
+                pricePerPing: 94.5,
+                lastUpdate: "今天" // Added lastUpdate
             },
             {
                 id: 3,
@@ -593,7 +614,8 @@
                 dealPrice: null,
                 bidCount: 0,
                 status: "overpriced",
-                pricePerPing: 63
+                pricePerPing: 63,
+                lastUpdate: "昨天" // Added lastUpdate
             },
             {
                 id: 4,
@@ -606,7 +628,8 @@
                 dealPrice: null,
                 bidCount: 10,
                 status: "negotiating",
-                pricePerPing: 80
+                pricePerPing: 80,
+                lastUpdate: "10分鐘前" // Added lastUpdate
             }
         ];
 
@@ -691,7 +714,8 @@
                     </td>
                     <td class="status-column">${difficulty}</td>
                     <td class="status-column">${statusText}</td>
-                    <td class="price-column">${marketPrice}</td>
+                    <td class="market-price-column">${marketPrice}</td> <!-- Used new class -->
+                    <td class="last-update-column">${land.lastUpdate}</td> <!-- Added new cell -->
                     <td class="actions-column">
                         <div class="button-group">
                             ${land.status === 'bidding' ? 
@@ -720,7 +744,7 @@
                 switch(land.status) {
                     case 'sold':
                         statusDescription = "✅ 交易已完成";
-                        dealInfo = `成交價格: $${formatPrice(land.dealPrice)}萬\n`;
+                        dealInfo = `成交價格: ${formatPrice(land.dealPrice)}萬\n`;
                         break;
                     case 'negotiating':
                         statusDescription = "🤝 一如協商中";
@@ -751,6 +775,7 @@
 • 賣方定價: ${formatPrice(land.sellerPrice)}萬
 • 最高出價: ${formatPrice(land.buyerPrice)}萬
 • ${dealInfo}• 出價次數: ${land.bidCount} 次
+• 最後更新: ${land.lastUpdate}
 
 📈 交易狀態:
 • ${statusDescription}
@@ -784,6 +809,7 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
                 if (newBid && !isNaN(newBid) && parseInt(newBid) > land.buyerPrice) {
                     land.buyerPrice = parseInt(newBid);
                     land.bidCount += 1;
+                    land.lastUpdate = "剛剛"; // Update lastUpdate on bid
                     
                     if (land.buyerPrice >= land.sellerPrice * 0.95) { 
                         const randomChoice = Math.random();
@@ -880,6 +906,7 @@ ${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫
                         const increase = Math.floor(Math.random() * 500) + 50;
                         land.buyerPrice += increase;
                         land.bidCount += 1;
+                        land.lastUpdate = "剛剛"; // Update lastUpdate on activity
                         
                         if (land.buyerPrice >= land.sellerPrice * 0.95) {
                             const randomChoice = Math.random();
