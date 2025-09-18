@@ -33,6 +33,7 @@
             display: flex;
             flex-direction: column;
             border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative; /* For close button positioning */
         }
         
         .chat-container h2 {
@@ -227,10 +228,58 @@
             font-weight: bold;
             color: #333;
         }
+
+        /* <<< MODIFICATION START: Styles for Close Button >>> */
+        .modal-close-btn {
+            display: none; /* Hidden by default on desktop */
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2.5rem;
+            color: #888;
+            cursor: pointer;
+            line-height: 1;
+            z-index: 10;
+        }
+        .modal-close-btn:hover {
+            color: #333;
+        }
+        /* <<< MODIFICATION END >>> */
+
+        /* <<< MODIFICATION START: Media Query for Mobile Full-Width View >>> */
+        @media (max-width: 768px) {
+            body {
+                padding: 0; /* Remove side padding for full screen */
+            }
+
+            .chat-container {
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                max-height: none;
+                border-radius: 0;
+                box-shadow: none;
+                padding: 50px 15px 20px 15px; /* Adjust padding for mobile, giving space at the top for the close button */
+            }
+
+            .modal-close-btn {
+                display: block; /* Show the close button on mobile */
+            }
+            
+            #chatMessages {
+                min-height: 200px;
+            }
+        }
+        /* <<< MODIFICATION END >>> */
+
     </style>
 </head>
 <body>
     <div id="bidChatModal" class="chat-container">
+        <!-- <<< MODIFICATION START: Added Close Button >>> -->
+        <span class="modal-close-btn" onclick="window.close()">&times;</span>
+        <!-- <<< MODIFICATION END >>> -->
+        
         <h2>土地競價聊天室</h2>
         
         <div id="chatLandInfo">
@@ -261,7 +310,6 @@
                 <strong>您的目前提案: <span id="chatYourBid">0萬</span></strong>
             </div>
             
-            <!-- <<< MODIFICATION START: Added new buttons and reordered them >>> -->
             <div class="bid-buttons-grid">
                 <button class="chat-bid-btn" onclick="setChatBidAmount('plus', 10)">+ 10 萬</button>
                 <button class="chat-bid-btn" onclick="setChatBidAmount('plus', 50)">+ 50 萬</button>
@@ -274,7 +322,6 @@
                 <button class="chat-bid-btn" onclick="setChatBidAmount('matchSeller')">＝賣方價</button>
                 <button class="chat-bid-btn" onclick="setChatBidAmount('roundUp')">出價到整數</button>
             </div>
-            <!-- <<< MODIFICATION END >>> -->
             
             <button id="chatSubmitBid" onclick="submitChatBid()" disabled>確認出價</button>
         </div>
@@ -439,7 +486,6 @@
             if (land && highestBid > land.buyerPrice) land.buyerPrice = highestBid;
         }
 
-        // <<< MODIFICATION START: Added 'roundUp' case >>>
         function setChatBidAmount(type, value = 0) {
             const land = landData.find(l => l.id === currentChatLandId);
             if (!land) return;
@@ -468,7 +514,6 @@
                     } else {
                         newAmount = Math.ceil((baseBid + 1) / 100) * 100;
                     }
-                    // Ensure the rounded up value is actually higher than the current bid
                     if (newAmount <= baseBid) {
                          if (baseBid < 1000) newAmount += 10;
                          else if (baseBid < 10000) newAmount += 50;
@@ -480,7 +525,6 @@
             currentChatBidAmount = Math.round(Math.max(0, newAmount));
             updateChatBidDisplay();
         }
-        // <<< MODIFICATION END >>>
 
         function updateChatBidDisplay() {
             const currentHighest = getCurrentHighestBid();
@@ -502,7 +546,7 @@
             const currentHighest = getCurrentHighestBid();
             if (currentChatBidAmount <= currentHighest) { alert('出價必須高於目前最高出價！'); return; }
             addChatMessage({ type: 'bid', userName: currentChatUser, amount: currentChatBidAmount, timestamp: new Date() });
-            currentChatBidAmount += 10; // Default increment for next proposal
+            currentChatBidAmount += 10; 
             updateChatBidDisplay();
             setTimeout(() => { if (Math.random() > 0.6 && chatParticipants.length > 1) simulateOtherUserBid(); }, 2000 + Math.random() * 4000);
         }
