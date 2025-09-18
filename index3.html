@@ -261,14 +261,20 @@
                 <strong>您的目前提案: <span id="chatYourBid">0萬</span></strong>
             </div>
             
+            <!-- <<< MODIFICATION START: Added new buttons and reordered them >>> -->
             <div class="bid-buttons-grid">
                 <button class="chat-bid-btn" onclick="setChatBidAmount('plus', 10)">+ 10 萬</button>
                 <button class="chat-bid-btn" onclick="setChatBidAmount('plus', 50)">+ 50 萬</button>
                 <button class="chat-bid-btn" onclick="setChatBidAmount('plus', 100)">+ 100 萬</button>
+                <button class="chat-bid-btn" onclick="setChatBidAmount('plus', 200)">+ 200 萬</button>
                 <button class="chat-bid-btn" onclick="setChatBidAmount('highestPlusPercent', 1)">最高價 +1%</button>
+                <button class="chat-bid-btn" onclick="setChatBidAmount('highestPlusPercent', 2)">最高價 +2%</button>
+                <button class="chat-bid-btn" onclick="setChatBidAmount('sellerMinusPercent', 1)">賣方價 -1%</button>
                 <button class="chat-bid-btn" onclick="setChatBidAmount('sellerMinusPercent', 2)">賣方價 -2%</button>
                 <button class="chat-bid-btn" onclick="setChatBidAmount('matchSeller')">＝賣方價</button>
+                <button class="chat-bid-btn" onclick="setChatBidAmount('roundUp')">出價到整數</button>
             </div>
+            <!-- <<< MODIFICATION END >>> -->
             
             <button id="chatSubmitBid" onclick="submitChatBid()" disabled>確認出價</button>
         </div>
@@ -342,7 +348,6 @@
         function formatPrice(price) {
             if (price === null || price === 0) return '---';
             if (price >= 10000) return (price / 10000).toFixed(1) + '億';
-            if (price >= 1000) return (price / 1000).toFixed(0) + '千';
             return price.toString();
         }
 
@@ -434,20 +439,48 @@
             if (land && highestBid > land.buyerPrice) land.buyerPrice = highestBid;
         }
 
+        // <<< MODIFICATION START: Added 'roundUp' case >>>
         function setChatBidAmount(type, value = 0) {
             const land = landData.find(l => l.id === currentChatLandId);
             if (!land) return;
             let newAmount = currentChatBidAmount;
             const currentHighest = getCurrentHighestBid();
+            const baseBid = currentHighest > 0 ? currentHighest : Math.round(land.sellerPrice * 0.7);
+
             switch (type) {
-                case 'plus': newAmount = (currentHighest > 0 ? currentHighest : (land.sellerPrice * 0.7)) + value; break;
-                case 'highestPlusPercent': newAmount = Math.round(currentHighest * (1 + value / 100)); break;
-                case 'sellerMinusPercent': newAmount = Math.round(land.sellerPrice * (1 - value / 100)); break;
-                case 'matchSeller': newAmount = land.sellerPrice; break;
+                case 'plus': 
+                    newAmount = baseBid + value; 
+                    break;
+                case 'highestPlusPercent': 
+                    newAmount = Math.round(baseBid * (1 + value / 100)); 
+                    break;
+                case 'sellerMinusPercent': 
+                    newAmount = Math.round(land.sellerPrice * (1 - value / 100)); 
+                    break;
+                case 'matchSeller': 
+                    newAmount = land.sellerPrice; 
+                    break;
+                case 'roundUp': {
+                    if (baseBid < 1000) {
+                        newAmount = Math.ceil((baseBid + 1) / 10) * 10;
+                    } else if (baseBid < 10000) {
+                        newAmount = Math.ceil((baseBid + 1) / 50) * 50;
+                    } else {
+                        newAmount = Math.ceil((baseBid + 1) / 100) * 100;
+                    }
+                    // Ensure the rounded up value is actually higher than the current bid
+                    if (newAmount <= baseBid) {
+                         if (baseBid < 1000) newAmount += 10;
+                         else if (baseBid < 10000) newAmount += 50;
+                         else newAmount += 100;
+                    }
+                    break;
+                }
             }
             currentChatBidAmount = Math.round(Math.max(0, newAmount));
             updateChatBidDisplay();
         }
+        // <<< MODIFICATION END >>>
 
         function updateChatBidDisplay() {
             const currentHighest = getCurrentHighestBid();
@@ -469,7 +502,7 @@
             const currentHighest = getCurrentHighestBid();
             if (currentChatBidAmount <= currentHighest) { alert('出價必須高於目前最高出價！'); return; }
             addChatMessage({ type: 'bid', userName: currentChatUser, amount: currentChatBidAmount, timestamp: new Date() });
-            currentChatBidAmount += 10;
+            currentChatBidAmount += 10; // Default increment for next proposal
             updateChatBidDisplay();
             setTimeout(() => { if (Math.random() > 0.6 && chatParticipants.length > 1) simulateOtherUserBid(); }, 2000 + Math.random() * 4000);
         }
