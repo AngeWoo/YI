@@ -444,6 +444,54 @@
             background-color: #fffde7;
             font-weight: bold;
         }
+
+        /* <<< MODIFICATION START: Add Media Query for Mobile Full-Width View >>> */
+        @media (max-width: 768px) {
+            body {
+                padding: 0; /* Remove side padding on mobile */
+            }
+
+            .header,
+            .market-summary {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .header {
+                padding-top: 20px;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            .dashboard {
+                border-radius: 0; /* Remove rounded corners to fill the screen */
+                padding: 15px; /* Adjust padding for content inside */
+            }
+
+            .filters {
+                flex-direction: column;
+                align-items: stretch; /* Make filters take full width */
+            }
+            
+            .search-box {
+                max-width: none; /* Allow search box to be full width */
+            }
+
+            .view-toggle {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+            
+            .table-container {
+                /* On mobile, remove the shadow and border from the container 
+                   as the main dashboard provides the background */
+                box-shadow: none;
+                border-radius: 0;
+                margin-top: 15px;
+            }
+        }
+        /* <<< MODIFICATION END >>> */
+
     </style>
 </head>
 <body>
@@ -623,7 +671,7 @@
                 shareNumerator: ownerCount > 1 ? 1 : ownerCount,
                 shareDenominator: ownerCount,
                 buildingNumber: Math.random() > 0.4 ? `建號${Math.floor(Math.random() * 8000) + 1000}` : '',
-                marketPrice: Math.round(pricePerPing * (0.8 + Math.random() * 0.3)) // Store market price
+                marketPrice: Math.round(pricePerPing * (0.8 + Math.random() * 0.3))
             };
         }
 
@@ -735,9 +783,7 @@
                     <h2 style="text-align: center; margin-bottom: 5px;">產 調 分 析 表</h2>
                     <div style="display: flex; justify-content: space-between; padding: 0 10px;">
                         <span><strong>土地部份</strong></span>
-                        <!-- <<< MODIFICATION START: Changed to display full title >>> -->
                         <span style="max-width: 70%;"><strong>地段: ${land.title}</strong></span>
-                        <!-- <<< MODIFICATION END >>> -->
                     </div>
                     <table class="analysis-table">
                         <thead>
