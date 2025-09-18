@@ -369,6 +369,81 @@
             opacity: 0.8;
             cursor: not-allowed;
         }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close-btn:hover {
+            color: #333;
+        }
+
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .analysis-table th, .analysis-table td {
+            border: 1px solid #b0bec5;
+            padding: 8px 5px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .analysis-table th {
+            background-color: #eceff1;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        
+        .analysis-table .sub-header {
+            background-color: #f5f5f5;
+        }
+
+        .analysis-table .zone-cell {
+            background-color: #ffcdd2;
+            color: #c62828;
+            font-weight: bold;
+        }
+        
+        .analysis-table .subtotal-row td {
+            background-color: #fffde7;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -468,9 +543,7 @@
                         <th rowspan="2" class="area-column">坪數</th>
                         <th colspan="3" class="seller-info-header">賣方資訊</th>
                         <th colspan="3" class="buyer-info-header">買方資訊</th>
-                        <!-- <<< MODIFICATION START: Header Text Change >>> -->
                         <th rowspan="2" class="status-column">出價<br>熱度</th>
-                        <!-- <<< MODIFICATION END >>> -->
                         <th rowspan="2" class="status-column">狀態</th>
                         <th rowspan="2" class="market-price-column">鄰近實價<br>平均坪價<br>(萬元)</th>
                         <th rowspan="2" class="last-update-column">近期異動<br>時間</th>
@@ -505,11 +578,10 @@
                 "台南市": ["安平區", "東區", "北區", "中西區", "永康區"],
                 "高雄市": ["左營區", "鼓山區", "三民區", "鳳山區", "前鎮區"]
             };
-            const titleFragments = [
-                "精華地段", "重劃區", "淘金區", "商業用地", "住宅用地", "學區周邊", "臨大馬路",
-                "稀有釋出", "投資潛力佳", "方正土地", "都更建地", "農地轉建", "特定專用區", "近交流道"
-            ];
+            const titleFragments = ["精華地段", "重劃區", "淘金區", "商業用地", "住宅用地", "學區周邊", "臨大馬路", "稀有釋出", "投資潛力佳", "方正土地", "都更建地", "農地轉建", "特定專用區", "近交流道"];
+            const landUseZones = ["商三", "住二", "住三", "工一", "特專區"];
             const statusOptions = ['bidding', 'negotiating', 'sold', 'overpriced'];
+            
             const region = regions[Math.floor(Math.random() * regions.length)];
             const district = districtsMap[region][Math.floor(Math.random() * districtsMap[region].length)];
             const area = (Math.random() * 200 + 10).toFixed(1);
@@ -519,12 +591,14 @@
             else if (region === "台中市") pricePerPing = Math.random() * 250 + 50;
             else if (region === "桃園市") pricePerPing = Math.random() * 120 + 30;
             else pricePerPing = Math.random() * 150 + 30;
+            
             const sellerPrice = Math.round(area * pricePerPing);
             let buyerPrice = Math.round(sellerPrice * (0.7 + Math.random() * 0.2));
             let status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
             let dealPrice = null;
             let bidCount = Math.floor(Math.random() * 20) + 1;
             const lastUpdate = lastUpdateOptions[Math.floor(Math.random() * lastUpdateOptions.length)];
+            
             if (status === 'sold') {
                 dealPrice = Math.round(sellerPrice * (0.95 + Math.random() * 0.05));
                 buyerPrice = dealPrice;
@@ -534,22 +608,34 @@
                 buyerPrice = Math.round(sellerPrice * (0.6 + Math.random() * 0.1));
                 bidCount = Math.floor(Math.random() * 3) + 1;
             }
+            
             const title = `${region}${district}${titleFragments[Math.floor(Math.random() * titleFragments.length)]}${id}地號`;
-            return { id, title, region, district, area: parseFloat(area), sellerPrice, buyerPrice, dealPrice, bidCount, status, pricePerPing: parseFloat(pricePerPing.toFixed(1)), lastUpdate };
+            const ownerCount = Math.floor(Math.random() * 30) + 1;
+
+            return { 
+                id, title, region, district, 
+                area: parseFloat(area), 
+                sellerPrice, buyerPrice, dealPrice, bidCount, status, 
+                pricePerPing: parseFloat(pricePerPing.toFixed(1)), 
+                lastUpdate,
+                landUseZone: landUseZones[Math.floor(Math.random() * landUseZones.length)],
+                ownerCount: ownerCount,
+                shareNumerator: ownerCount > 1 ? 1 : ownerCount,
+                shareDenominator: ownerCount,
+                buildingNumber: Math.random() > 0.4 ? `建號${Math.floor(Math.random() * 8000) + 1000}` : '',
+                marketPrice: Math.round(pricePerPing * (0.8 + Math.random() * 0.3)) // Store market price
+            };
         }
 
         let landData = [
-            { id: 1, title: "桃園市八德區廣福段一小段1001地號", region: "桃園市", district: "八德區", area: 179.6, sellerPrice: 23000, buyerPrice: 13050, dealPrice: null, bidCount: 6, status: "bidding", pricePerPing: 130.5, lastUpdate: "2分鐘前" },
-            { id: 2, title: "新北市淡水區淡水小段53地號", region: "新北市", district: "淡水區", area: 88.2, sellerPrice: 8400, buyerPrice: 8239, dealPrice: 8239, bidCount: 0, status: "sold", pricePerPing: 94.5, lastUpdate: "今天" },
-            { id: 3, title: "台北市內湖區文德段一小段145地號", region: "台北市", district: "內湖區", area: 17, sellerPrice: 1071, buyerPrice: 0, dealPrice: null, bidCount: 0, status: "overpriced", pricePerPing: 63, lastUpdate: "昨天" },
-            { id: 4, title: "台北市文山區興隆段一小段174-3地號", region: "台北市", district: "文山區", area: 20, sellerPrice: 1600, buyerPrice: 1310.5, dealPrice: null, bidCount: 10, status: "negotiating", pricePerPing: 80, lastUpdate: "10分鐘前" }
+            { id: 1, title: "桃園市八德區廣福段一小段1001地號", region: "桃園市", district: "八德區", area: 179.6, sellerPrice: 23000, buyerPrice: 13050, dealPrice: null, bidCount: 6, status: "bidding", pricePerPing: 130.5, lastUpdate: "2分鐘前", landUseZone: "工一", ownerCount: 15, shareNumerator: 1, shareDenominator: 15, buildingNumber: "", marketPrice: 110 },
         ];
 
-        let nextId = 5;
+        let nextId = 2;
         let filteredData = [...landData];
 
         function initializeRandomLands() {
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 30; i++) {
                 landData.push(generateRandomLand(nextId++));
             }
             filteredData = [...landData];
@@ -579,12 +665,11 @@
                 const sellerTotalPrice = land.sellerPrice;
                 const buyerUnitPrice = land.buyerPrice > 0 ? (land.buyerPrice / land.area) : 0;
                 const buyerTotalPrice = land.buyerPrice;
-                const marketPrice = Math.round(sellerUnitPrice * (0.8 + Math.random() * 0.3));
+                const marketPrice = land.marketPrice;
                 
                 const sellerChangePercent = sellerUnitPrice > 0 && marketPrice > 0 ? (((sellerUnitPrice - marketPrice) / marketPrice) * 100).toFixed(1) : 0;
                 const offerChangePercent = sellerTotalPrice > 0 ? (((buyerTotalPrice - sellerTotalPrice) / sellerTotalPrice) * 100).toFixed(1) : 0;
 
-                // <<< MODIFICATION START: Simplified switch statement >>>
                 let statusText = '', holdingType = '';
                 switch (land.status) {
                     case 'bidding': statusText = '競價中'; holdingType = '全部'; break;
@@ -592,26 +677,19 @@
                     case 'overpriced': statusText = '乏人問津'; holdingType = '全部'; break;
                     case 'negotiating': statusText = '協商中'; holdingType = '持分'; break;
                 }
-                // <<< MODIFICATION END >>>
-
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td class="id-column">${land.id}</td>
                     <td class="status-column">${holdingType}</td>
                     <td class="district-column"><div class="land-title" title="${land.title}">${land.title}</div></td>
-                    <td class="area-column">${land.area}</td>
-                    
+                    <td class="area-column">${land.area.toFixed(2)}</td>
                     <td class="price-column red seller-cell-group">${formatPrice(sellerTotalPrice)}</td>
                     <td class="price-column red seller-cell-group">${sellerUnitPrice.toFixed(1)}</td>
                     <td class="percentage-column seller-cell-group ${parseFloat(sellerChangePercent) >= 0 ? 'positive' : 'negative'}">${parseFloat(sellerChangePercent) >= 0 ? '+' : ''}${sellerChangePercent}%</td>
-                    
                     <td class="price-column blue buyer-cell-group">${land.buyerPrice > 0 ? formatPrice(buyerTotalPrice) : (land.status === 'overpriced' ? '無人出價' : '')}</td>
                     <td class="price-column blue buyer-cell-group">${land.buyerPrice > 0 ? buyerUnitPrice.toFixed(1) : ''}</td>
                     <td class="percentage-column buyer-cell-group ${parseFloat(offerChangePercent) >= 0 ? 'positive' : 'negative'}">${land.buyerPrice > 0 ? (parseFloat(offerChangePercent) >= 0 ? '+' : '') + offerChangePercent + '%' : ''}</td>
-                    
-                    <!-- <<< MODIFICATION START: Display bid count >>> -->
                     <td class="status-column">${land.bidCount}</td>
-                    <!-- <<< MODIFICATION END >>> -->
                     <td class="status-column">${statusText}</td>
                     <td class="market-price-column">${marketPrice}</td>
                     <td class="last-update-column">${land.lastUpdate}</td>
@@ -633,39 +711,89 @@
 
         function showDetails(landId) {
             const land = landData.find(l => l.id === landId);
-            if (land) {
-                let statusDescription = "", dealInfo = "";
-                switch(land.status) {
-                    case 'sold': statusDescription = "✅ 交易已完成"; dealInfo = `成交價格: ${formatPrice(land.dealPrice)}萬\n`; break;
-                    case 'negotiating': statusDescription = "🤝 一如協商中"; dealInfo = "目前一如協商中，暫停競價\n"; break;
-                    case 'bidding': statusDescription = "🔥 競價進行中"; dealInfo = "目前競價中\n"; break;
-                    case 'overpriced': statusDescription = "📉 乏人問津"; dealInfo = "目前乏人問津\n"; break;
-                }
-                const detailInfo = `
-╔═══════════════════════════════════════╗
-                詳細土地資料                
-╚═══════════════════════════════════════╝
-土地標題: ${land.title}
-📍 地理位置:
-• 地區: ${land.region} ${land.district}
-• 坪數: ${land.area}坪
-• 單價: ${land.pricePerPing}萬/坪
-💰 價格資訊:
-• 賣方定價: ${formatPrice(land.sellerPrice)}萬
-• 最高出價: ${formatPrice(land.buyerPrice)}萬
-• ${dealInfo}• 出價次數: ${land.bidCount} 次
-• 最後更新: ${land.lastUpdate}
-📈 交易狀態:
-• ${statusDescription}
-🏷️ 土地特色:
-• 位於${land.district}精華地段
-• 交通便利，投資潛力佳
-• 周邊生活機能完善
-${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段，暫停公開競價' : ''}
-╔═══════════════════════════════════════╗
-                `;
-                alert(detailInfo);
+            if (!land) {
+                alert('找不到土地資料！');
+                return;
             }
+
+            const PING_TO_M2 = 3.305785;
+            const areaM2 = land.area * PING_TO_M2;
+            const announcedValuePerM2 = Math.round(land.marketPrice * 10000 / PING_TO_M2);
+            
+            const shareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0;
+            const shareAreaM2 = areaM2 * shareRatio;
+            const shareAreaPing = land.area * shareRatio;
+            const sharePercentage = (shareRatio * 100).toFixed(2);
+
+            const modalContainer = document.createElement('div');
+            modalContainer.className = 'modal-overlay';
+            modalContainer.onclick = () => modalContainer.remove(); 
+
+            modalContainer.innerHTML = `
+                <div class="modal-content" onclick="event.stopPropagation()">
+                    <span class="modal-close-btn" onclick="this.closest('.modal-overlay').remove()">&times;</span>
+                    <h2 style="text-align: center; margin-bottom: 5px;">產 調 分 析 表</h2>
+                    <div style="display: flex; justify-content: space-between; padding: 0 10px;">
+                        <span><strong>土地部份</strong></span>
+                        <!-- <<< MODIFICATION START: Changed to display full title >>> -->
+                        <span style="max-width: 70%;"><strong>地段: ${land.title}</strong></span>
+                        <!-- <<< MODIFICATION END >>> -->
+                    </div>
+                    <table class="analysis-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">地號</th>
+                                <th rowspan="2">土地<br>分區</th>
+                                <th>公告現值 (114年)</th>
+                                <th colspan="2">面積</th>
+                                <th rowspan="2">所有權<br>人數</th>
+                                <th colspan="2">土地持分</th>
+                                <th colspan="3">佔土地持分面積</th>
+                                <th colspan="1">有無地上物</th>
+                            </tr>
+                            <tr class="sub-header">
+                                <th>元/m²</th>
+                                <th>m²</th>
+                                <th>坪</th>
+                                <th>分子</th>
+                                <th>分母</th>
+                                <th>m²</th>
+                                <th>坪</th>
+                                <th>比例</th>
+                                <th>地上物建號</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${land.id}</td>
+                                <td class="zone-cell">${land.landUseZone}</td>
+                                <td>${announcedValuePerM2.toLocaleString()}</td>
+                                <td>${areaM2.toFixed(2)}</td>
+                                <td>${land.area.toFixed(2)}</td>
+                                <td>${land.ownerCount}</td>
+                                <td>${land.shareNumerator}</td>
+                                <td>${land.shareDenominator}</td>
+                                <td>${shareAreaM2.toFixed(2)}</td>
+                                <td>${shareAreaPing.toFixed(2)}</td>
+                                <td>${sharePercentage}%</td>
+                                <td>${land.buildingNumber}</td>
+                            </tr>
+                            <tr class="subtotal-row">
+                                <td colspan="3">小計</td>
+                                <td>${areaM2.toFixed(2)}</td>
+                                <td>${land.area.toFixed(2)}</td>
+                                <td colspan="3"></td>
+                                <td>${shareAreaM2.toFixed(2)}</td>
+                                <td>${shareAreaPing.toFixed(2)}</td>
+                                <td>${sharePercentage}%</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            document.body.appendChild(modalContainer);
         }
 
         function filterData() {
