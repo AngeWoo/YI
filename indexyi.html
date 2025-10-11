@@ -28,12 +28,13 @@
         }
 
         .header h1 {
-            font-size: 2rem;
+            font-size: 2.8rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
         .action-buttons {
             display: flex;
+            justify-content: center;
             gap: 15px;
             margin-bottom: 20px;
             flex-wrap: wrap;
@@ -209,6 +210,35 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(5, 150, 105, 0.4);
         }
+        
+        .real-price-section {
+            margin-top: 40px;
+        }
+
+        .real-price-table th {
+            background-color: #0f766e;
+            color: white;
+            font-weight: 600;
+        }
+
+        .real-price-table td {
+            text-align: left;
+            padding-left: 15px;
+        }
+        
+        .real-price-table td.center-align {
+            text-align: center;
+            padding-left: 8px;
+        }
+
+        .real-price-table .price-highlight {
+            font-weight: bold;
+            color: #c62828;
+        }
+
+        .real-price-table tbody tr:hover {
+            background-color: #e0f2f1;
+        }
 
         /* PDF 匯出時隱藏按鈕 */
         @media print {
@@ -304,11 +334,11 @@
 </head>
 <body>
     <div class="header">
-        <h1>產 調 分 析 表</h1>
+        <h1>一如永續剷調分析表(基本版)</h1>
     </div>
 
     <div class="action-buttons">
-        <a href="index2.html" class="back-button">← 返回看板</a>
+        <a href="index.html" class="back-button">← 返回看板</a>
         <button onclick="exportToPDF()" class="export-pdf-button" id="exportBtn">📄 匯出 PDF</button>
     </div>
 
@@ -421,6 +451,26 @@
             <div class="streetview-container" id="streetviewContainer">
                 <!-- 街景地圖將由 JavaScript 動態生成 -->
             </div>
+        </div>
+
+        <div class="analysis-section real-price-section">
+            <h2 class="section-title">鄰近實價登錄資訊</h2>
+            <table class="analysis-table real-price-table">
+                <thead>
+                    <tr>
+                        <th>交易時間</th>
+                        <th>地址/地段</th>
+                        <th>型態</th>
+                        <th>總價</th>
+                        <th>土地坪數</th>
+                        <th>單價</th>
+                        <th>備註</th>
+                    </tr>
+                </thead>
+                <tbody id="realPriceTableBody">
+                    <!-- 由JavaScript動態生成 -->
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -555,6 +605,45 @@
                     <td></td>
                 </tr>
             `;
+        }
+        
+        function renderRealPriceTable(land) {
+            const tableBody = document.getElementById('realPriceTableBody');
+            let contentHTML = '';
+
+            for (let i = 0; i < 8; i++) {
+                const transactionMonth = Math.floor(Math.random() * 5) + 1;
+                const transactionDate = `114/${String(transactionMonth).padStart(2, '0')}`;
+                
+                const randomStreets = ["中正路", "中山路", "成功路", "大業路", "文心路", "中華路", "民生東路", "羅斯福路"];
+                const street = randomStreets[Math.floor(Math.random() * randomStreets.length)];
+                const address = `${land.district}${street}${Math.floor(Math.random() * 200) + 1}號`;
+                
+                const types = ["住宅用地/建", "商業用地/商", "工業用地/工", "農業用地/農"];
+                const type = types[Math.floor(Math.random() * types.length)];
+
+                const areaVariation = (Math.random() - 0.5) * 0.8; // -40% to +40% variation
+                const area = land.area * (1 + areaVariation);
+
+                const priceVariation = (Math.random() - 0.5) * 0.6; // -30% to +30% variation
+                const unitPrice = land.pricePerPing * (1 + priceVariation);
+                const totalPrice = area * unitPrice;
+                
+                const remarks = Math.random() > 0.85 ? "親友交易" : "";
+
+                contentHTML += `
+                    <tr>
+                        <td class="center-align">${transactionDate}</td>
+                        <td>${address}</td>
+                        <td class="center-align">${type}</td>
+                        <td class="center-align price-highlight">${(totalPrice / 10000).toFixed(1)} 億</td>
+                        <td class="center-align">${area.toFixed(2)} 坪</td>
+                        <td class="center-align price-highlight">${unitPrice.toFixed(1)} 萬/坪</td>
+                        <td class="center-align">${remarks}</td>
+                    </tr>
+                `;
+            }
+            tableBody.innerHTML = contentHTML;
         }
 
         function initializeMaps(land) {
@@ -835,6 +924,7 @@
             const land = getLandData();
             renderLandTable(land);
             renderBuildingTable(land);
+            renderRealPriceTable(land);
             
             // 延遲初始化地圖以確保 DOM 元素已渲染
             setTimeout(() => {

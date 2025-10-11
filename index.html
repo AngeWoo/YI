@@ -613,6 +613,143 @@
             transform: translateY(-1px);
         }
 
+        /* --- AI Assistant Styles --- */
+        #ai-assistant-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #DC2626 0%, #b91c1c 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        #ai-assistant-button:hover {
+            transform: scale(1.1);
+        }
+
+        #ai-chat-popup {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            max-height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            z-index: 999;
+            overflow: hidden;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        #ai-chat-popup.show {
+            display: flex;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .chat-header {
+            background: #DC2626;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .chat-header #close-chat-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .message.ai {
+            background: #f1f1f1;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background: #DC2626;
+            color: white;
+            border-bottom-right-radius: 4px;
+            align-self: flex-end;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            background: #f8f9fa;
+            flex-shrink: 0;
+        }
+
+        #chat-input {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 15px;
+            margin-right: 10px;
+        }
+
+        #chat-input:focus {
+            outline: none;
+            border-color: #DC2626;
+        }
+
+        #send-chat-btn {
+            background: #DC2626;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        #send-chat-btn:hover {
+            background: #b91c1c;
+        }
 
         @media (max-width: 768px) {
             .header-container {
@@ -726,6 +863,21 @@
             .price-info {
                 margin-bottom: 10px;
             }
+
+            /* AI Chat Popup Adjustments for Mobile */
+            #ai-chat-popup {
+                width: 100%;
+                height: 100%;
+                max-height: 100%;
+                bottom: 0;
+                right: 0;
+                border-radius: 0;
+            }
+
+            #ai-assistant-button {
+                bottom: 20px;
+                right: 20px;
+            }
         }
     </style>
 </head>
@@ -734,6 +886,8 @@
         <nav class="header-nav">
             <a href="index.html" class="nav-link active">土地買賣</a>
             <a href="index1.html" class="nav-link">競價看板</a>
+            <a href="index5.html" class="nav-link">我的案件</a>
+            <a href="#" class="nav-link">會員登入</a>
         </nav>
         <div class="header">
             <div class="title-container">
@@ -855,6 +1009,26 @@
             <!-- 分頁按鈕將由JavaScript動態生成 -->
         </div>
     </main>
+
+    <!-- AI Assistant HTML -->
+    <div id="ai-assistant-button">
+        <span>🤖</span>
+    </div>
+
+    <div id="ai-chat-popup">
+        <div class="chat-header">
+            <h3>AI 小助手</h3>
+            <button id="close-chat-btn">&times;</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message ai">你好！我是 AI 小助手，有什麼關於平台的問題嗎？</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="輸入您的問題...">
+            <button id="send-chat-btn">發送</button>
+        </div>
+    </div>
+
 
     <script>
         let currentView = 'card';
@@ -1207,6 +1381,75 @@
         document.getElementById('districtFilter').addEventListener('change', filterData);
         document.getElementById('priceFilter').addEventListener('change', filterData);
         document.getElementById('areaFilter').addEventListener('change', filterData);
+
+        // --- AI Assistant Logic ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const aiButton = document.getElementById('ai-assistant-button');
+            const chatPopup = document.getElementById('ai-chat-popup');
+            const closeChatBtn = document.getElementById('close-chat-btn');
+            const sendChatBtn = document.getElementById('send-chat-btn');
+            const chatInput = document.getElementById('chat-input');
+            const chatMessages = document.getElementById('chat-messages');
+
+            if (aiButton && chatPopup && closeChatBtn && sendChatBtn && chatInput && chatMessages) {
+                aiButton.addEventListener('click', () => {
+                    chatPopup.classList.toggle('show');
+                });
+
+                closeChatBtn.addEventListener('click', () => {
+                    chatPopup.classList.remove('show');
+                });
+
+                sendChatBtn.addEventListener('click', handleSendMessage);
+                chatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault(); // 防止表單提交
+                        handleSendMessage();
+                    }
+                });
+
+                function handleSendMessage() {
+                    const userMessage = chatInput.value.trim();
+                    if (userMessage === '') return;
+
+                    appendMessage(userMessage, 'user');
+                    chatInput.value = '';
+                    
+                    // 模擬 AI 回應
+                    setTimeout(() => {
+                        const aiResponse = getAIResponse(userMessage);
+                        appendMessage(aiResponse, 'ai');
+                    }, 800);
+                }
+                
+                function appendMessage(text, sender) {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message', sender);
+                    messageElement.textContent = text;
+                    chatMessages.appendChild(messageElement);
+                    chatMessages.scrollTop = chatMessages.scrollHeight; // 自動滾動到底部
+                }
+
+                function getAIResponse(question) {
+                    question = question.toLowerCase();
+                    if (question.includes('你好') || question.includes('哈囉')) {
+                        return '您好！很高興為您服務。';
+                    } else if (question.includes('如何搜尋') || question.includes('怎麼找')) {
+                        return '您可以在上方的搜尋區塊，透過選擇「地區」、「價格範圍」、「坪數範圍」等條件來篩選您理想的土地。';
+                    } else if (question.includes('競價') || question.includes('出價')) {
+                        return '點擊「競價看板」頁面可以看到所有正在競價中的土地。在土地卡片上點擊「我要出價」即可參與競價。';
+                    } else if (question.includes('會員')) {
+                        return '點擊右上角的「會員登入」可以登入您的帳號。成為會員後，您可以查看更詳細的土地資訊，例如地籍資料、所有權人資訊等。';
+                    } else if (question.includes('卡片') && question.includes('表格')) {
+                        return '在搜尋結果頁面的右上角，您可以找到「卡片式」和「表格式」的切換按鈕，自由選擇您喜歡的瀏覽模式。';
+                    } else if (question.includes('持分') || question.includes('全部')) {
+                        return '「持分」指的是您購買的土地是與其他人共同持有所有權。「全部」則表示您將擁有該筆土地的完整所有權。';
+                    } else {
+                        return '抱歉，我暫時無法回答這個問題。您可以嘗試問我關於「如何搜尋」、「競價功能」或「會員權益」等問題。';
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>

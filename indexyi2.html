@@ -28,12 +28,13 @@
         }
 
         .header h1 {
-            font-size: 2rem;
+            font-size: 2.8rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
         .action-buttons {
             display: flex;
+            justify-content: center;
             gap: 15px;
             margin-bottom: 20px;
             flex-wrap: wrap;
@@ -209,6 +210,91 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(5, 150, 105, 0.4);
         }
+        
+        .real-price-section {
+            margin-top: 40px;
+        }
+
+        .real-price-table th {
+            background-color: #0f766e;
+            color: white;
+            font-weight: 600;
+        }
+
+        .real-price-table td {
+            text-align: left;
+            padding-left: 15px;
+        }
+        
+        .real-price-table td.center-align {
+            text-align: center;
+            padding-left: 8px;
+        }
+
+        .real-price-table .price-highlight {
+            font-weight: bold;
+            color: #c62828;
+        }
+
+        .real-price-table tbody tr:hover {
+            background-color: #e0f2f1;
+        }
+
+        .expert-advice-section {
+            margin-top: 40px;
+        }
+
+        .advice-content {
+            background: #fffde7;
+            border: 1px solid #fff9c4;
+            border-radius: 12px;
+            padding: 25px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .advice-content h3 {
+            font-size: 1.2rem;
+            color: #0f766e;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #a7ffeb;
+        }
+
+        .advice-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .advice-content ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .advice-content li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        .advice-content li::before {
+            content: '🔹';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: #14b8a6;
+        }
+
+        .advice-content .highlight-good {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .advice-content .highlight-bad {
+            color: #c62828;
+            font-weight: bold;
+        }
 
         /* PDF 匯出時隱藏按鈕 */
         @media print {
@@ -304,11 +390,11 @@
 </head>
 <body>
     <div class="header">
-        <h1>產 調 分 析 表</h1>
+        <h1>一如永續剷調分析表(會員進階版)</h1>
     </div>
 
     <div class="action-buttons">
-        <a href="index2.html" class="back-button">← 返回看板</a>
+        <a href="index.html" class="back-button">← 返回看板</a>
         <button onclick="exportToPDF()" class="export-pdf-button" id="exportBtn">📄 匯出 PDF</button>
     </div>
 
@@ -420,6 +506,33 @@
             <h2 class="section-title">Google 街景圖</h2>
             <div class="streetview-container" id="streetviewContainer">
                 <!-- 街景地圖將由 JavaScript 動態生成 -->
+            </div>
+        </div>
+
+        <div class="analysis-section real-price-section">
+            <h2 class="section-title">鄰近實價登錄資訊</h2>
+            <table class="analysis-table real-price-table">
+                <thead>
+                    <tr>
+                        <th>交易時間</th>
+                        <th>地址/地段</th>
+                        <th>型態</th>
+                        <th>總價</th>
+                        <th>土地坪數</th>
+                        <th>單價</th>
+                        <th>備註</th>
+                    </tr>
+                </thead>
+                <tbody id="realPriceTableBody">
+                    <!-- 由JavaScript動態生成 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="analysis-section expert-advice-section">
+            <h2 class="section-title">專家建議</h2>
+            <div class="advice-content" id="expertAdviceContent">
+                <!-- 由JavaScript動態生成 -->
             </div>
         </div>
     </div>
@@ -554,6 +667,101 @@
                     <td>${(parseFloat(buildingSharePercentage) * 2).toFixed(2)}%</td>
                     <td></td>
                 </tr>
+            `;
+        }
+        
+        function renderRealPriceTable(land) {
+            const tableBody = document.getElementById('realPriceTableBody');
+            let contentHTML = '';
+
+            for (let i = 0; i < 8; i++) {
+                const transactionMonth = Math.floor(Math.random() * 5) + 1;
+                const transactionDate = `114/${String(transactionMonth).padStart(2, '0')}`;
+                
+                const randomStreets = ["中正路", "中山路", "成功路", "大業路", "文心路", "中華路", "民生東路", "羅斯福路"];
+                const street = randomStreets[Math.floor(Math.random() * randomStreets.length)];
+                const address = `${land.district}${street}${Math.floor(Math.random() * 200) + 1}號`;
+                
+                const types = ["住宅用地/建", "商業用地/商", "工業用地/工", "農業用地/農"];
+                const type = types[Math.floor(Math.random() * types.length)];
+
+                const areaVariation = (Math.random() - 0.5) * 0.8; // -40% to +40% variation
+                const area = land.area * (1 + areaVariation);
+
+                const priceVariation = (Math.random() - 0.5) * 0.6; // -30% to +30% variation
+                const unitPrice = land.pricePerPing * (1 + priceVariation);
+                const totalPrice = area * unitPrice;
+                
+                const remarks = Math.random() > 0.85 ? "親友交易" : "";
+
+                contentHTML += `
+                    <tr>
+                        <td class="center-align">${transactionDate}</td>
+                        <td>${address}</td>
+                        <td class="center-align">${type}</td>
+                        <td class="center-align price-highlight">${(totalPrice / 10000).toFixed(1)} 億</td>
+                        <td class="center-align">${area.toFixed(2)} 坪</td>
+                        <td class="center-align price-highlight">${unitPrice.toFixed(1)} 萬/坪</td>
+                        <td class="center-align">${remarks}</td>
+                    </tr>
+                `;
+            }
+            tableBody.innerHTML = contentHTML;
+        }
+
+        function renderExpertAdvice(land) {
+            const adviceContainer = document.getElementById('expertAdviceContent');
+            let strengths = '';
+            let risks = '';
+            let recommendation = '';
+
+            // --- Strengths Analysis ---
+            const priceDiff = land.pricePerPing - land.marketPrice;
+            const priceDiffPercent = (priceDiff / land.marketPrice) * 100;
+            if (priceDiff < 0) {
+                strengths += `<li><strong>價格優勢：</strong>目前開價單價為 <span class="highlight-good">${land.pricePerPing} 萬/坪</span>，低於鄰近實價登錄平均 <span class="highlight-good">${Math.abs(priceDiffPercent).toFixed(1)}%</span>，具備良好價格基礎。</li>`;
+            } else {
+                risks += `<li><strong>價格偏高：</strong>目前開價單價為 <span class="highlight-bad">${land.pricePerPing} 萬/坪</span>，高於鄰近實價登錄平均 <span class="highlight-bad">${priceDiffPercent.toFixed(1)}%</span>，建議謹慎評估其價值。</li>`;
+            }
+
+            if (land.landUseZone.includes('商')) {
+                strengths += `<li><strong>分區潛力：</strong>土地使用分區為 <span class="highlight-good">${land.landUseZone}</span>，商業價值高，適合規劃高收益型建案或長期持有。</li>`;
+            } else if (land.landUseZone.includes('住')) {
+                strengths += `<li><strong>分區優勢：</strong>土地使用分區為 <span class="highlight-good">${land.landUseZone}</span>，位於住宅區，市場需求穩定，適合住宅開發。</li>`;
+            } else {
+                strengths += `<li><strong>分區類型：</strong>土地使用分區為 ${land.landUseZone}，需根據具體法規評估其開發潛力。</li>`;
+            }
+            
+            strengths += `<li><strong>地理位置：</strong>位於 <span class="highlight-good">${land.region}${land.district}</span>，屬於發展成熟或具潛力之區域，基礎設施完善。</li>`;
+
+            // --- Risk Assessment ---
+            if (land.ownerCount > 10) {
+                risks += `<li><strong>產權複雜：</strong>所有權人數高達 <span class="highlight-bad">${land.ownerCount}人</span>，屬於持分共有土地，未來整合開發<span class="highlight-bad">難度極高</span>，需投入大量時間與溝通成本。</li>`;
+            } else if (land.ownerCount > 1) {
+                risks += `<li><strong>產權持分：</strong>所有權人數為 <span class="highlight-bad">${land.ownerCount}人</span>，整合難度中等，但仍需考量其他共有人意願，存在一定不確定性。</li>`;
+            } else {
+                strengths += `<li><strong>產權單純：</strong>所有權人數為 1 人，<span class="highlight-good">產權完整</span>，無須整合，可立即進行規劃開發。</li>`;
+            }
+
+            if (land.buildingNumber) {
+                risks += `<li><strong>地上物處理：</strong>土地上<span class="highlight-bad">存有地上物（建號 ${land.buildingNumber}）</span>，需考量後續拆遷、補償或排除佔用等相關成本與法律程序。</li>`;
+            }
+
+            // --- Overall Recommendation ---
+            recommendation += `<p>綜合評估，此標的具備<strong>${strengths.includes('價格優勢') ? '價格' : '地理位置'}</strong>與<strong>${strengths.includes('分區潛力') ? '分區' : '產權'}</strong>等優勢，但同時也需留意${risks.includes('產權') ? '產權複雜' : '價格偏高'}與地上物等挑戰。</p>`;
+            if (land.ownerCount > 10) {
+                recommendation += `<p><strong>主要建議：</strong>此案最大挑戰在於<span class="highlight-bad">高人數的產權整合</span>。建議投資人若無豐富整合經驗或足夠耐心，應謹慎評估。若決心投入，建議優先與主要持分者溝通，並準備長期作戰的心理與資金準備。出價方面可較保守，以反映整合風險。</p>`;
+            } else {
+                recommendation += `<p><strong>主要建議：</strong>此案產權相對單純，主要考量點在於價格與地上物。建議買方可於 <span class="highlight-good">${(land.marketPrice * 0.95).toFixed(1)}萬/坪 至 ${(land.marketPrice * 1.05).toFixed(1)}萬/坪</span> 區間積極出價，並將地上物處理成本納入總投資預算中。若能順利排除地上物，此標的開發潛力值得期待。</p>`;
+            }
+
+            adviceContainer.innerHTML = `
+                <h3>一、優勢分析 (Strengths)</h3>
+                <ul>${strengths}</ul>
+                <h3>二、風險評估 (Risks)</h3>
+                <ul>${risks}</ul>
+                <h3>三、綜合建議與策略</h3>
+                ${recommendation}
             `;
         }
 
@@ -835,6 +1043,8 @@
             const land = getLandData();
             renderLandTable(land);
             renderBuildingTable(land);
+            renderRealPriceTable(land);
+            renderExpertAdvice(land);
             
             // 延遲初始化地圖以確保 DOM 元素已渲染
             setTimeout(() => {
