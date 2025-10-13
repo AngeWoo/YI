@@ -683,6 +683,7 @@
                             <th>地區</th>
                             <th>坪數</th>
                             <th>總價</th>
+                            <th>聯絡資訊</th>
                             <th>資料完整度</th>
                             <th>狀態</th>
                             <th>提交時間</th>
@@ -833,6 +834,30 @@
                     </div>
                 </div>
 
+                <!-- Contact Information -->
+                <div class="form-section">
+                    <h3>📞 聯絡資訊</h3>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>聯絡電子郵件</label>
+                            <input type="email" id="editEmail" placeholder="例: contact@example.com">
+                        </div>
+                        <div class="form-field">
+                            <label>聯絡電話</label>
+                            <input type="tel" id="editPhone" placeholder="例: 02-12345678 或 0912-345678">
+                        </div>
+                        <div class="form-field">
+                            <label>Line ID</label>
+                            <input type="text" id="editLineId" placeholder="例: @yiruland">
+                        </div>
+                    </div>
+                    <div style="padding: 12px; background: #fff3cd; border-radius: 8px; margin-top: 10px;">
+                        <p style="font-size: 0.85rem; color: #856404; margin: 0;">
+                            💡 提示：至少填寫一種聯絡方式，方便買方與您聯繫。
+                        </p>
+                    </div>
+                </div>
+
                 <!-- Documents Upload -->
                 <div class="form-section">
                     <h3>📎 相關文件上傳</h3>
@@ -943,6 +968,9 @@
                     address: `${region}${districts[Math.floor(Math.random() * districts.length)]}精華路${i}號`,
                     description: '優質土地，地理位置佳，交通便利。',
                     features: ['近捷運', '臨路', '方正'],
+                    email: Math.random() > 0.3 ? `contact${i}@yiru.com.tw` : '',
+                    phone: Math.random() > 0.3 ? `0912-${String(Math.floor(Math.random() * 1000000)).padStart(6, '0')}` : '',
+                    lineId: Math.random() > 0.3 ? `@yiru${i}` : '',
                     documents: generateRandomDocuments()
                 });
             }
@@ -1000,12 +1028,22 @@
                     case 'rejected': statusClass = 'status-rejected'; statusText = '已拒絕'; break;
                 }
 
+                // 聯絡資訊顯示
+                let contactInfo = [];
+                if (land.email) contactInfo.push(`📧 ${land.email}`);
+                if (land.phone) contactInfo.push(`📱 ${land.phone}`);
+                if (land.lineId) contactInfo.push(`💬 ${land.lineId}`);
+                const contactDisplay = contactInfo.length > 0 
+                    ? `<div style="font-size: 0.8rem; line-height: 1.6; text-align: left;">${contactInfo.join('<br>')}</div>` 
+                    : '<span style="color: #999;">未填寫</span>';
+
                 row.innerHTML = `
                     <td>${land.id}</td>
                     <td style="text-align: left; max-width: 200px; white-space: normal;">${land.title}</td>
                     <td>${land.region}</td>
                     <td>${land.area}坪</td>
                     <td style="font-weight: bold; color: #DC2626;">${formatPrice(land.totalPrice)}</td>
+                    <td style="max-width: 180px;">${contactDisplay}</td>
                     <td>
                         <div style="display: flex; align-items: center; gap: 8px; justify-content: center;">
                             <div style="width: 80px; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
@@ -1069,6 +1107,9 @@
             document.getElementById('editAddress').value = currentEditingLand.address;
             document.getElementById('editDescription').value = currentEditingLand.description;
             document.getElementById('editFeatures').value = currentEditingLand.features.join(', ');
+            document.getElementById('editEmail').value = currentEditingLand.email || '';
+            document.getElementById('editPhone').value = currentEditingLand.phone || '';
+            document.getElementById('editLineId').value = currentEditingLand.lineId || '';
 
             // Render documents
             renderDocumentList();
@@ -1128,6 +1169,12 @@
                 if (value && value.trim() !== '') filledFields++;
             });
 
+            // Check contact information (at least one required)
+            const email = document.getElementById('editEmail').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+            const lineId = document.getElementById('editLineId').value.trim();
+            const hasContact = email || phone || lineId;
+
             // Check required documents
             let uploadedDocs = 0;
             const requiredDocs = requiredDocuments.filter(d => d.required);
@@ -1135,9 +1182,11 @@
                 if (currentEditingLand.documents[doc.id]) uploadedDocs++;
             });
 
-            const fieldCompletion = (filledFields / requiredFields.length) * 50;
+            // Calculate completion: 40% fields + 10% contact + 50% documents
+            const fieldCompletion = (filledFields / requiredFields.length) * 40;
+            const contactCompletion = hasContact ? 10 : 0;
             const docCompletion = (uploadedDocs / requiredDocs.length) * 50;
-            const totalCompletion = Math.round(fieldCompletion + docCompletion);
+            const totalCompletion = Math.round(fieldCompletion + contactCompletion + docCompletion);
 
             const progressFill = document.getElementById('progressFill');
             progressFill.style.width = totalCompletion + '%';
@@ -1160,6 +1209,16 @@
 
             if (areaInput) areaInput.addEventListener('input', calculateTotal);
             if (priceInput) priceInput.addEventListener('input', calculateTotal);
+
+            // Update completion on contact info input
+            ['editEmail', 'editPhone', 'editLineId'].forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', () => {
+                        if (currentEditingLand) updateCompletion();
+                    });
+                }
+            });
         });
 
         function saveChanges() {
@@ -1192,6 +1251,9 @@
             currentEditingLand.address = document.getElementById('editAddress').value;
             currentEditingLand.description = document.getElementById('editDescription').value;
             currentEditingLand.features = document.getElementById('editFeatures').value.split(',').map(f => f.trim());
+            currentEditingLand.email = document.getElementById('editEmail').value;
+            currentEditingLand.phone = document.getElementById('editPhone').value;
+            currentEditingLand.lineId = document.getElementById('editLineId').value;
             currentEditingLand.completion = completion;
 
             alert('資料已儲存成功！');
