@@ -169,7 +169,7 @@
         .percentage-column { width: 60px; font-weight: bold; }
         .market-price-column { width: 50px; font-weight: bold; font-size: 13px; line-height: 1.2; }
         .last-update-column { width: 60px; }
-        .actions-column { width: 85px !important; padding: 8px 2px !important; }
+        .actions-column { width: 100px !important; padding: 8px 2px !important; }
 
         .positive { color: #059669; } .negative { color: #dc2626; } .red { color: #dc2626; } .blue { color: #2563eb; } .green { color: #059669; }
         .land-title { text-align: left; white-space: normal; word-wrap: break-word; line-height: 1.2; font-weight: 500; font-size: 13px; }
@@ -187,12 +187,136 @@
         .bid-btn:disabled { background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%); cursor: not-allowed; transform: none; opacity: 0.7; }
         .detail-btn { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; }
         .detail-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(5, 150, 105, 0.4); }
+        .contact-btn { background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); color: white; }
+        .contact-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(8, 145, 178, 0.4); }
         .negotiating-disabled { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); opacity: 0.8; cursor: not-allowed; }
 
         #user-info-display { display: none; align-items: center; gap: 15px; }
         #username-display { font-size: 0.9rem; font-weight: 600; color: #333; }
         #logout-button { padding: 6px 15px; background: #f0f0f0; color: #DC2626; border: 2px solid #f0f0f0; }
         #logout-button:hover { border: 2px solid #DC2626; color: #DC2626; background: white; }
+
+        /* Contact Modal Styles */
+        .contact-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .contact-modal-content {
+            background: white;
+            padding: 35px 40px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .contact-modal-overlay.show .contact-modal-content {
+            transform: scale(1);
+        }
+
+        .close-contact-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .close-contact-modal:hover {
+            color: #333;
+        }
+
+        .contact-modal-content h2 {
+            text-align: center;
+            color: #059669;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .contact-info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid #059669;
+            transition: all 0.3s;
+        }
+
+        .contact-info-item:hover {
+            background: #ecfdf5;
+            transform: translateX(5px);
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: #059669;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .contact-details {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .contact-value {
+            font-size: 1.05rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .contact-value a {
+            color: #059669;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-value a:hover {
+            color: #047857;
+            text-decoration: underline;
+        }
 
         @media (max-width: 768px) {
             body { padding: 10px 0 0 0; }
@@ -206,6 +330,7 @@
             .search-box { max-width: none; }
             .view-toggle { margin-left: 0; margin-top: 10px; }
             .table-container { box-shadow: none; border-radius: 12px; margin-top: 15px; }
+            .contact-modal-content { width: 95%; padding: 25px 20px; }
         }
     </style>
 </head>
@@ -247,7 +372,7 @@
                 <div class="filter-group"><label>狀態:</label><select id="statusFilter"><option value="">全部狀態</option><option value="bidding">競價中</option><option value="negotiating">一如協商</option><option value="sold">已成交</option><option value="overpriced">乏人問津</option></select></div>
                 <div class="filter-group"><label>地區:</label><select id="regionFilter"><option value="">全部地區</option><option value="台北市">台北市</option><option value="新北市">新北市</option><option value="桃園市">桃園市</option><option value="台中市">台中市</option><option value="台南市">台南市</option><option value="高雄市">高雄市</option></select></div>
                 <div class="filter-group"><label>價格範圍:</label><select id="priceFilter"><option value="">全部價格</option><option value="0-1000">1000萬以下</option><option value="1000-5000">1000-5000萬</option><option value="5000-10000">5000萬-1億</option><option value="10000+">1億以上</option></select></div>
-                <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="searchInput" placeholder="搜尋土地標題或地区..."></div>
+                <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="searchInput" placeholder="搜尋土地標題或地區..."></div>
                 <div class="view-toggle"><button onclick="switchToCardView()">卡片式</button><button class="active" onclick="switchToTableView()">表格式</button></div>
             </div>
 
@@ -264,6 +389,44 @@
                     <tbody id="landTableBody"></tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal HTML -->
+    <div id="contactModal" class="contact-modal-overlay">
+        <div class="contact-modal-content">
+            <button class="close-contact-modal">&times;</button>
+            <h2>
+                <span>📞</span>
+                與我聯絡
+            </h2>
+            <ul class="contact-info-list">
+                <li class="contact-info-item">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-details">
+                        <div class="contact-label">電子郵件</div>
+                        <div class="contact-value">
+                            <a href="mailto:123@yiru.com.tw">123@yiru.com.tw</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="contact-info-item">
+                    <div class="contact-icon">📱</div>
+                    <div class="contact-details">
+                        <div class="contact-label">聯絡電話</div>
+                        <div class="contact-value">
+                            <a href="tel:02-987654321">02-987654321</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="contact-info-item">
+                    <div class="contact-icon">💬</div>
+                    <div class="contact-details">
+                        <div class="contact-label">Line ID</div>
+                        <div class="contact-value">123@yiru.com</div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -310,6 +473,11 @@
             }
         }
 
+        function showContactModal() {
+            const modal = document.getElementById('contactModal');
+            modal.classList.add('show');
+        }
+
         // --- RENDER & FILTER ---
         function renderLandTable(data) {
             const tableBody = document.getElementById('landTableBody');
@@ -330,13 +498,14 @@
                     <td class="actions-column"><div class="button-group">
                         ${land.status === 'bidding' || land.status === 'overpriced' ? `<button class="action-btn bid-btn" onclick="startBidding(${land.id})">我要出價</button>` : land.status === 'negotiating' ? `<button class="action-btn bid-btn negotiating-disabled" disabled>協商中</button>` : `<button class="action-btn bid-btn" disabled>已成交</button>`}
                         <button class="action-btn detail-btn" onclick="showDetails(${land.id})">詳細資料</button>
+                        <button class="action-btn contact-btn" onclick="showContactModal()">與我聯絡</button>
                     </div></td>`;
                 tableBody.appendChild(row);
             });
         }
-        function filterData() { /* ... (This function remains unchanged) ... */ }
+        function filterData(){const statusFilter=document.getElementById("statusFilter").value,regionFilter=document.getElementById("regionFilter").value,priceFilter=document.getElementById("priceFilter").value,searchTerm=document.getElementById("searchInput").value.toLowerCase();filteredData=landData.filter(land=>{if(statusFilter&&land.status!==statusFilter)return!1;if(regionFilter&&land.region!==regionFilter)return!1;if(priceFilter){const price=land.sellerPrice;switch(priceFilter){case"0-1000":if(price>=1e3)return!1;break;case"1000-5000":if(price<1e3||price>=5e3)return!1;break;case"5000-10000":if(price<5e3||price>=1e4)return!1;break;case"10000+":if(price<1e4)return!1}}if(searchTerm&&!land.title.toLowerCase().includes(searchTerm)&&!land.district.toLowerCase().includes(searchTerm))return!1;return!0}),renderLandTable(filteredData)}
         function switchToCardView() { window.location.href = 'index1.html'; }
-        function switchToTableView() { /* ... (This function remains unchanged) ... */ }
+        function switchToTableView() { /* Already on table view */ }
         
         // --- LOGIN STATE SCRIPT ---
         function updateHeaderUI() {
@@ -355,7 +524,7 @@
             }
         }
         function handleLogout() {
-            if(confirm('您確定要登出嗎？')) {
+            if(confirm('您確定要登出嗎?')) {
                 const storedUser = JSON.parse(sessionStorage.getItem('currentUser'));
                 sessionStorage.removeItem('currentUser');
                 alert(`使用者 ${storedUser.name} 已登出。`);
@@ -374,12 +543,29 @@
             
             updateHeaderUI();
             document.getElementById('logout-button')?.addEventListener('click', handleLogout);
+
+            // Contact Modal Logic
+            const contactModal = document.getElementById('contactModal');
+            const closeContactBtn = contactModal.querySelector('.close-contact-modal');
+            
+            if (closeContactBtn) {
+                closeContactBtn.addEventListener('click', () => {
+                    contactModal.classList.remove('show');
+                });
+            }
+            
+            if (contactModal) {
+                contactModal.addEventListener('click', (e) => {
+                    if (e.target === contactModal) {
+                        contactModal.classList.remove('show');
+                    }
+                });
+            }
         });
 
-        // --- SIMULATION & FULL SCRIPT FOR COMPLETENESS ---
-        function filterData(){const statusFilter=document.getElementById("statusFilter").value,regionFilter=document.getElementById("regionFilter").value,priceFilter=document.getElementById("priceFilter").value,searchTerm=document.getElementById("searchInput").value.toLowerCase();filteredData=landData.filter(land=>{if(statusFilter&&land.status!==statusFilter)return!1;if(regionFilter&&land.region!==regionFilter)return!1;if(priceFilter){const price=land.sellerPrice;switch(priceFilter){case"0-1000":if(price>=1e3)return!1;break;case"1000-5000":if(price<1e3||price>=5e3)return!1;break;case"5000-10000":if(price<5e3||price>=1e4)return!1;break;case"10000+":if(price<1e4)return!1}}if(searchTerm&&!land.title.toLowerCase().includes(searchTerm)&&!land.district.toLowerCase().includes(searchTerm))return!1;return!0}),renderLandTable(filteredData)}
+        // --- SIMULATION & UPDATES ---
         setInterval(()=>{landData.forEach(land=>{if("bidding"===land.status&&Math.random()>.7){land.buyerPrice+=Math.floor(50*Math.random())+5,land.bidCount+=1,land.lastUpdate="剛剛",land.buyerPrice>=.95*land.sellerPrice&&(land.status=Math.random()>.6?"sold":"negotiating","sold"===land.status&&(land.dealPrice=Math.round((land.sellerPrice+land.buyerPrice)/2)))}else if("negotiating"===land.status&&Math.random()>.9){const result=Math.random();result>.6?(land.status="sold",land.dealPrice=Math.round((land.sellerPrice+land.buyerPrice)/2)):result<.3&&(land.status="bidding"),land.lastUpdate="剛剛"}else"overpriced"===land.status&&Math.random()>.85&&(land.sellerPrice=Math.round(.97*land.sellerPrice),land.sellerPrice<=1.05*land.buyerPrice&&(land.status="bidding"),land.lastUpdate="剛剛")}),filterData()},12e3);
         setInterval(()=>{if(Math.random()>.8){const newLand=generateRandomLand(++nextId);landData.unshift(newLand),filterData()}},2e4);
     </script>
 </body>
-</html>```
+</html>

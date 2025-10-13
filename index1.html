@@ -287,8 +287,11 @@
         .bid-button:disabled { background: #6c757d; cursor: not-allowed; transform: none; box-shadow: none; }
         .bid-button.negotiating-disabled { background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%); opacity: 0.6; cursor: not-allowed; }
 
-        .detail-button { flex: 1; padding: 10px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; }
+        .detail-button { flex: 1; padding: 10px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; margin-right: 8px; }
         .detail-button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4); }
+
+        .contact-button { flex: 1; padding: 10px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; }
+        .contact-button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(5, 150, 105, 0.4); }
 
         .button-group { display: flex; gap: 0; margin-top: 15px; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
@@ -301,6 +304,128 @@
         #logout-button { padding: 6px 15px; background: #f0f0f0; color: #DC2626; border: 2px solid #f0f0f0; }
         #logout-button:hover { border: 2px solid #DC2626; color: #DC2626; background: white; }
 
+        /* Contact Modal Styles */
+        .contact-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .contact-modal-content {
+            background: white;
+            padding: 35px 40px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .contact-modal-overlay.show .contact-modal-content {
+            transform: scale(1);
+        }
+
+        .close-contact-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .close-contact-modal:hover {
+            color: #333;
+        }
+
+        .contact-modal-content h2 {
+            text-align: center;
+            color: #059669;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .contact-info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid #059669;
+            transition: all 0.3s;
+        }
+
+        .contact-info-item:hover {
+            background: #ecfdf5;
+            transform: translateX(5px);
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: #059669;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .contact-details {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .contact-value {
+            font-size: 1.05rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .contact-value a {
+            color: #059669;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-value a:hover {
+            color: #047857;
+            text-decoration: underline;
+        }
+
         @media (max-width: 768px) {
             body { padding: 10px 0 0 0; }
             .header-container { padding: 15px 20px; margin: 0 10px 15px 10px; }
@@ -312,6 +437,7 @@
             .filters { flex-direction: column; }
             .search-box { max-width: none; }
             .view-toggle { margin-left: 0; margin-top: 10px; }
+            .contact-modal-content { width: 95%; padding: 25px 20px; }
         }
     </style>
 </head>
@@ -321,12 +447,10 @@
             <a href="index.html" class="nav-link">土地買賣</a>
             <a href="index1.html" class="nav-link active">競價看板</a>
             <a href="index5.html" class="nav-link">我的案件</a>
-            <!-- User Info Display (Logged In) -->
             <div id="user-info-display">
                 <span id="username-display"></span>
                 <a id="logout-button" class="nav-link">登出</a>
             </div>
-            <!-- Login Button (Logged Out) -->
             <a href="index.html" id="login-nav-button" class="nav-link">會員登入</a>
         </nav>
         <div class="header">
@@ -363,8 +487,45 @@
         </div>
     </div>
 
+    <!-- Contact Modal HTML -->
+    <div id="contactModal" class="contact-modal-overlay">
+        <div class="contact-modal-content">
+            <button class="close-contact-modal">&times;</button>
+            <h2>
+                <span>📞</span>
+                與我聯絡
+            </h2>
+            <ul class="contact-info-list">
+                <li class="contact-info-item">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-details">
+                        <div class="contact-label">電子郵件</div>
+                        <div class="contact-value">
+                            <a href="mailto:123@yiru.com.tw">123@yiru.com.tw</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="contact-info-item">
+                    <div class="contact-icon">📱</div>
+                    <div class="contact-details">
+                        <div class="contact-label">聯絡電話</div>
+                        <div class="contact-value">
+                            <a href="tel:02-987654321">02-987654321</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="contact-info-item">
+                    <div class="contact-icon">💬</div>
+                    <div class="contact-details">
+                        <div class="contact-label">Line ID</div>
+                        <div class="contact-value">123@yiru.com</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <script>
-        // --- DATA and GENERATION (Full logic pasted here for completeness) ---
         function generateRandomLand(idOffset) {
             const regions = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市"];
             const districtsMap = { "台北市": ["中正區", "大安區", "信義區"], "新北市": ["板橋區", "新莊區", "三重區"], "桃園市": ["中壢區", "桃園區", "八德區"], "台中市": ["西屯區", "南屯區", "北屯區"], "台南市": ["安平區", "東區", "永康區"], "高雄市": ["左營區", "鼓山區", "三民區"] };
@@ -392,7 +553,6 @@
         let landData = Array.from({ length: 30 }, (_, i) => generateRandomLand(i + 1));
         let filteredData = [...landData];
 
-        // --- UTILITY & ACTION FUNCTIONS ---
         function formatPrice(price) { return price >= 10000 ? `${(price / 10000).toFixed(1)}億` : `${price.toLocaleString()}萬`; }
         function calculateDifference(price1, price2) { const diff = price1 - price2; const percent = ((diff / price2) * 100).toFixed(1); return { diff, percent }; }
 
@@ -413,7 +573,11 @@
             }
         }
 
-        // --- RENDER & FILTER ---
+        function showContactModal() {
+            const modal = document.getElementById('contactModal');
+            modal.classList.add('show');
+        }
+
         function renderLandCards(data) {
             const landGrid = document.getElementById('landGrid');
             landGrid.innerHTML = '';
@@ -427,7 +591,7 @@
                 let pricingHTML = `<div class="pricing-section"><div class="price-row"><span class="price-label">賣方定價</span><span class="price-value seller-price">${formatPrice(land.sellerPrice)}</span></div><div class="price-row"><span class="price-label">最高出價</span><div class="bid-info"><span class="price-value buyer-price">${formatPrice(land.buyerPrice)}</span>${land.status === 'negotiating' ? '<span class="negotiating-badge">協商中</span>' : `<span class="bid-count">${land.bidCount}次出價</span>`}<span class="price-difference negative">-${formatPrice(sellerBuyerDiff.diff)} (${sellerBuyerDiff.percent}%)</span></div></div>`;
                 if (land.dealPrice) { pricingHTML += `<div class="price-row"><span class="price-label">成交價格</span><div class="bid-info"><span class="price-value deal-price">${formatPrice(land.dealPrice)}</span><span class="price-difference ${dealDiff.diff >= 0 ? 'positive' : 'negative'}">${dealDiff.diff >= 0 ? '+' : ''}${formatPrice(Math.abs(dealDiff.diff))} (${dealDiff.percent}%)</span></div></div>`; }
                 pricingHTML += `</div>`;
-                card.innerHTML = `<div class="time-info">${land.lastUpdate}</div><div class="land-header"><div class="land-title">${land.title}</div><div class="status-indicator"><div class="status-badge ${currentStatus.class}">${currentStatus.text}</div></div></div>${pricingHTML}<div class="land-details"><div class="detail-item"><span class="detail-label">地區</span><span class="detail-value">${land.region} ${land.district}</span></div><div class="detail-item"><span class="detail-label">坪數</span><span class="detail-value">${land.area}</span></div><div class="detail-item"><span class="detail-label">單價</span><span class="detail-value">${land.pricePerPing}</span></div><div class="detail-item"><span class="detail-label">地址</span><span class="detail-value">${land.address}</span></div></div><div class="trading-activity"><div class="activity-info">${land.status === 'sold' ? '成交完成' : land.status === 'negotiating' ? '一如協商進行中' : `${land.bidCount} 次出價競爭`}</div><div class="trend-indicator">${land.status === 'bidding' ? `<span class="trend-arrow trend-up">🔥</span><span>競價中</span>` : land.status === 'sold' ? `<span class="trend-arrow trend-up">✅</span><span>已成交</span>` : land.status === 'negotiating' ? `<span class="trend-arrow trend-negotiating">🤝</span><span>協商中</span>` : `<span class="trend-arrow trend-down">📉</span><span>冷清</span>`}</div></div><div class="button-group">${land.status === 'bidding' || land.status === 'overpriced' ? `<button class="bid-button" onclick="startBidding(${land.id})">我要出價</button>` : land.status === 'negotiating' ? `<button class="bid-button negotiating-disabled" onclick="startBidding(${land.id})" disabled>協商中</button>` : `<button class="bid-button" disabled>已成交</button>`}<button class="detail-button" onclick="showDetails(${land.id})">詳細土地資料</button></div>`;
+                card.innerHTML = `<div class="time-info">${land.lastUpdate}</div><div class="land-header"><div class="land-title">${land.title}</div><div class="status-indicator"><div class="status-badge ${currentStatus.class}">${currentStatus.text}</div></div></div>${pricingHTML}<div class="land-details"><div class="detail-item"><span class="detail-label">地區</span><span class="detail-value">${land.region} ${land.district}</span></div><div class="detail-item"><span class="detail-label">坪數</span><span class="detail-value">${land.area}</span></div><div class="detail-item"><span class="detail-label">單價</span><span class="detail-value">${land.pricePerPing}</span></div><div class="detail-item"><span class="detail-label">地址</span><span class="detail-value">${land.address}</span></div></div><div class="trading-activity"><div class="activity-info">${land.status === 'sold' ? '成交完成' : land.status === 'negotiating' ? '一如協商進行中' : `${land.bidCount} 次出價競爭`}</div><div class="trend-indicator">${land.status === 'bidding' ? `<span class="trend-arrow trend-up">🔥</span><span>競價中</span>` : land.status === 'sold' ? `<span class="trend-arrow trend-up">✅</span><span>已成交</span>` : land.status === 'negotiating' ? `<span class="trend-arrow trend-negotiating">🤝</span><span>協商中</span>` : `<span class="trend-arrow trend-down">📉</span><span>冷清</span>`}</div></div><div class="button-group">${land.status === 'bidding' || land.status === 'overpriced' ? `<button class="bid-button" onclick="startBidding(${land.id})">我要出價</button>` : land.status === 'negotiating' ? `<button class="bid-button negotiating-disabled" onclick="startBidding(${land.id})" disabled>協商中</button>` : `<button class="bid-button" disabled>已成交</button>`}<button class="detail-button" onclick="showDetails(${land.id})">詳細土地資料</button><button class="contact-button" onclick="showContactModal()">與我聯絡</button></div>`;
                 landGrid.appendChild(card);
             });
         }
@@ -435,7 +599,6 @@
         function switchToCardView() { /* No action needed */ }
         function switchToTableView() { window.location.href = 'index2.html'; }
         
-        // --- LOGIN STATE SCRIPT ---
         function updateHeaderUI() {
             const loginButton = document.getElementById('login-nav-button');
             const userInfoDisplay = document.getElementById('user-info-display');
@@ -452,7 +615,7 @@
             }
         }
         function handleLogout() {
-            if(confirm('您確定要登出嗎？')) {
+            if(confirm('您確定要登出嗎?')) {
                 const storedUser = JSON.parse(sessionStorage.getItem('currentUser'));
                 sessionStorage.removeItem('currentUser');
                 alert(`使用者 ${storedUser.name} 已登出。`);
@@ -460,7 +623,6 @@
             }
         }
 
-        // --- EVENT LISTENERS & INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', function() {
             renderLandCards(landData);
             updateHeaderUI();
@@ -470,9 +632,26 @@
             document.getElementById('priceFilter').addEventListener('change', filterData);
             document.getElementById('searchInput').addEventListener('input', filterData);
             document.getElementById('logout-button')?.addEventListener('click', handleLogout);
+            
+            // Contact Modal Logic
+            const contactModal = document.getElementById('contactModal');
+            const closeContactBtn = contactModal.querySelector('.close-contact-modal');
+            
+            if (closeContactBtn) {
+                closeContactBtn.addEventListener('click', () => {
+                    contactModal.classList.remove('show');
+                });
+            }
+            
+            if (contactModal) {
+                contactModal.addEventListener('click', (e) => {
+                    if (e.target === contactModal) {
+                        contactModal.classList.remove('show');
+                    }
+                });
+            }
         });
         
-        // --- SIMULATION INTERVALS ---
         setInterval(()=>{landData.forEach(land=>{if("bidding"===land.status&&Math.random()>.7){land.buyerPrice+=Math.floor(50*Math.random())+5;land.bidCount+=1;land.lastUpdate="剛剛";if(land.buyerPrice>=.95*land.sellerPrice){land.status=Math.random()>.6?"sold":"negotiating";if("sold"===land.status)land.dealPrice=Math.round((land.sellerPrice+land.buyerPrice)/2)}}else if("negotiating"===land.status&&Math.random()>.9){const result=Math.random();result>.6?(land.status="sold",land.dealPrice=Math.round((land.sellerPrice+land.buyerPrice)/2)):result<.3&&(land.status="bidding");land.lastUpdate="剛剛"}else"overpriced"===land.status&&Math.random()>.85&&(land.sellerPrice=Math.round(.97*land.sellerPrice),land.sellerPrice<=1.05*land.buyerPrice&&(land.status="bidding"),land.lastUpdate="剛剛")});filterData()},12e3);
         setInterval(()=>{if(Math.random()>.8){const newLand=generateRandomLand(Date.now());landData.unshift(newLand);filterData()}},2e4);
     </script>
