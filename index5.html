@@ -274,7 +274,7 @@
         .modal-header h2 { font-size: 1.8rem; margin-bottom: 5px; }
         .modal-header p { font-size: 0.9rem; color: #666; }
         .modal-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; }
-        .modal-section h3 { margin-bottom: 15px; color: #333; font-size: 1.1rem; }
+        .modal-section h3 { margin-bottom: 15px; color: #333; font-size: 1.1rem; text-align: left; }
         .custom-file-upload {
             border: 2px dashed #ccc;
             border-radius: 8px;
@@ -382,7 +382,6 @@
             color: #495057;
         }
         .submit-case-btn {
-            grid-column: 1 / -1;
             margin-top: 25px;
             width: 100%;
             padding: 12px;
@@ -498,94 +497,119 @@
             <button class="close-modal-btn">&times;</button>
             <div class="modal-header">
                 <h2>新增永續案件</h2>
-                <p>請填寫以下土地詳細資訊</p>
+                <p>請填寫以下地主與土地資訊</p>
             </div>
             <form id="addCaseForm" onsubmit="handleAddCaseSubmit(event)">
-                <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label for="case-photo">照片 (可上傳多張)</label>
-                        <input type="file" id="case-photo" multiple accept="image/*">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-land-type">土地類型</label>
-                        <input type="text" id="case-land-type" placeholder="例如：農地、建地">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-total-price">總價</label>
-                        <div class="input-group">
-                            <input type="number" id="case-total-price" placeholder="請輸入數字">
-                            <span class="input-group-text">萬元</span>
+                <div class="modal-section" style="border-top: none; padding-top: 0; margin-top: 0;">
+                    <h3>地主聯絡資訊</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="case-owner-name">姓名</label>
+                            <input type="text" id="case-owner-name" placeholder="請輸入您的姓名" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-owner-tel">聯絡電話 (Tel)</label>
+                            <input type="tel" id="case-owner-tel" placeholder="例如：0912345678" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-owner-email">電子郵件 (Email)</label>
+                            <input type="email" id="case-owner-email" placeholder="例如：example@mail.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-owner-lineid">Line ID</label>
+                            <input type="text" id="case-owner-lineid" placeholder="請輸入您的Line ID">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="case-area">面積</label>
-                        <div class="input-group">
-                            <input type="number" step="0.01" id="case-area" placeholder="請輸入數字">
-                             <span class="input-group-text">坪</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="case-section">地段</label>
-                        <input type="text" id="case-section" placeholder="例如：XX段XX小段">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-land-number">地號</label>
-                        <input type="text" id="case-land-number" placeholder="請輸入地號">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-zoning">使用分區</label>
-                        <input type="text" id="case-zoning" placeholder="例如：特定農業區">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-ratio">建蔽容積</label>
-                        <input type="text" id="case-ratio" placeholder="例如：60% / 180%">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-buildable-area">可建總坪</label>
-                         <div class="input-group">
-                            <input type="number" step="0.01" id="case-buildable-area" placeholder="請輸入數字">
-                            <span class="input-group-text">坪</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="case-road-width">臨路路寬</label>
-                        <div class="input-group">
-                            <input type="number" id="case-road-width" placeholder="請輸入數字">
-                            <span class="input-group-text">米</span>
-                        </div>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="case-infrastructure">基礎設施</label>
-                        <textarea id="case-infrastructure" placeholder="例如：水、電、網路是否已到位"></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="case-current-status">現況</label>
-                        <textarea id="case-current-status" placeholder="例如：空地、有農作物、有平房"></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="case-suitable-use">適合用途</label>
-                        <textarea id="case-suitable-use" placeholder="例如：倉儲、太陽能、休閒農場"></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="case-undesirable-facilities">嫌惡設施</label>
-                        <textarea id="case-undesirable-facilities" placeholder="附近是否有墓地、高壓電塔等設施"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="case-down-payment">自備款</label>
-                        <div class="input-group">
-                            <input type="number" id="case-down-payment" placeholder="請輸入數字">
-                            <span class="input-group-text">萬元</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="case-subdivision">可否分割出售</label>
-                        <select id="case-subdivision">
-                            <option value="no">否</option>
-                            <option value="yes">是</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="submit-case-btn">上傳審核</button>
                 </div>
+
+                <div class="modal-section">
+                    <h3>土地詳細資訊</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="case-photo">照片 (可上傳多張)</label>
+                            <input type="file" id="case-photo" multiple accept="image/*">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-land-type">土地類型</label>
+                            <input type="text" id="case-land-type" placeholder="例如：農地、建地">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-total-price">總價</label>
+                            <div class="input-group">
+                                <input type="number" id="case-total-price" placeholder="請輸入數字">
+                                <span class="input-group-text">萬元</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-area">面積</label>
+                            <div class="input-group">
+                                <input type="number" step="0.01" id="case-area" placeholder="請輸入數字">
+                                 <span class="input-group-text">坪</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-section">地段</label>
+                            <input type="text" id="case-section" placeholder="例如：XX段XX小段">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-land-number">地號</label>
+                            <input type="text" id="case-land-number" placeholder="請輸入地號">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-zoning">使用分區</label>
+                            <input type="text" id="case-zoning" placeholder="例如：特定農業區">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-ratio">建蔽容積</label>
+                            <input type="text" id="case-ratio" placeholder="例如：60% / 180%">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-buildable-area">可建總坪</label>
+                             <div class="input-group">
+                                <input type="number" step="0.01" id="case-buildable-area" placeholder="請輸入數字">
+                                <span class="input-group-text">坪</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-road-width">臨路路寬</label>
+                            <div class="input-group">
+                                <input type="number" id="case-road-width" placeholder="請輸入數字">
+                                <span class="input-group-text">米</span>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="case-infrastructure">基礎設施</label>
+                            <textarea id="case-infrastructure" placeholder="例如：水、電、網路是否已到位"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="case-current-status">現況</label>
+                            <textarea id="case-current-status" placeholder="例如：空地、有農作物、有平房"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="case-suitable-use">適合用途</label>
+                            <textarea id="case-suitable-use" placeholder="例如：倉儲、太陽能、休閒農場"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="case-undesirable-facilities">嫌惡設施</label>
+                            <textarea id="case-undesirable-facilities" placeholder="附近是否有墓地、高壓電塔等設施"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-down-payment">自備款</label>
+                            <div class="input-group">
+                                <input type="number" id="case-down-payment" placeholder="請輸入數字">
+                                <span class="input-group-text">萬元</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-subdivision">可否分割出售</label>
+                            <select id="case-subdivision">
+                                <option value="no">否</option>
+                                <option value="yes">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="submit-case-btn">上傳審核</button>
             </form>
         </div>
     </div>
