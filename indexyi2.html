@@ -305,15 +305,198 @@
             font-weight: bold;
         }
 
+        .share-analysis-section {
+            margin-top: 40px;
+        }
+
+        .share-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .share-info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 4px solid #14b8a6;
+        }
+
+        .share-info-card h4 {
+            color: #0f766e;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .share-info-card .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0f2f1;
+        }
+
+        .share-info-card .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .share-info-card .info-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .share-info-card .info-value {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 14px;
+        }
+
+        .share-info-card .info-value.good {
+            color: #059669;
+        }
+
+        .share-info-card .info-value.bad {
+            color: #dc2626;
+        }
+
+        .share-info-card .info-value.warning {
+            color: #f59e0b;
+        }
+
+        .risk-meter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .risk-meter-bar {
+            flex: 1;
+            height: 8px;
+            background: #e0f2f1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .risk-meter-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .risk-meter-fill.low {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .risk-meter-fill.medium {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+
+        .risk-meter-fill.high {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+
+        .risk-meter-label {
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 40px;
+        }
+
+        .integration-strategy {
+            background: #f0fdfa;
+            border: 2px solid #14b8a6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .integration-strategy h5 {
+            color: #0f766e;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .integration-strategy ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .integration-strategy li {
+            padding: 5px 0 5px 20px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .integration-strategy li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .ownership-chart {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .ownership-bar {
+            display: flex;
+            height: 40px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .ownership-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .ownership-segment:hover {
+            filter: brightness(1.1);
+            cursor: pointer;
+        }
+
+        .ownership-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 13px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
         @media print {
             .open-map-btn, .action-buttons, .header { display: none !important; }
             body { padding: 0; background: white; }
             .container { margin: 0; padding: 20px; box-shadow: none; border-radius: 0; }
         }
 
-        .pdf-mode .open-map-btn, .pdf-mode .action-buttons, .pdf-mode .header { display: none !important; }
-        .pdf-mode { background: white !important; padding: 0 !important; }
-        .pdf-mode .container { margin: 0 !important; padding: 0 !important; box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; }
+        .pdf-mode .open-map-btn, .pdf-mode .action-buttons { display: none !important; }
+        .pdf-mode { background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%) !important; padding: 20px !important; }
+        .pdf-mode .container { margin: 0 auto !important; padding: 30px !important; max-width: 1400px !important; }
         .pdf-mode .analysis-table, .pdf-mode .property-info, .pdf-mode .section-title { page-break-inside: avoid; }
 
         .map-container { height: 350px; border-radius: 8px; overflow: hidden; background: #e2e8f0; }
@@ -333,7 +516,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>一如永續剷調分析表(會員進階版)</h1>
+        <h1>一如永續產調分析表(會員進階版)</h1>
     </div>
 
     <div class="action-buttons">
@@ -344,7 +527,7 @@
     <div class="container" id="pdfContent">
         <div class="analysis-section land-section">
             <h2 class="section-title">土地部份</h2>
-            <div class="property-info"><span><strong>土地部份</strong></span><span id="landAddress" style="max-width: 70%;"><strong>地段：載入中...</strong></span></div>
+            <div class="property-info"><span><strong>土地部份</strong></span><span id="landAddress" style="max-width: 70%;"><strong>地段:載入中...</strong></span></div>
             <table class="analysis-table">
                 <thead>
                     <tr><th rowspan="2">地號</th><th rowspan="2">土地<br>分區</th><th>公告現值 (114年)</th><th colspan="2">面積</th><th rowspan="2">所有權<br>人數</th><th colspan="2">土地持分</th><th colspan="3">伊土地持分面積</th><th colspan="1">有無地上物</th></tr>
@@ -356,7 +539,7 @@
 
         <div class="analysis-section building-section">
             <h2 class="section-title">地上物部份</h2>
-            <div class="property-info"><span><strong>地上物部份</strong></span><span id="buildingAddress"><strong>地址：載入中...</strong></span></div>
+            <div class="property-info"><span><strong>地上物部份</strong></span><span id="buildingAddress"><strong>地址:載入中...</strong></span></div>
             <table class="analysis-table">
                 <thead>
                     <tr><th rowspan="2">建號</th><th rowspan="2">所含樓<br>層</th><th rowspan="2">建物所有權<br>人數</th><th colspan="2">建物面積</th><th colspan="2">建物持分</th><th colspan="3">建物持分面積</th><th rowspan="2">備註</th></tr>
@@ -389,6 +572,108 @@
             </table>
         </div>
 
+        <div class="analysis-section share-analysis-section">
+            <h2 class="section-title">🔍 持分地深度分析</h2>
+            <div class="share-info-grid">
+                <div class="share-info-card">
+                    <h4>📊 產權結構分析</h4>
+                    <div class="info-row">
+                        <span class="info-label">共有人總數</span>
+                        <span class="info-value bad" id="ownerCountDisplay">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">您的持分比例</span>
+                        <span class="info-value" id="shareRatioDisplay">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">實際持分面積</span>
+                        <span class="info-value good" id="shareAreaDisplay">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">產權類型</span>
+                        <span class="info-value" id="ownershipTypeDisplay">-</span>
+                    </div>
+                    <div class="ownership-chart">
+                        <div class="ownership-bar" id="ownershipBar"></div>
+                        <div class="ownership-legend" id="ownershipLegend"></div>
+                    </div>
+                </div>
+
+                <div class="share-info-card">
+                    <h4>⚖️ 法律權利說明</h4>
+                    <div class="info-row">
+                        <span class="info-label">優先購買權</span>
+                        <span class="info-value good">✓ 享有</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">分割請求權</span>
+                        <span class="info-value good">✓ 可行使</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">使用收益權</span>
+                        <span class="info-value warning">需協議</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">處分權限</span>
+                        <span class="info-value">可單獨出售持分</span>
+                    </div>
+                    <div style="margin-top: 15px; padding: 12px; background: #fef3c7; border-radius: 6px; font-size: 13px; line-height: 1.6;">
+                        <strong style="color: #92400e;">⚠️ 重要提醒：</strong><br>
+                        • 出售持分需通知其他共有人<br>
+                        • 其他共有人享有優先購買權<br>
+                        • 建議諮詢專業地政士協助
+                    </div>
+                </div>
+
+                <div class="share-info-card">
+                    <h4>💰 投資價值評估</h4>
+                    <div class="info-row">
+                        <span class="info-label">持分單價</span>
+                        <span class="info-value" id="shareUnitPriceDisplay">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">完整產權單價</span>
+                        <span class="info-value" id="fullPriceDisplay">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">價差分析</span>
+                        <span class="info-value good" id="priceDiffDisplay">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">投資總額</span>
+                        <span class="info-value" id="totalInvestmentDisplay">-</span>
+                    </div>
+                    <div style="margin-top: 15px; padding: 12px; background: #ecfdf5; border-radius: 6px; font-size: 13px; line-height: 1.6;">
+                        <strong style="color: #065f46;">💡 投資建議：</strong><br>
+                        <span id="investmentAdvice">載入中...</span>
+                    </div>
+                </div>
+
+                <div class="share-info-card">
+                    <h4>⚠️ 風險與整合評估</h4>
+                    <div class="info-row">
+                        <span class="info-label">整合難度</span>
+                        <span class="info-value" id="integrationDifficulty">-</span>
+                    </div>
+                    <div class="risk-meter">
+                        <span class="risk-meter-label" id="riskLevel">-</span>
+                        <div class="risk-meter-bar">
+                            <div class="risk-meter-fill" id="riskFill"></div>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">預估整合時間</span>
+                        <span class="info-value warning" id="integrationTime">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">整合成功率</span>
+                        <span class="info-value" id="successRate">-</span>
+                    </div>
+                    <div class="integration-strategy" id="integrationStrategy"></div>
+                </div>
+            </div>
+        </div>
+
         <div class="analysis-section expert-advice-section">
             <h2 class="section-title">專家建議</h2>
             <div class="advice-content" id="expertAdviceContent"></div>
@@ -411,56 +696,112 @@
             return { id: new URLSearchParams(window.location.search).get('landId') || 1, title: "桃園市八德區廣福段一小段1001地號", region: "桃園市", district: "八德區", area: 179.6, sellerPrice: 23000, buyerPrice: 13050, pricePerPing: 130.5, landUseZone: "工一", ownerCount: 15, shareNumerator: 1, shareDenominator: 15, buildingNumber: "建號10233", marketPrice: 110 };
         }
 
-        function renderLandTable(land) { /* ... (Same as before) ... */ }
-        function renderBuildingTable(land) { /* ... (Same as before) ... */ }
-        function renderRealPriceTable(land) { /* ... (Same as before) ... */ }
-        function renderExpertAdvice(land) { /* ... (Same as before) ... */ }
-        function initializeMaps(land) { /* ... (Same as before) ... */ }
-        function initializeStreetView(land) { /* ... (Same as before) ... */ }
-        function openExternalMap(mapType) { /* ... (Same as before) ... */ }
-
-        // --- UPDATED PDF EXPORT FUNCTION ---
         async function exportToPDF() {
             const button = document.getElementById('exportBtn');
             const originalText = button.innerHTML;
             try {
-                button.disabled = true; button.innerHTML = '⏳ 產生中...';
+                // 1. 準備階段
+                button.disabled = true;
+                button.innerHTML = '⏳ 生成中...';
                 document.body.classList.add('pdf-mode');
                 await new Promise(resolve => setTimeout(resolve, 500));
-                const content = document.getElementById('pdfContent');
-                const canvas = await html2canvas(content, { scale: 2, useCORS: true, allowTaint: true, logging: false, backgroundColor: '#ffffff' });
+
+                // 2. 擷取整個頁面為 Canvas
+                const canvas = await html2canvas(document.body, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false,
+                    backgroundColor: '#e0f2f1',
+                    windowWidth: document.documentElement.scrollWidth,
+                    windowHeight: document.documentElement.scrollHeight
+                });
                 document.body.classList.remove('pdf-mode');
-                const { jsPDF } = window.jspdf; const pdfWidth = 210, pdfHeight = 297, margin = 0; const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                const imgWidth = canvas.width, imgHeight = canvas.height; const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                const ratio = imgWidth / imgHeight, pageRatio = pdfWidth / pdfHeight;
-                let canvasHeightOnPage, canvasWidthOnPage;
-                if (ratio > pageRatio) { canvasWidthOnPage = pdfWidth; canvasHeightOnPage = pdfWidth / ratio; } else { canvasHeightOnPage = pdfHeight; canvasWidthOnPage = pdfHeight * ratio; }
-                const totalPages = Math.ceil(imgHeight / (canvasHeightOnPage / (canvasWidthOnPage / imgWidth)));
-                let capturedHeight = 0;
-                for (let i = 1; i <= totalPages; i++) {
-                    const sourceY = capturedHeight;
-                    const sourceHeight = Math.min(imgHeight - capturedHeight, imgWidth * (pdfHeight/pdfWidth));
-                    const tempCanvas = document.createElement('canvas'); tempCanvas.width = imgWidth; tempCanvas.height = sourceHeight;
-                    const tempCtx = tempCanvas.getContext('2d');
-                    tempCtx.drawImage(canvas, 0, sourceY, imgWidth, sourceHeight, 0, 0, imgWidth, sourceHeight);
-                    const pageImgData = tempCanvas.toDataURL('image/jpeg', 0.95);
-                    if (i > 1) pdf.addPage();
-                    pdf.addImage(pageImgData, 'JPEG', margin, margin, pdfWidth, pdfHeight);
-                    capturedHeight += sourceHeight;
+
+                // 3. 初始化 jsPDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ 
+                    orientation: 'portrait', 
+                    unit: 'mm', 
+                    format: 'a4',
+                    compress: true
+                });
+                
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                
+                // 4. 計算比例 - 保持寬高比
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                
+                // Canvas 與 PDF 的比例 (mm per pixel)
+                const ratio = pdfWidth / canvasWidth;
+                
+                // 計算實際圖片在PDF中的高度
+                const imgHeightInPDF = canvasHeight * ratio;
+                
+                // 計算需要多少頁
+                const totalPages = Math.ceil(imgHeightInPDF / pdfHeight);
+                
+                // 5. 分頁處理
+                for (let pageNum = 0; pageNum < totalPages; pageNum++) {
+                    if (pageNum > 0) {
+                        pdf.addPage();
+                    }
+                    
+                    // 計算當前頁在 Canvas 中的起始位置和高度
+                    const startY = (pageNum * pdfHeight) / ratio;
+                    const heightToCut = Math.min(pdfHeight / ratio, canvasHeight - startY);
+                    
+                    // 創建臨時 Canvas 存放當前頁內容
+                    const pageCanvas = document.createElement('canvas');
+                    pageCanvas.width = canvasWidth;
+                    pageCanvas.height = heightToCut;
+                    
+                    const ctx = pageCanvas.getContext('2d');
+                    ctx.drawImage(
+                        canvas,
+                        0, startY,           // 源起始位置
+                        canvasWidth, heightToCut,  // 源尺寸
+                        0, 0,                // 目標起始位置
+                        canvasWidth, heightToCut   // 目標尺寸
+                    );
+                    
+                    // 轉換為圖片並加入 PDF
+                    const imgData = pageCanvas.toDataURL('image/jpeg', 0.95);
+                    const imgHeight = heightToCut * ratio;
+                    
+                    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, imgHeight);
                 }
-                const land = getLandData(); const today = new Date(); const dateStr = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+
+                // 6. 儲存 PDF
+                const land = getLandData();
+                const today = new Date();
+                const dateStr = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
                 pdf.save(`產調分析表_${land.title}_${dateStr}.pdf`);
-                button.innerHTML = '✅ 匯出成功！'; setTimeout(() => { button.innerHTML = originalText; button.disabled = false; }, 2000);
+                
+                button.innerHTML = '✅ 匯出成功!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 2000);
+
             } catch (error) {
-                console.error('匯出 PDF 時發生錯誤：', error); alert('匯出 PDF 失敗，請稍後再試。');
-                button.innerHTML = originalText; button.disabled = false; document.body.classList.remove('pdf-mode');
+                console.error('匯出 PDF 時發生錯誤:', error);
+                alert('匯出 PDF 失敗,請稍後再試。');
+                button.innerHTML = originalText;
+                button.disabled = false;
+                document.body.classList.remove('pdf-mode');
             }
         }
         
-        // (The full, non-minified JavaScript functions are pasted below for completeness and readability)
         document.addEventListener('DOMContentLoaded', function() {
             const land = getLandData();
-            renderLandTable(land); renderBuildingTable(land); renderRealPriceTable(land); renderExpertAdvice(land);
+            renderLandTable(land); 
+            renderBuildingTable(land); 
+            renderRealPriceTable(land); 
+            renderShareAnalysis(land);
+            renderExpertAdvice(land);
             setTimeout(() => { initializeMaps(land); initializeStreetView(land); }, 100);
         });
 
@@ -471,13 +812,13 @@
             const shareAreaM2 = areaM2 * shareRatio;
             const shareAreaPing = land.area * shareRatio;
             const sharePercentage = (shareRatio * 100).toFixed(2);
-            document.getElementById('landAddress').innerHTML = `<strong>地段：${land.title}</strong>`;
+            document.getElementById('landAddress').innerHTML = `<strong>地段:${land.title}</strong>`;
             document.getElementById('landTableBody').innerHTML = `<tr><td>${land.id}</td><td class="zone-cell">${land.landUseZone}</td><td>${announcedValuePerM2.toLocaleString()}</td><td>${areaM2.toFixed(2)}</td><td>${land.area.toFixed(2)}</td><td>${land.ownerCount}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${shareAreaM2.toFixed(2)}</td><td>${shareAreaPing.toFixed(2)}</td><td>${sharePercentage}%</td><td>${land.buildingNumber || ''}</td></tr><tr class="subtotal-row"><td colspan="3">小計</td><td>${areaM2.toFixed(2)}</td><td>${land.area.toFixed(2)}</td><td colspan="3"></td><td>${shareAreaM2.toFixed(2)}</td><td>${shareAreaPing.toFixed(2)}</td><td>${sharePercentage}%</td><td></td></tr>`;
         }
         function renderBuildingTable(land) {
             if (!land.buildingNumber) { document.getElementById('buildingTableBody').innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 20px; color: #666;">此筆土地無地上物</td></tr>`; return; }
             const buildingAreaPing = (Math.random() * 20 + 10).toFixed(2), buildingAreaM2 = (buildingAreaPing * PING_TO_M2).toFixed(2), buildingOwners = Math.floor(Math.random() * 15) + 5, buildingShareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0, buildingShareAreaM2 = (buildingAreaM2 * buildingShareRatio).toFixed(2), buildingShareAreaPing = (buildingAreaPing * buildingShareRatio).toFixed(2), buildingSharePercentage = (buildingShareRatio * 100).toFixed(2);
-            document.getElementById('buildingAddress').innerHTML = `<strong>地址：${land.region}${land.district}○○街○○巷1號</strong>`;
+            document.getElementById('buildingAddress').innerHTML = `<strong>地址:${land.region}${land.district}○○街○○巷1號</strong>`;
             document.getElementById('buildingTableBody').innerHTML = `<tr><td rowspan="2">10233</td><td>1</td><td rowspan="2">${buildingOwners}</td><td>${(buildingAreaM2 / 2).toFixed(2)}</td><td>${(buildingAreaPing / 2).toFixed(2)}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${(buildingShareAreaM2 / 2).toFixed(2)}</td><td>${(buildingShareAreaPing / 2).toFixed(2)}</td><td>${buildingSharePercentage}%</td><td rowspan="2"></td></tr><tr><td>2</td><td>${(buildingAreaM2 / 2).toFixed(2)}</td><td>${(buildingAreaPing / 2).toFixed(2)}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${(buildingShareAreaM2 / 2).toFixed(2)}</td><td>${(buildingShareAreaPing / 2).toFixed(2)}</td><td>${buildingSharePercentage}%</td></tr><tr class="subtotal-row"><td colspan="3">小計</td><td>${buildingAreaM2}</td><td>${buildingAreaPing}</td><td colspan="2"></td><td>${buildingShareAreaM2}</td><td>${buildingShareAreaPing}</td><td>${(parseFloat(buildingSharePercentage) * 2).toFixed(2)}%</td><td></td></tr>`;
         }
         function renderRealPriceTable(land) {
@@ -491,21 +832,199 @@
             }
             document.getElementById('realPriceTableBody').innerHTML = contentHTML;
         }
+
+        function renderShareAnalysis(land) {
+            const shareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0;
+            const shareAreaPing = land.area * shareRatio;
+            const sharePercentage = (shareRatio * 100).toFixed(2);
+            
+            // 產權結構分析
+            document.getElementById('ownerCountDisplay').innerHTML = `${land.ownerCount} 人`;
+            document.getElementById('shareRatioDisplay').innerHTML = `${land.shareNumerator}/${land.shareDenominator} (${sharePercentage}%)`;
+            document.getElementById('shareAreaDisplay').innerHTML = `${shareAreaPing.toFixed(2)} 坪`;
+            
+            let ownershipType = '';
+            if (land.ownerCount === 1) {
+                ownershipType = '<span style="color: #059669;">單獨所有</span>';
+            } else if (land.ownerCount <= 3) {
+                ownershipType = '<span style="color: #f59e0b;">分別共有 (少數)</span>';
+            } else if (land.ownerCount <= 10) {
+                ownershipType = '<span style="color: #f59e0b;">分別共有 (中等)</span>';
+            } else {
+                ownershipType = '<span style="color: #dc2626;">分別共有 (多數)</span>';
+            }
+            document.getElementById('ownershipTypeDisplay').innerHTML = ownershipType;
+            
+            // 產權結構圖
+            renderOwnershipChart(land);
+            
+            // 投資價值評估
+            const shareUnitPrice = land.pricePerPing;
+            const fullPrice = land.marketPrice;
+            const priceDiff = ((shareUnitPrice / fullPrice - 1) * 100).toFixed(1);
+            const totalInvestment = shareAreaPing * shareUnitPrice;
+            
+            document.getElementById('shareUnitPriceDisplay').innerHTML = `${shareUnitPrice.toFixed(1)} 萬/坪`;
+            document.getElementById('fullPriceDisplay').innerHTML = `${fullPrice.toFixed(1)} 萬/坪`;
+            
+            if (priceDiff < 0) {
+                document.getElementById('priceDiffDisplay').innerHTML = `折價 ${Math.abs(priceDiff)}% <span style="color: #059669;">✓ 划算</span>`;
+                document.getElementById('priceDiffDisplay').className = 'info-value good';
+            } else {
+                document.getElementById('priceDiffDisplay').innerHTML = `溢價 ${priceDiff}% <span style="color: #dc2626;">⚠️ 偏高</span>`;
+                document.getElementById('priceDiffDisplay').className = 'info-value bad';
+            }
+            
+            document.getElementById('totalInvestmentDisplay').innerHTML = `${(totalInvestment / 10000).toFixed(2)} 億`;
+            
+            // 投資建議
+            let investmentAdvice = '';
+            if (priceDiff < -20) {
+                investmentAdvice = `持分價格較市場行情<strong style="color: #059669;">低 ${Math.abs(priceDiff)}%</strong>，具有投資價值。建議積極評估。`;
+            } else if (priceDiff < -10) {
+                investmentAdvice = `持分價格<strong style="color: #059669;">合理偏低</strong>，若整合成功可獲利。`;
+            } else if (priceDiff < 10) {
+                investmentAdvice = `持分價格<strong style="color: #f59e0b;">接近市場行情</strong>，需審慎評估整合成本。`;
+            } else {
+                investmentAdvice = `持分價格<strong style="color: #dc2626;">偏高</strong>，建議重新議價或評估其他標的。`;
+            }
+            document.getElementById('investmentAdvice').innerHTML = investmentAdvice;
+            
+            // 風險與整合評估
+            let difficulty, riskLevel, riskColor, riskWidth, integrationTime, successRate;
+            
+            if (land.ownerCount === 1) {
+                difficulty = '<span style="color: #059669;">無需整合</span>';
+                riskLevel = '低風險';
+                riskColor = 'low';
+                riskWidth = '20%';
+                integrationTime = '立即可用';
+                successRate = '<span style="color: #059669;">100%</span>';
+            } else if (land.ownerCount <= 3) {
+                difficulty = '<span style="color: #059669;">容易</span>';
+                riskLevel = '低風險';
+                riskColor = 'low';
+                riskWidth = '30%';
+                integrationTime = '3-6 個月';
+                successRate = '<span style="color: #059669;">80-90%</span>';
+            } else if (land.ownerCount <= 10) {
+                difficulty = '<span style="color: #f59e0b;">中等</span>';
+                riskLevel = '中風險';
+                riskColor = 'medium';
+                riskWidth = '60%';
+                integrationTime = '6-18 個月';
+                successRate = '<span style="color: #f59e0b;">50-70%</span>';
+            } else {
+                difficulty = '<span style="color: #dc2626;">困難</span>';
+                riskLevel = '高風險';
+                riskColor = 'high';
+                riskWidth = '90%';
+                integrationTime = '1.5-5 年以上';
+                successRate = '<span style="color: #dc2626;">20-40%</span>';
+            }
+            
+            document.getElementById('integrationDifficulty').innerHTML = difficulty;
+            document.getElementById('riskLevel').textContent = riskLevel;
+            document.getElementById('riskFill').className = `risk-meter-fill ${riskColor}`;
+            document.getElementById('riskFill').style.width = riskWidth;
+            document.getElementById('integrationTime').innerHTML = integrationTime;
+            document.getElementById('successRate').innerHTML = successRate;
+            
+            // 整合策略
+            renderIntegrationStrategy(land);
+        }
+
+        function renderOwnershipChart(land) {
+            const bar = document.getElementById('ownershipBar');
+            const legend = document.getElementById('ownershipLegend');
+            
+            const shareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0;
+            const yourShare = shareRatio * 100;
+            const othersShare = 100 - yourShare;
+            
+            const colors = ['#10b981', '#60a5fa', '#f59e0b', '#ef4444', '#a855f7', '#ec4899'];
+            
+            bar.innerHTML = `
+                <div class="ownership-segment" style="width: ${yourShare}%; background: #10b981;">
+                    您 ${yourShare.toFixed(1)}%
+                </div>
+                <div class="ownership-segment" style="width: ${othersShare}%; background: #94a3b8;">
+                    其他 ${land.ownerCount - 1} 人 ${othersShare.toFixed(1)}%
+                </div>
+            `;
+            
+            legend.innerHTML = `
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #10b981;"></div>
+                    <span>您的持分 (${land.shareNumerator}/${land.shareDenominator})</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #94a3b8;"></div>
+                    <span>其他共有人 (${land.ownerCount - 1} 人)</span>
+                </div>
+            `;
+        }
+
+        function renderIntegrationStrategy(land) {
+            const container = document.getElementById('integrationStrategy');
+            let strategies = [];
+            
+            if (land.ownerCount === 1) {
+                strategies = [
+                    '產權完整，無需整合',
+                    '可立即進行開發規劃',
+                    '建議盡快完成產權移轉'
+                ];
+            } else if (land.ownerCount <= 3) {
+                strategies = [
+                    '逐一拜訪其他共有人了解意願',
+                    '可考慮全部收購或協議開發',
+                    '建議委託專業地政士協助',
+                    '預留3-6個月整合時間'
+                ];
+            } else if (land.ownerCount <= 10) {
+                strategies = [
+                    '先找出主要持分者進行溝通',
+                    '評估是否有人已在收購持分',
+                    '考慮分批收購降低成本',
+                    '必要時可行使分割請求權',
+                    '建議聘請專業團隊協助整合'
+                ];
+            } else {
+                strategies = [
+                    '⚠️ 整合難度極高，需謹慎評估',
+                    '建議先調查是否有大股東',
+                    '評估訴訟分割的可行性',
+                    '考慮與建商或專業投資者合作',
+                    '預留充足時間與資金成本',
+                    '可考慮僅收購自己需要的持分'
+                ];
+            }
+            
+            let html = '<h5>🎯 整合策略建議</h5><ul>';
+            strategies.forEach(strategy => {
+                html += `<li>${strategy}</li>`;
+            });
+            html += '</ul>';
+            
+            container.innerHTML = html;
+        }
+
         function renderExpertAdvice(land) {
             const adviceContainer = document.getElementById('expertAdviceContent'); let strengths = '', risks = '', recommendation = ''; const priceDiff = land.pricePerPing - land.marketPrice, priceDiffPercent = (priceDiff / land.marketPrice) * 100;
-            if (priceDiff < 0) { strengths += `<li><strong>價格優勢：</strong>目前開價單價為 <span class="highlight-good">${land.pricePerPing} 萬/坪</span>，低於鄰近實價登錄平均 <span class="highlight-good">${Math.abs(priceDiffPercent).toFixed(1)}%</span>，具備良好價格基礎。</li>`; } else { risks += `<li><strong>價格偏高：</strong>目前開價單價為 <span class="highlight-bad">${land.pricePerPing} 萬/坪</span>，高於鄰近實價登錄平均 <span class="highlight-bad">${priceDiffPercent.toFixed(1)}%</span>，建議謹慎評估其價值。</li>`; }
-            if (land.landUseZone.includes('商')) { strengths += `<li><strong>分區潛力：</strong>土地使用分區為 <span class="highlight-good">${land.landUseZone}</span>，商業價值高，適合規劃高收益型建案或長期持有。</li>`; } else if (land.landUseZone.includes('住')) { strengths += `<li><strong>分區優勢：</strong>土地使用分區為 <span class="highlight-good">${land.landUseZone}</span>，位於住宅區，市場需求穩定，適合住宅開發。</li>`; } else { strengths += `<li><strong>分區類型：</strong>土地使用分區為 ${land.landUseZone}，需根據具體法規評估其開發潛力。</li>`; }
-            strengths += `<li><strong>地理位置：</strong>位於 <span class="highlight-good">${land.region}${land.district}</span>，屬於發展成熟或具潛力之區域，基礎設施完善。</li>`;
-            if (land.ownerCount > 10) { risks += `<li><strong>產權複雜：</strong>所有權人數高達 <span class="highlight-bad">${land.ownerCount}人</span>，屬於持分共有土地，未來整合開發<span class="highlight-bad">難度極高</span>，需投入大量時間與溝通成本。</li>`; } else if (land.ownerCount > 1) { risks += `<li><strong>產權持分：</strong>所有權人數為 <span class="highlight-bad">${land.ownerCount}人</span>，整合難度中等，但仍需考量其他共有人意願，存在一定不確定性。</li>`; } else { strengths += `<li><strong>產權單純：</strong>所有權人數為 1 人，<span class="highlight-good">產權完整</span>，無須整合，可立即進行規劃開發。</li>`; }
-            if (land.buildingNumber) { risks += `<li><strong>地上物處理：</strong>土地上<span class="highlight-bad">存有地上物（建號 ${land.buildingNumber}）</span>，需考量後續拆遷、補償或排除佔用等相關成本與法律程序。</li>`; }
-            recommendation += `<p>綜合評估，此標的具備<strong>${strengths.includes('價格優勢')?'價格':'地理位置'}</strong>與<strong>${strengths.includes('分區潛力')?'分區':'產權'}</strong>等優勢，但同時也需留意${risks.includes('產權')?'產權複雜':'價格偏高'}與地上物等挑戰。</p>`;
-            if (land.ownerCount > 10) { recommendation += `<p><strong>主要建議：</strong>此案最大挑戰在於<span class="highlight-bad">高人數的產權整合</span>。建議投資人若無豐富整合經驗或足夠耐心，應謹慎評估。若決心投入，建議優先與主要持分者溝通，並準備長期作戰的心理與資金準備。出價方面可較保守，以反映整合風險。</p>`; } else { recommendation += `<p><strong>主要建議：</strong>此案產權相對單純，主要考量點在於價格與地上物。建議買方可於 <span class="highlight-good">${(land.marketPrice * 0.95).toFixed(1)}萬/坪 至 ${(land.marketPrice * 1.05).toFixed(1)}萬/坪</span> 區間積極出價，並將地上物處理成本納入總投資預算中。若能順利排除地上物，此標的開發潛力值得期待。</p>`; }
+            if (priceDiff < 0) { strengths += `<li><strong>價格優勢:</strong>目前開價單價為 <span class="highlight-good">${land.pricePerPing} 萬/坪</span>,低於鄰近實價登錄平均 <span class="highlight-good">${Math.abs(priceDiffPercent).toFixed(1)}%</span>,具備良好價格基礎。</li>`; } else { risks += `<li><strong>價格偏高:</strong>目前開價單價為 <span class="highlight-bad">${land.pricePerPing} 萬/坪</span>,高於鄰近實價登錄平均 <span class="highlight-bad">${priceDiffPercent.toFixed(1)}%</span>,建議謹慎評估其價值。</li>`; }
+            if (land.landUseZone.includes('商')) { strengths += `<li><strong>分區潛力:</strong>土地使用分區為 <span class="highlight-good">${land.landUseZone}</span>,商業價值高,適合規劃高收益型建案或長期持有。</li>`; } else if (land.landUseZone.includes('住')) { strengths += `<li><strong>分區優勢:</strong>土地使用分區為 <span class="highlight-good">${land.landUseZone}</span>,位於住宅區,市場需求穩定,適合住宅開發。</li>`; } else { strengths += `<li><strong>分區類型:</strong>土地使用分區為 ${land.landUseZone},需根據具體法規評估其開發潛力。</li>`; }
+            strengths += `<li><strong>地理位置:</strong>位於 <span class="highlight-good">${land.region}${land.district}</span>,屬於發展成熟或具潛力之區域,基礎設施完善。</li>`;
+            if (land.ownerCount > 10) { risks += `<li><strong>產權複雜:</strong>所有權人數高達 <span class="highlight-bad">${land.ownerCount}人</span>,屬於持分共有土地,未來整合開發<span class="highlight-bad">難度極高</span>,需投入大量時間與溝通成本。</li>`; } else if (land.ownerCount > 1) { risks += `<li><strong>產權持分:</strong>所有權人數為 <span class="highlight-bad">${land.ownerCount}人</span>,整合難度中等,但仍需考量其他共有人意願,存在一定不確定性。</li>`; } else { strengths += `<li><strong>產權單純:</strong>所有權人數為 1 人,<span class="highlight-good">產權完整</span>,無須整合,可立即進行規劃開發。</li>`; }
+            if (land.buildingNumber) { risks += `<li><strong>地上物處理:</strong>土地上<span class="highlight-bad">存有地上物(建號 ${land.buildingNumber})</span>,需考量後續拆遷、補償或排除佔用等相關成本與法律程序。</li>`; }
+            recommendation += `<p>綜合評估,此標的具備<strong>${strengths.includes('價格優勢')?'價格':'地理位置'}</strong>與<strong>${strengths.includes('分區潛力')?'分區':'產權'}</strong>等優勢,但同時也需留意${risks.includes('產權')?'產權複雜':'價格偏高'}與地上物等挑戰。</p>`;
+            if (land.ownerCount > 10) { recommendation += `<p><strong>主要建議:</strong>此案最大挑戰在於<span class="highlight-bad">高人數的產權整合</span>。建議投資人若無豐富整合經驗或足夠耐心,應謹慎評估。若決心投入,建議優先與主要持分者溝通,並準備長期作戰的心理與資金準備。出價方面可較保守,以反映整合風險。</p>`; } else { recommendation += `<p><strong>主要建議:</strong>此案產權相對單純,主要考量點在於價格與地上物。建議買方可於 <span class="highlight-good">${(land.marketPrice * 0.95).toFixed(1)}萬/坪 至 ${(land.marketPrice * 1.05).toFixed(1)}萬/坪</span> 區間積極出價,並將地上物處理成本納入總投資預算中。若能順利排除地上物,此標的開發潛力值得期待。</p>`; }
             adviceContainer.innerHTML = `<h3>一、優勢分析 (Strengths)</h3><ul>${strengths}</ul><h3>二、風險評估 (Risks)</h3><ul>${risks}</ul><h3>三、綜合建議與策略</h3>${recommendation}`;
         }
         function initializeMaps(land) {
             let coords = [25.0330, 121.5654]; if (land.region === "桃園市") coords = [24.9936, 121.3010]; else if (land.region === "台中市") coords = [24.1477, 120.6736]; else if (land.region === "台南市") coords = [22.9997, 120.2270]; else if (land.region === "高雄市") coords = [22.6273, 120.3014]; currentCoords = coords;
-            const zoningMap = L.map('zoningMap').setView(coords, 16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(zoningMap); L.polygon([[coords[0] + 0.001, coords[1] - 0.001], [coords[0] + 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] - 0.001]], { color: '#DC2626', fillColor: '#ffcdd2', fillOpacity: 0.5 }).addTo(zoningMap).bindPopup(`使用分區：${land.landUseZone}<br>面積：${land.area}坪`);
-            const cadastralMap = L.map('cadastralMap').setView(coords, 17); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(cadastralMap); L.marker(coords).addTo(cadastralMap).bindPopup(`地號：${land.id}<br>${land.title}`); L.polygon([[coords[0] + 0.0008, coords[1] - 0.0008], [coords[0] + 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] - 0.0008]], { color: '#2563eb', weight: 2, fillOpacity: 0.1 }).addTo(cadastralMap);
+            const zoningMap = L.map('zoningMap').setView(coords, 16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(zoningMap); L.polygon([[coords[0] + 0.001, coords[1] - 0.001], [coords[0] + 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] - 0.001]], { color: '#DC2626', fillColor: '#ffcdd2', fillOpacity: 0.5 }).addTo(zoningMap).bindPopup(`使用分區:${land.landUseZone}<br>面積:${land.area}坪`);
+            const cadastralMap = L.map('cadastralMap').setView(coords, 17); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(cadastralMap); L.marker(coords).addTo(cadastralMap).bindPopup(`地號:${land.id}<br>${land.title}`); L.polygon([[coords[0] + 0.0008, coords[1] - 0.0008], [coords[0] + 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] - 0.0008]], { color: '#2563eb', weight: 2, fillOpacity: 0.1 }).addTo(cadastralMap);
             const topographicMap = L.map('topographicMap').setView(coords, 15); L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png').addTo(topographicMap); L.marker(coords).addTo(topographicMap).bindPopup(`地形位置<br>${land.region}${land.district}`);
             const aerialMap = L.map('aerialMap').setView(coords, 18); L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(aerialMap); L.circle(coords, { color: '#059669', fillColor: '#10b981', fillOpacity: 0.3, radius: 50 }).addTo(aerialMap).bindPopup('土地位置');
             const overlayMap = L.map('overlayMap').setView(coords, 16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(overlayMap); L.polygon([[coords[0] + 0.001, coords[1] - 0.001], [coords[0] + 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] - 0.001]], { color: '#DC2626', fillColor: '#ffcdd2', fillOpacity: 0.4 }).addTo(overlayMap); L.polygon([[coords[0] + 0.0008, coords[1] - 0.0008], [coords[0] + 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] - 0.0008]], { color: '#2563eb', weight: 2, fillOpacity: 0 }).addTo(overlayMap); L.marker(coords).addTo(overlayMap).bindPopup('多圖層套圖預覽。<br>點擊上方按鈕開啟全功能分析。').openPopup();
@@ -514,7 +1033,7 @@
             let coords = [25.0330, 121.5654]; if (land.region === "桃園市") coords = [24.9936, 121.3010]; else if (land.region === "台中市") coords = [24.1477, 120.6736];
             const streetviewMap = L.map('streetviewContainer').setView(coords, 18); L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(streetviewMap);
             const marker = L.marker(coords).addTo(streetviewMap); const streetviewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${coords[0]},${coords[1]}`;
-            marker.bindPopup(`<div style="text-align: center;"><strong>${land.title}</strong><br><a href="${streetviewUrl}" target="_blank" style="display:inline-block;margin-top:10px;padding:8px 16px;background:linear-gradient(135deg, #4285f4 0%, #34a853 100%);color:white;text-decoration:none;border-radius:6px;font-weight:600;">🌍 開啟 Google 街景</a></div>`).openPopup();
+            marker.bindPopup(`<div style="text-align: center;"><strong>${land.title}</strong><br><a href="${streetviewUrl}" target="_blank" style="display:inline-block;margin-top:10px;padding:8px 16px;background:linear-gradient(135deg, #4285f4 0%, #34a853 100%);color:white;text-decoration:none;border-radius:6px;font-weight:600;">🌐 開啟 Google 街景</a></div>`).openPopup();
             L.circle(coords, { color: '#4285f4', fillColor: '#4285f4', fillOpacity: 0.2, radius: 30 }).addTo(streetviewMap);
         }
         function openExternalMap(mapType) { let url = `https://www.openstreetmap.org/#map=17/${currentCoords[0]}/${currentCoords[1]}`; if (mapType === 'aerial') { url = `https://www.google.com/maps/@${currentCoords[0]},${currentCoords[1]},18z/data=!3m1!1e3`; } window.open(url, '_blank'); }
