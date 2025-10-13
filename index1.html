@@ -34,6 +34,7 @@
             transform: translateY(-50%);
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
         .nav-link {
@@ -45,6 +46,7 @@
             font-weight: 500;
             background: transparent;
             border: 2px solid transparent;
+            cursor: pointer;
         }
 
         .nav-link:hover {
@@ -218,25 +220,10 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
-        .land-card.bidding {
-            border-color: #FF9800;
-            background: linear-gradient(135deg, #ffffff 0%, #fffdf8 100%);
-        }
-
-        .land-card.sold {
-            border-color: #4CAF50;
-            background: linear-gradient(135deg, #ffffff 0%, #f8fff8 100%);
-        }
-
-        .land-card.overpriced {
-            border-color: #f44336;
-            background: linear-gradient(135deg, #ffffff 0%, #fff8f8 100%);
-        }
-
-        .land-card.negotiating {
-            border-color: #9C27B0;
-            background: linear-gradient(135deg, #ffffff 0%, #faf8ff 100%);
-        }
+        .land-card.bidding { border-color: #FF9800; background: linear-gradient(135deg, #ffffff 0%, #fffdf8 100%); }
+        .land-card.sold { border-color: #4CAF50; background: linear-gradient(135deg, #ffffff 0%, #f8fff8 100%); }
+        .land-card.overpriced { border-color: #f44336; background: linear-gradient(135deg, #ffffff 0%, #fff8f8 100%); }
+        .land-card.negotiating { border-color: #9C27B0; background: linear-gradient(135deg, #ffffff 0%, #faf8ff 100%); }
 
         .land-header {
             display: flex;
@@ -256,323 +243,75 @@
             margin-right: 10px;
         }
 
-        .status-indicator {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-            flex-shrink: 0;
-            min-width: 80px;
-        }
+        .status-indicator { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; min-width: 80px; }
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .status-hot { background: #ff4757; color: white; animation: pulse 2s infinite; }
+        .status-bidding { background: #FF9800; color: white; }
+        .status-sold { background: #4CAF50; color: white; }
+        .status-new { background: #2ed573; color: white; }
+        .status-negotiating { background: #9C27B0; color: white; animation: glow 3s ease-in-out infinite alternate; }
+        @keyframes glow { 0% { box-shadow: 0 0 5px rgba(156, 39, 176, 0.5); } 100% { box-shadow: 0 0 15px rgba(156, 39, 176, 0.8); } }
 
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .status-hot {
-            background: #ff4757;
-            color: white;
-            animation: pulse 2s infinite;
-        }
-
-        .status-bidding {
-            background: #FF9800;
-            color: white;
-        }
-
-        .status-sold {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .status-new {
-            background: #2ed573;
-            color: white;
-        }
-
-        .status-negotiating {
-            background: #9C27B0;
-            color: white;
-            animation: glow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px rgba(156, 39, 176, 0.5); }
-            100% { box-shadow: 0 0 15px rgba(156, 39, 176, 0.8); }
-        }
-
-        .pricing-section {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            padding: 8px 0;
-        }
-
-        .price-row:last-child {
-            margin-bottom: 0;
-            border-top: 2px solid #dee2e6;
-            padding-top: 12px;
-            font-weight: bold;
-        }
-
-        .price-label {
-            font-size: 0.9rem;
-            color: #666;
-            font-weight: 500;
-        }
-
-        .price-value {
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
+        .pricing-section { background: #f8f9fa; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 8px 0; }
+        .price-row:last-child { margin-bottom: 0; border-top: 2px solid #dee2e6; padding-top: 12px; font-weight: bold; }
+        .price-label { font-size: 0.9rem; color: #666; font-weight: 500; }
+        .price-value { font-size: 1rem; font-weight: bold; }
         .seller-price { color: #dc3545; }
         .buyer-price { color: #007bff; }
         .deal-price { color: #28a745; }
         .negotiating-price { color: #9C27B0; }
-
-        .bid-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .bid-count {
-            background: #e9ecef;
-            color: #495057;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-        }
-
-        .negotiating-badge {
-            background: #9C27B0;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-        }
-
-        .price-difference {
-            font-size: 0.8rem;
-            font-weight: normal;
-            margin-left: 8px;
-        }
-
+        .bid-info { display: flex; align-items: center; gap: 8px; }
+        .bid-count { background: #e9ecef; color: #495057; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; }
+        .negotiating-badge { background: #9C27B0; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; }
+        .price-difference { font-size: 0.8rem; font-weight: normal; margin-left: 8px; }
         .positive { color: #28a745; }
         .negative { color: #dc3545; }
 
-        .land-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-        }
-
-        .detail-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .detail-label {
-            color: #666;
-            font-weight: 500;
-        }
-
-        .detail-value {
-            color: #333;
-            font-weight: bold;
-        }
-
-        .trading-activity {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #f5f5f5;
-        }
-
-        .activity-info {
-            font-size: 0.85rem;
-            color: #666;
-        }
-
-        .trend-indicator {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .trend-arrow {
-            font-size: 1.2rem;
-        }
-
+        .land-details { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; font-size: 0.9rem; }
+        .detail-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .detail-label { color: #666; font-weight: 500; }
+        .detail-value { color: #333; font-weight: bold; }
+        .trading-activity { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 2px solid #f5f5f5; }
+        .activity-info { font-size: 0.85rem; color: #666; }
+        .trend-indicator { display: flex; align-items: center; gap: 5px; font-size: 0.9rem; font-weight: bold; }
+        .trend-arrow { font-size: 1.2rem; }
         .trend-up { color: #4CAF50; }
         .trend-down { color: #f44336; }
         .trend-stable { color: #FF9800; }
         .trend-negotiating { color: #9C27B0; }
 
-        .time-info {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 0.7rem;
-            color: #666;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid #e0e0e0;
-            z-index: 10;
-            white-space: nowrap;
-            min-width: 50px;
-            text-align: center;
-            line-height: 1;
-        }
+        .time-info { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; color: #666; background: rgba(255, 255, 255, 0.95); padding: 2px 6px; border-radius: 4px; border: 1px solid #e0e0e0; z-index: 10; white-space: nowrap; min-width: 50px; text-align: center; line-height: 1; }
+        .bid-button { flex: 1; padding: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; margin-right: 8px; }
+        .bid-button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .bid-button:disabled { background: #6c757d; cursor: not-allowed; transform: none; box-shadow: none; }
+        .bid-button.negotiating-disabled { background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%); opacity: 0.6; cursor: not-allowed; }
 
-        .bid-button {
-            flex: 1;
-            padding: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 8px;
-        }
+        .detail-button { flex: 1; padding: 10px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; }
+        .detail-button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4); }
 
-        .bid-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .bid-button:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .bid-button.negotiating-disabled {
-            background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%);
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .detail-button {
-            flex: 1;
-            padding: 10px;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .detail-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 0;
-            margin-top: 15px;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .search-box {
-            position: relative;
-            flex: 1;
-            max-width: 300px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding-left: 40px;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-        }
+        .button-group { display: flex; gap: 0; margin-top: 15px; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .search-box { position: relative; flex: 1; max-width: 300px; }
+        .search-box input { width: 100%; padding-left: 40px; }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #999; }
+        
+        #user-info-display { display: none; align-items: center; gap: 15px; }
+        #username-display { font-size: 0.9rem; font-weight: 600; color: #333; }
+        #logout-button { padding: 6px 15px; background: #f0f0f0; color: #DC2626; border: 2px solid #f0f0f0; }
+        #logout-button:hover { border: 2px solid #DC2626; color: #DC2626; background: white; }
 
         @media (max-width: 768px) {
-            body {
-                padding: 10px 0 0 0;
-            }
-
-            .header-container {
-                padding: 15px 20px;
-                margin: 0 10px 15px 10px;
-            }
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            .header p {
-                display: none;
-            }
-            .header-nav {
-                position: static;
-                transform: none;
-                justify-content: center;
-                width: 100%;
-                margin-top: 15px;
-            }
-            .title-container {
-                margin-bottom: 0;
-            }
-
-            .page-content {
-                padding: 0 10px 10px 10px;
-            }
-            
-            .land-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .filters {
-                flex-direction: column;
-            }
-            
-            .search-box {
-                max-width: none;
-            }
-
-            .view-toggle {
-                margin-left: 0;
-                margin-top: 10px;
-            }
+            body { padding: 10px 0 0 0; }
+            .header-container { padding: 15px 20px; margin: 0 10px 15px 10px; }
+            .header h1 { font-size: 1.5rem; } .header p { display: none; }
+            .header-nav { position: static; transform: none; justify-content: center; width: 100%; margin-top: 15px; }
+            .title-container { margin-bottom: 0; }
+            .page-content { padding: 0 10px 10px 10px; }
+            .land-grid { grid-template-columns: 1fr; }
+            .filters { flex-direction: column; }
+            .search-box { max-width: none; }
+            .view-toggle { margin-left: 0; margin-top: 10px; }
         }
     </style>
 </head>
@@ -581,20 +320,20 @@
         <nav class="header-nav">
             <a href="index.html" class="nav-link">土地買賣</a>
             <a href="index1.html" class="nav-link active">競價看板</a>
-            <a href="#" class="nav-link">會員登入</a>
+            <a href="index5.html" class="nav-link">我的案件</a>
+            <!-- User Info Display (Logged In) -->
+            <div id="user-info-display">
+                <span id="username-display"></span>
+                <a id="logout-button" class="nav-link">登出</a>
+            </div>
+            <!-- Login Button (Logged Out) -->
+            <a href="index.html" id="login-nav-button" class="nav-link">會員登入</a>
         </nav>
         <div class="header">
             <div class="title-container">
                 <div class="logo-container">
                     <svg width="60" height="75" viewBox="0 0 100 125" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="50" cy="45" rx="45" ry="40" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <line x1="15" y1="20" x2="85" y2="20" stroke="#DC2626" stroke-width="4"/>
-                        <line x1="25" y1="40" x2="25" y2="70" stroke="#DC2626" stroke-width="4"/>
-                        <circle cx="35" cy="50" r="10" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <circle cx="35" cy="65" r="8" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <line x1="65" y1="45" x2="65" y2="75" stroke="#DC2626" stroke-width="4"/>
-                        <path d="M 65 45 Q 75 40 85 45 Q 85 50 85 75" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <text x="50" y="110" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#DC2626" letter-spacing="3px">YIRU</text>
+                        <ellipse cx="50" cy="45" rx="45" ry="40" stroke="#DC2626" stroke-width="4" fill="none"/><line x1="15" y1="20" x2="85" y2="20" stroke="#DC2626" stroke-width="4"/><line x1="25" y1="40" x2="25" y2="70" stroke="#DC2626" stroke-width="4"/><circle cx="35" cy="50" r="10" stroke="#DC2626" stroke-width="4" fill="none"/><circle cx="35" cy="65" r="8" stroke="#DC2626" stroke-width="4" fill="none"/><line x1="65" y1="45" x2="65" y2="75" stroke="#DC2626" stroke-width="4"/><path d="M 65 45 Q 75 40 85 45 Q 85 50 85 75" stroke="#DC2626" stroke-width="4" fill="none"/><text x="50" y="110" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#DC2626" letter-spacing="3px">YIRU</text>
                     </svg>
                 </div>
                 <h1>一如土地交易競價看板</h1>
@@ -605,640 +344,137 @@
 
     <div class="page-content">
         <div class="market-summary">
-            <div class="summary-card">
-                <h3>進行中競價</h3>
-                <div class="value" style="color: #FF9800;">28</div>
-                <div class="change trend-down">-6 筆減少</div>
-            </div>
-            <div class="summary-card">
-                <h3>一如協商中</h3>
-                <div class="value" style="color: #9C27B0;">6</div>
-                <div class="change trend-up">+6 筆新增</div>
-            </div>
-            <div class="summary-card">
-                <h3>今日成交</h3>
-                <div class="value" style="color: #4CAF50;">18</div>
-                <div class="change trend-up">+12 (+200%)</div>
-            </div>
-            <div class="summary-card">
-                <h3>平均溢價率</h3>
-                <div class="value" style="color: #2196F3;">+8.2%</div>
-                <div class="change trend-up">+2.1%</div>
-            </div>
+            <div class="summary-card"><h3>進行中競價</h3><div class="value" style="color: #FF9800;">28</div><div class="change trend-down">-6 筆減少</div></div>
+            <div class="summary-card"><h3>一如協商中</h3><div class="value" style="color: #9C27B0;">6</div><div class="change trend-up">+6 筆新增</div></div>
+            <div class="summary-card"><h3>今日成交</h3><div class="value" style="color: #4CAF50;">18</div><div class="change trend-up">+12 (+200%)</div></div>
+            <div class="summary-card"><h3>平均溢價率</h3><div class="value" style="color: #2196F3;">+8.2%</div><div class="change trend-up">+2.1%</div></div>
         </div>
 
         <div class="dashboard">
             <div class="filters">
-                <div class="filter-group">
-                    <label>狀態:</label>
-                    <select id="statusFilter">
-                        <option value="">全部狀態</option>
-                        <option value="bidding">競價中</option>
-                        <option value="negotiating">一如協商</option>
-                        <option value="sold">已成交</option>
-                        <option value="overpriced">乏人問津</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>地區:</label>
-                    <select id="regionFilter">
-                        <option value="">全部地區</option>
-                        <option value="台北市">台北市</option>
-                        <option value="新北市">新北市</option>
-                        <option value="桃園市">桃園市</option>
-                        <option value="台中市">台中市</option>
-                        <option value="台南市">台南市</option>
-                        <option value="高雄市">高雄市</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>價格範圍:</label>
-                    <select id="priceFilter">
-                        <option value="">全部價格</option>
-                        <option value="0-1000">1000萬以下</option>
-                        <option value="1000-5000">1000-5000萬</option>
-                        <option value="5000-10000">5000萬-1億</option>
-                        <option value="10000+">1億以上</option>
-                    </select>
-                </div>
-                <div class="search-box">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="searchInput" placeholder="搜尋土地標題或地區...">
-                </div>
-                <div class="view-toggle">
-                    <button class="active" onclick="switchToCardView()">卡片式</button>
-                    <button onclick="switchToTableView()">表格式</button>
-                </div>
+                <div class="filter-group"><label>狀態:</label><select id="statusFilter"><option value="">全部狀態</option><option value="bidding">競價中</option><option value="negotiating">一如協商</option><option value="sold">已成交</option><option value="overpriced">乏人問津</option></select></div>
+                <div class="filter-group"><label>地區:</label><select id="regionFilter"><option value="">全部地區</option><option value="台北市">台北市</option><option value="新北市">新北市</option><option value="桃園市">桃園市</option><option value="台中市">台中市</option><option value="台南市">台南市</option><option value="高雄市">高雄市</option></select></div>
+                <div class="filter-group"><label>價格範圍:</label><select id="priceFilter"><option value="">全部價格</option><option value="0-1000">1000萬以下</option><option value="1000-5000">1000-5000萬</option><option value="5000-10000">5000萬-1億</option><option value="10000+">1億以上</option></select></div>
+                <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="searchInput" placeholder="搜尋土地標題或地區..."></div>
+                <div class="view-toggle"><button class="active" onclick="switchToCardView()">卡片式</button><button onclick="switchToTableView()">表格式</button></div>
             </div>
 
-            <div class="land-grid" id="landGrid">
-                <!-- 土地卡片將由JavaScript動態生成 -->
-            </div>
+            <div class="land-grid" id="landGrid"></div>
         </div>
     </div>
 
     <script>
-        // 省略重複的 JavaScript 代碼（與原文件相同）
-        // 以下是完整的腳本內容...
+        // --- DATA and GENERATION (Full logic pasted here for completeness) ---
         function generateRandomLand(idOffset) {
             const regions = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市"];
-            const districtsMap = {
-                "台北市": ["中正區", "大安區", "信義區", "內湖區", "士林區", "松山區"],
-                "新北市": ["板橋區", "新莊區", "三重區", "中和區", "永和區", "淡水區", "林口區"],
-                "桃園市": ["中壢區", "桃園區", "平鎮區", "八德區", "大園區"],
-                "台中市": ["西屯區", "南屯區", "北屯區", "西區", "豐原區"],
-                "台南市": ["安平區", "東區", "北區", "中西區", "永康區"],
-                "高雄市": ["左營區", "鼓山區", "三民區", "鳳山區", "前鎮區"]
-            };
-            const titleFragments = [
-                "精華地段", "重劃區", "淘金區", "商業用地", "住宅用地", "學區周邊", "臨大馬路",
-                "稀有釋出", "投資潛力佳", "方正土地", "都更建地", "農地轉建", "特定專用區", "近交流道"
-            ];
+            const districtsMap = { "台北市": ["中正區", "大安區", "信義區"], "新北市": ["板橋區", "新莊區", "三重區"], "桃園市": ["中壢區", "桃園區", "八德區"], "台中市": ["西屯區", "南屯區", "北屯區"], "台南市": ["安平區", "東區", "永康區"], "高雄市": ["左營區", "鼓山區", "三民區"] };
+            const titleFragments = ["精華地段", "重劃區", "淘金區", "商業用地", "住宅用地"];
+            const landUseZones = ["商三", "住二", "住三", "工一"];
             const statusOptions = ['bidding', 'negotiating', 'sold', 'overpriced'];
-            const addresses = ["復興南路", "中正路", "中山路", "成功路", "大業路", "文心路", "中華路", "民生東路", "羅斯福路"];
-            const lastUpdateOptions = ["剛剛", "2分鐘前", "10分鐘前", "30分鐘前", "1小時前", "今天", "昨天"];
-
+            const addresses = ["復興南路", "中正路", "中山路", "成功路"];
+            const lastUpdateOptions = ["剛剛", "2分鐘前", "10分鐘前", "30分鐘前", "1小時前"];
             const region = regions[Math.floor(Math.random() * regions.length)];
             const district = districtsMap[region][Math.floor(Math.random() * districtsMap[region].length)];
-            const area = (Math.random() * 200 + 10).toFixed(2);
-            let pricePerPing = 0;
-
-            if (region === "台北市") pricePerPing = Math.random() * 400 + 100;
-            else if (region === "新北市") pricePerPing = Math.random() * 200 + 50;
-            else if (region === "台中市") pricePerPing = Math.random() * 250 + 50;
-            else if (region === "桃園市") pricePerPing = Math.random() * 120 + 30;
-            else pricePerPing = Math.random() * 150 + 30;
-
-            const sellerPrice = Math.round(area * pricePerPing / 100) * 100;
-            let buyerPrice = Math.round(sellerPrice * (0.7 + Math.random() * 0.2));
+            const area = (10 + 200 * Math.random()).toFixed(1);
+            let pricePerPing = (region === "台北市") ? 100 + 400 * Math.random() : 30 + 150 * Math.random();
+            const sellerPrice = Math.round(area * pricePerPing);
+            let buyerPrice = Math.round(sellerPrice * (0.7 + 0.2 * Math.random()));
             let status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
             let dealPrice = null;
-            let bidCount = Math.floor(Math.random() * 20) + 1;
-            const lastUpdate = lastUpdateOptions[Math.floor(Math.random() * lastUpdateOptions.length)];
-
-            if (status === 'sold') {
-                dealPrice = Math.round(sellerPrice * (0.95 + Math.random() * 0.05));
-                buyerPrice = dealPrice;
-            } else if (status === 'negotiating') {
-                buyerPrice = Math.round(sellerPrice * (0.95 + Math.random() * 0.04));
-            } else if (status === 'overpriced') {
-                buyerPrice = Math.round(sellerPrice * (0.6 + Math.random() * 0.1));
-                bidCount = Math.floor(Math.random() * 3) + 1;
-            }
-
-            if (buyerPrice >= sellerPrice && status !== 'sold') {
-                buyerPrice = Math.round(sellerPrice * (0.8 + Math.random() * 0.1));
-            }
-            if (status === 'negotiating' && buyerPrice < sellerPrice * 0.95) {
-                buyerPrice = Math.round(sellerPrice * (0.95 + Math.random() * 0.04));
-            }
-            
-            if (status === 'sold' && dealPrice === null) {
-                dealPrice = Math.round(sellerPrice * (0.95 + Math.random() * 0.05));
-                buyerPrice = dealPrice;
-            }
-
+            let bidCount = Math.floor(20 * Math.random()) + 1;
+            if (status === 'sold') { dealPrice = Math.round(sellerPrice * (0.95 + 0.05 * Math.random())); buyerPrice = dealPrice; }
+            else if (status === 'negotiating') { buyerPrice = Math.round(sellerPrice * (0.95 + 0.04 * Math.random())); }
+            else if (status === 'overpriced') { buyerPrice = Math.round(sellerPrice * (0.6 + 0.1 * Math.random())); bidCount = Math.floor(3 * Math.random()) + 1; }
             const title = `【${titleFragments[Math.floor(Math.random() * titleFragments.length)]}】${region}${district}土地編號${1000 + idOffset}`;
-
-            return {
-                id: Date.now() + idOffset,
-                title: title,
-                region: region,
-                district: district,
-                address: addresses[Math.floor(Math.random() * addresses.length)] + "路",
-                area: `${area}坪`,
-                sellerPrice: sellerPrice,
-                buyerPrice: buyerPrice,
-                dealPrice: dealPrice,
-                bidCount: bidCount,
-                lastUpdate: lastUpdate,
-                status: status,
-                pricePerPing: `${pricePerPing.toFixed(1)}萬/坪`
-            };
+            const ownerCount = Math.floor(30 * Math.random()) + 1;
+            return { id: Date.now() + idOffset, title, region, district, address: addresses[Math.floor(Math.random() * addresses.length)] + "路", area: `${area}坪`, sellerPrice, buyerPrice, dealPrice, bidCount, lastUpdate: lastUpdateOptions[Math.floor(Math.random() * lastUpdateOptions.length)], status, pricePerPing: `${pricePerPing.toFixed(1)}萬/坪`, landUseZone: landUseZones[Math.floor(Math.random() * landUseZones.length)], ownerCount, shareNumerator: ownerCount > 1 ? 1 : ownerCount, shareDenominator: ownerCount, buildingNumber: Math.random() > 0.4 ? `建號${Math.floor(8000 * Math.random()) + 1000}` : "", marketPrice: Math.round(pricePerPing * (0.8 + 0.3 * Math.random())) };
         }
-
-        let landData = [
-            {
-                id: 1,
-                title: "【重劃不動產】實泰~古亭捷運方正土地",
-                region: "台北市",
-                district: "中正區",
-                address: "古亭站商圈",
-                area: "33.06坪",
-                sellerPrice: 4200,
-                buyerPrice: 3850,
-                dealPrice: null,
-                bidCount: 8,
-                lastUpdate: "2分鐘前",
-                status: "bidding",
-                pricePerPing: "120.9萬/坪"
-            },
-            {
-                id: 2,
-                title: "北市科園實泰廣義重劃影響12通道實質加值厚厚",
-                region: "台北市",
-                district: "內湖區",
-                address: "內湖科技園區",
-                area: "258.14坪",
-                sellerPrice: 38000,
-                buyerPrice: 36500,
-                dealPrice: 37200,
-                bidCount: 15,
-                lastUpdate: "10分鐘前",
-                status: "sold",
-                pricePerPing: "144.1萬/坪"
-            },
-            {
-                id: 3,
-                title: "住宅用地特殊來歷臨棟住宅專用區土地三德街二建坪",
-                region: "新北市",
-                district: "板橋區",
-                address: "三德街",
-                area: "55.93坪",
-                sellerPrice: 10500,
-                buyerPrice: 8900,
-                dealPrice: null,
-                bidCount: 2,
-                lastUpdate: "45分鐘前",
-                status: "overpriced",
-                pricePerPing: "187.8萬/坪"
-            },
-            {
-                id: 4,
-                title: "基金內分設置基地設置棟",
-                region: "台北市",
-                district: "大安區",
-                address: "基金路",
-                area: "8.19坪",
-                sellerPrice: 920,
-                buyerPrice: 870,
-                dealPrice: null,
-                bidCount: 12,
-                lastUpdate: "1分鐘前",
-                status: "negotiating",
-                pricePerPing: "112.3萬/坪"
-            },
-            {
-                id: 5,
-                title: "住宅建築專家設置!附建大廈實實房客如空土地",
-                region: "台中市",
-                district: "西屯區",
-                address: "惠來路",
-                area: "43.92坪",
-                sellerPrice: 12800,
-                buyerPrice: 12300,
-                dealPrice: 12450,
-                bidCount: 9,
-                lastUpdate: "5分鐘前",
-                status: "sold",
-                pricePerPing: "283.4萬/坪"
-            },
-            {
-                id: 6,
-                title: "人文雙港3臨路土地",
-                region: "新北市",
-                district: "新莊區",
-                address: "中正路",
-                area: "67.8坪",
-                sellerPrice: 9500,
-                buyerPrice: 9100,
-                dealPrice: null,
-                bidCount: 6,
-                lastUpdate: "8分鐘前",
-                status: "negotiating",
-                pricePerPing: "140.1萬/坪"
-            },
-            {
-                id: 7,
-                title: "精華地段優質投資標的",
-                region: "台北市",
-                district: "信義區",
-                address: "信義計畫區",
-                area: "24.5坪",
-                sellerPrice: 8900,
-                buyerPrice: 8600,
-                dealPrice: null,
-                bidCount: 18,
-                lastUpdate: "30秒前",
-                status: "negotiating",
-                pricePerPing: "363.3萬/坪"
-            }
-        ];
-
-        const newLands = [];
-        for (let i = 0; i < 30; i++) {
-            newLands.push(generateRandomLand(i + 100));
-        }
-        landData = [...newLands, ...landData];
-
+        let landData = Array.from({ length: 30 }, (_, i) => generateRandomLand(i + 1));
         let filteredData = [...landData];
 
-        function formatPrice(price) {
-            if (price >= 10000) {
-                return `${(price / 10000).toFixed(1)}億`;
-            } else {
-                return `${price}萬`;
-            }
-        }
+        // --- UTILITY & ACTION FUNCTIONS ---
+        function formatPrice(price) { return price >= 10000 ? `${(price / 10000).toFixed(1)}億` : `${price.toLocaleString()}萬`; }
+        function calculateDifference(price1, price2) { const diff = price1 - price2; const percent = ((diff / price2) * 100).toFixed(1); return { diff, percent }; }
 
-        function calculateDifference(price1, price2) {
-            const diff = price1 - price2;
-            const percent = ((diff / price2) * 100).toFixed(1);
-            return { diff, percent };
+        function startBidding(landId) {
+            window.open(`index3.html?landId=${landId}`, '_blank');
         }
 
         function showDetails(landId) {
             const land = landData.find(l => l.id === landId);
             if (land) {
-                let statusDescription = "";
-                let dealInfo = "";
-                
-                switch(land.status) {
-                    case 'sold':
-                        statusDescription = "✅ 交易已完成";
-                        dealInfo = `成交價格: ${formatPrice(land.dealPrice)}\n`;
-                        break;
-                    case 'negotiating':
-                        statusDescription = "🤝 一如協商中";
-                        dealInfo = "目前一如協商中,暫停競價\n";
-                        break;
-                    case 'bidding':
-                        statusDescription = "🔥 競價進行中";
-                        dealInfo = "目前競價中\n";
-                        break;
-                    case 'overpriced':
-                        statusDescription = "📉 乏人問津";
-                        dealInfo = "目前乏人問津\n";
-                        break;
-                }
-                
-                const detailInfo = `
-╔═══════════════════════════════╗
-                詳細土地資料                
-╚═══════════════════════════════╝
-土地標題: ${land.title}
-
-📍 地理位置:
-• 地區: ${land.region} ${land.district}
-• 地址: ${land.address}
-• 坪數: ${land.area}
-• 單價: ${land.pricePerPing}
-
-💰 價格資訊:
-• 賣方定價: ${formatPrice(land.sellerPrice)}
-• 最高出價: ${formatPrice(land.buyerPrice)}
-• ${dealInfo}• 出價次數: ${land.bidCount} 次
-• 最後更新: ${land.lastUpdate}
-
-📈 交易狀態:
-• ${statusDescription}
-
-🏷️ 土地特色:
-• 位於${land.district}精華地段
-• 交通便利,投資潛力佳
-• 周邊生活機能完善
-${land.status === 'negotiating' ? '• 🤝 目前進入一如協商階段,暫停公開競價' : ''}
-╔═══════════════════════════════╗
-                `;
-                
-                alert(detailInfo);
+                const landForDetailsPage = {
+                    id: land.id, title: land.title, region: land.region, district: land.district, area: parseFloat(land.area), sellerPrice: land.sellerPrice, buyerPrice: land.buyerPrice, pricePerPing: parseFloat(land.pricePerPing),
+                    landUseZone: land.landUseZone || "競標用地", ownerCount: land.ownerCount || land.bidCount, shareNumerator: land.shareNumerator || 1, shareDenominator: land.shareDenominator || land.bidCount,
+                    buildingNumber: land.buildingNumber || "建號" + (10000 + land.id), marketPrice: land.marketPrice || parseFloat(land.pricePerPing) * 0.9
+                };
+                sessionStorage.setItem('selectedLand', JSON.stringify(landForDetailsPage));
+                window.open(`indexyi.html?landId=${land.id}`, '_blank');
             }
         }
 
-        function placeBid(landId) {
-            const land = landData.find(l => l.id === landId);
-            if (land) {
-                if (land.status === 'negotiating') {
-                    alert('此土地目前為一如協商狀態,暫停公開競價!\n\n如有興趣請聯繫一如不動產進行私下協商。');
-                    return;
-                }
-                
-                if (land.status === 'sold') {
-                    alert('此土地已完成交易!');
-                    return;
-                }
-                
-                const newBid = prompt(`目前最高出價: ${formatPrice(land.buyerPrice)}\n請輸入您的出價 (萬元):`);
-                if (newBid && !isNaN(newBid) && parseInt(newBid) > land.buyerPrice) {
-                    land.buyerPrice = parseInt(newBid);
-                    land.bidCount += 1;
-                    land.lastUpdate = "剛剛";
-                    
-                    if (land.buyerPrice >= land.sellerPrice * 0.95) { 
-                        const randomChoice = Math.random();
-                        if (randomChoice > 0.6) {
-                            land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
-                            land.status = 'sold';
-                        } else {
-                            land.status = 'negotiating';
-                        }
-                    }
-                    
-                    filterData();
-                    if (land.status === 'negotiating') {
-                        alert('您的出價已提交!\n\n由於價格接近賣方期望,此土地已轉為一如協商狀態。我們將為您安排專人聯繫進行進一步協商。');
-                    } else if (land.status === 'sold') {
-                         alert('您的出價已提交!\n\n恭喜!此土地已成功交易!');
-                    }
-                    else {
-                        alert('出價成功!');
-                    }
-                } else if (newBid) {
-                    alert('出價必須高於目前最高出價!');
-                }
-            }
-        }
-
+        // --- RENDER & FILTER ---
         function renderLandCards(data) {
             const landGrid = document.getElementById('landGrid');
             landGrid.innerHTML = '';
-
             data.forEach(land => {
-                const statusInfo = {
-                    'bidding': { text: '🔥 競價中', class: 'status-hot' },
-                    'sold': { text: '✅ 已成交', class: 'status-sold' },
-                    'overpriced': { text: '📉 乏人問津', class: 'status-bidding' },
-                    'negotiating': { text: '🤝 一如協商', class: 'status-negotiating' }
-                };
-
+                const statusInfo = { 'bidding': { text: '🔥 競價中', class: 'status-hot' }, 'sold': { text: '✅ 已成交', class: 'status-sold' }, 'overpriced': { text: '📉 乏人問津', class: 'status-bidding' }, 'negotiating': { text: '🤝 一如協商', class: 'status-negotiating' } };
                 const currentStatus = statusInfo[land.status];
-                
                 const sellerBuyerDiff = calculateDifference(land.sellerPrice, land.buyerPrice);
                 const dealDiff = land.dealPrice ? calculateDifference(land.dealPrice, land.sellerPrice) : null;
-
                 const card = document.createElement('div');
                 card.className = `land-card ${land.status}`;
-                
-                let pricingHTML = `
-                    <div class="pricing-section">
-                        <div class="price-row">
-                            <span class="price-label">賣方定價</span>
-                            <span class="price-value seller-price">${formatPrice(land.sellerPrice)}</span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">最高出價</span>
-                            <div class="bid-info">
-                                <span class="price-value buyer-price">${formatPrice(land.buyerPrice)}</span>
-                                ${land.status === 'negotiating' ? 
-                                    '<span class="negotiating-badge">協商中</span>' :
-                                    `<span class="bid-count">${land.bidCount}次出價</span>`}
-                                <span class="price-difference negative">-${formatPrice(sellerBuyerDiff.diff)} (${sellerBuyerDiff.percent}%)</span>
-                            </div>
-                        </div>
-                `;
-
-                if (land.dealPrice) {
-                    pricingHTML += `
-                        <div class="price-row">
-                            <span class="price-label">成交價格</span>
-                            <div class="bid-info">
-                                <span class="price-value deal-price">${formatPrice(land.dealPrice)}</span>
-                                <span class="price-difference ${dealDiff.diff >= 0 ? 'positive' : 'negative'}">
-                                    ${dealDiff.diff >= 0 ? '+' : ''}${formatPrice(Math.abs(dealDiff.diff))} (${dealDiff.percent}%)
-                                </span>
-                            </div>
-                        </div>
-                    `;
-                }
-
+                let pricingHTML = `<div class="pricing-section"><div class="price-row"><span class="price-label">賣方定價</span><span class="price-value seller-price">${formatPrice(land.sellerPrice)}</span></div><div class="price-row"><span class="price-label">最高出價</span><div class="bid-info"><span class="price-value buyer-price">${formatPrice(land.buyerPrice)}</span>${land.status === 'negotiating' ? '<span class="negotiating-badge">協商中</span>' : `<span class="bid-count">${land.bidCount}次出價</span>`}<span class="price-difference negative">-${formatPrice(sellerBuyerDiff.diff)} (${sellerBuyerDiff.percent}%)</span></div></div>`;
+                if (land.dealPrice) { pricingHTML += `<div class="price-row"><span class="price-label">成交價格</span><div class="bid-info"><span class="price-value deal-price">${formatPrice(land.dealPrice)}</span><span class="price-difference ${dealDiff.diff >= 0 ? 'positive' : 'negative'}">${dealDiff.diff >= 0 ? '+' : ''}${formatPrice(Math.abs(dealDiff.diff))} (${dealDiff.percent}%)</span></div></div>`; }
                 pricingHTML += `</div>`;
-
-                card.innerHTML = `
-                    <div class="time-info">${land.lastUpdate}</div>
-                    <div class="land-header">
-                        <div class="land-title">${land.title}</div>
-                        <div class="status-indicator">
-                            <div class="status-badge ${currentStatus.class}">
-                                ${currentStatus.text}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    ${pricingHTML}
-                    
-                    <div class="land-details">
-                        <div class="detail-item">
-                            <span class="detail-label">地區</span>
-                            <span class="detail-value">${land.region} ${land.district}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">坪數</span>
-                            <span class="detail-value">${land.area}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">單價</span>
-                            <span class="detail-value">${land.pricePerPing}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">地址</span>
-                            <span class="detail-value">${land.address}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="trading-activity">
-                        <div class="activity-info">
-                            ${land.status === 'sold' ? '成交完成' : 
-                              land.status === 'negotiating' ? '一如協商進行中' :
-                              `${land.bidCount} 次出價競爭`}
-                        </div>
-                        <div class="trend-indicator">
-                            ${land.status === 'bidding' ? 
-                                `<span class="trend-arrow trend-up">🔥</span><span>競價中</span>` :
-                                land.status === 'sold' ? 
-                                `<span class="trend-arrow trend-up">✅</span><span>已成交</span>` :
-                                land.status === 'negotiating' ?
-                                `<span class="trend-arrow trend-negotiating">🤝</span><span>協商中</span>` :
-                                `<span class="trend-arrow trend-down">📉</span><span>冷清</span>`
-                            }
-                        </div>
-                    </div>
-                    
-                    <div class="button-group">
-                        ${land.status === 'bidding' ? 
-                            `<button class="bid-button" onclick="placeBid(${land.id})">我要出價</button>` : 
-                            land.status === 'overpriced' ?
-                            `<button class="bid-button" onclick="placeBid(${land.id})">我要出價</button>` :
-                            land.status === 'negotiating' ?
-                            `<button class="bid-button negotiating-disabled" onclick="placeBid(${land.id})" disabled>協商中 禁止出價</button>` :
-                            `<button class="bid-button" disabled>已成交</button>`
-                        }
-                        <button class="detail-button" onclick="showDetails(${land.id})">詳細土地資料</button>
-                    </div>
-                `;
+                card.innerHTML = `<div class="time-info">${land.lastUpdate}</div><div class="land-header"><div class="land-title">${land.title}</div><div class="status-indicator"><div class="status-badge ${currentStatus.class}">${currentStatus.text}</div></div></div>${pricingHTML}<div class="land-details"><div class="detail-item"><span class="detail-label">地區</span><span class="detail-value">${land.region} ${land.district}</span></div><div class="detail-item"><span class="detail-label">坪數</span><span class="detail-value">${land.area}</span></div><div class="detail-item"><span class="detail-label">單價</span><span class="detail-value">${land.pricePerPing}</span></div><div class="detail-item"><span class="detail-label">地址</span><span class="detail-value">${land.address}</span></div></div><div class="trading-activity"><div class="activity-info">${land.status === 'sold' ? '成交完成' : land.status === 'negotiating' ? '一如協商進行中' : `${land.bidCount} 次出價競爭`}</div><div class="trend-indicator">${land.status === 'bidding' ? `<span class="trend-arrow trend-up">🔥</span><span>競價中</span>` : land.status === 'sold' ? `<span class="trend-arrow trend-up">✅</span><span>已成交</span>` : land.status === 'negotiating' ? `<span class="trend-arrow trend-negotiating">🤝</span><span>協商中</span>` : `<span class="trend-arrow trend-down">📉</span><span>冷清</span>`}</div></div><div class="button-group">${land.status === 'bidding' || land.status === 'overpriced' ? `<button class="bid-button" onclick="startBidding(${land.id})">我要出價</button>` : land.status === 'negotiating' ? `<button class="bid-button negotiating-disabled" onclick="startBidding(${land.id})" disabled>協商中</button>` : `<button class="bid-button" disabled>已成交</button>`}<button class="detail-button" onclick="showDetails(${land.id})">詳細土地資料</button></div>`;
                 landGrid.appendChild(card);
             });
         }
-
-        function filterData() {
-            const statusFilter = document.getElementById('statusFilter').value;
-            const regionFilter = document.getElementById('regionFilter').value;
-            const priceFilter = document.getElementById('priceFilter').value;
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-
-            filteredData = landData.filter(land => {
-                let matches = true;
-
-                if (statusFilter && land.status !== statusFilter) {
-                    matches = false;
-                }
-
-                if (regionFilter && land.region !== regionFilter) {
-                    matches = false;
-                }
-
-                if (priceFilter) {
-                    const price = land.sellerPrice;
-                    switch (priceFilter) {
-                        case '0-1000':
-                            if (price >= 1000) matches = false;
-                            break;
-                        case '1000-5000':
-                            if (price < 1000 || price >= 5000) matches = false;
-                            break;
-                        case '5000-10000':
-                            if (price < 5000 || price >= 10000) matches = false;
-                            break;
-                        case '10000+':
-                            if (price < 10000) matches = false;
-                            break;
-                    }
-                }
-
-                if (searchTerm && !land.title.toLowerCase().includes(searchTerm) && 
-                    !land.address.toLowerCase().includes(searchTerm)) {
-                    matches = false;
-                }
-
-                return matches;
-            });
-
-            renderLandCards(filteredData);
-        }
-
-        function switchToCardView() {
-            document.querySelector('.view-toggle button:first-child').classList.add('active');
-            document.querySelector('.view-toggle button:last-child').classList.remove('active');
-            renderLandCards(filteredData);
-        }
-
-        function switchToTableView() {
-            window.location.href = 'index2.html';
-        }
-
-        document.getElementById('statusFilter').addEventListener('change', filterData);
-        document.getElementById('regionFilter').addEventListener('change', filterData);
-        document.getElementById('priceFilter').addEventListener('change', filterData);
-        document.getElementById('searchInput').addEventListener('input', filterData);
-
-        renderLandCards(landData);
-
-        setInterval(() => {
-            landData.forEach(land => {
-                if (land.status === 'bidding') {
-                    if (Math.random() > 0.7) {
-                        const increase = Math.floor(Math.random() * 100) + 10;
-                        land.buyerPrice += increase;
-                        land.bidCount += 1;
-                        land.lastUpdate = "剛剛";
-                        
-                        if (land.buyerPrice >= land.sellerPrice * 0.95) {
-                            const randomChoice = Math.random();
-                            if (randomChoice > 0.6) {
-                                land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
-                                land.status = 'sold';
-                            } else {
-                                land.status = 'negotiating';
-                            }
-                        }
-                    }
-                }
-                
-                if (land.status === 'negotiating' && Math.random() > 0.9) {
-                    const negotiationResult = Math.random();
-                    if (negotiationResult > 0.6) {
-                        land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
-                        land.status = 'sold';
-                        land.lastUpdate = "剛剛";
-                    } else if (negotiationResult < 0.2) {
-                        land.status = 'bidding';
-                        land.lastUpdate = "剛剛";
-                    }
-                }
-                
-                if (land.status === 'overpriced' && Math.random() > 0.8) {
-                    land.sellerPrice = Math.round(land.sellerPrice * 0.95);
-                    land.lastUpdate = "剛剛";
-                    if (land.sellerPrice <= land.buyerPrice * 1.05) {
-                        land.status = 'bidding';
-                    }
-                }
-            });
-            
-            filterData();
-        }, 12000);
-
-        setInterval(() => {
-            if (Math.random() > 0.8) {
-                const statusOptions = ['bidding', 'negotiating'];
-                const selectedStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
-                
-                const newLand = generateRandomLand(Date.now());
-                newLand.lastUpdate = "剛剛";
-                
-                if (selectedStatus === 'bidding') {
-                    newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.7 + Math.random() * 0.2));
-                    newLand.bidCount = Math.floor(Math.random() * 5) + 1;
-                } else if (selectedStatus === 'negotiating') {
-                    newLand.buyerPrice = Math.round(newLand.sellerPrice * (0.95 + Math.random() * 0.04));
-                    newLand.bidCount = Math.floor(Math.random() * 8) + 3;
-                }
-                newLand.dealPrice = null;
-                newLand.status = selectedStatus;
-                
-                landData.unshift(newLand);
-                filterData();
+        function filterData(){const statusFilter=document.getElementById("statusFilter").value,regionFilter=document.getElementById("regionFilter").value,priceFilter=document.getElementById("priceFilter").value,searchTerm=document.getElementById("searchInput").value.toLowerCase();filteredData=landData.filter(land=>{if(statusFilter&&land.status!==statusFilter)return!1;if(regionFilter&&land.region!==regionFilter)return!1;if(priceFilter){const price=land.sellerPrice;switch(priceFilter){case"0-1000":if(price>=1e3)return!1;break;case"1000-5000":if(price<1e3||price>=5e3)return!1;break;case"5000-10000":if(price<5e3||price>=1e4)return!1;break;case"10000+":if(price<1e4)return!1}}if(searchTerm&&!land.title.toLowerCase().includes(searchTerm)&&!land.address.toLowerCase().includes(searchTerm))return!1;return!0}),renderLandCards(filteredData)}
+        function switchToCardView() { /* No action needed */ }
+        function switchToTableView() { window.location.href = 'index2.html'; }
+        
+        // --- LOGIN STATE SCRIPT ---
+        function updateHeaderUI() {
+            const loginButton = document.getElementById('login-nav-button');
+            const userInfoDisplay = document.getElementById('user-info-display');
+            const usernameDisplay = document.getElementById('username-display');
+            const storedUser = sessionStorage.getItem('currentUser');
+            if (storedUser) {
+                const currentUser = JSON.parse(storedUser);
+                loginButton.style.display = 'none';
+                userInfoDisplay.style.display = 'flex';
+                usernameDisplay.textContent = `歡迎, ${currentUser.name} (${currentUser.role})`;
+            } else {
+                loginButton.style.display = 'block';
+                userInfoDisplay.style.display = 'none';
             }
-        }, 20000);
+        }
+        function handleLogout() {
+            if(confirm('您確定要登出嗎？')) {
+                const storedUser = JSON.parse(sessionStorage.getItem('currentUser'));
+                sessionStorage.removeItem('currentUser');
+                alert(`使用者 ${storedUser.name} 已登出。`);
+                updateHeaderUI();
+            }
+        }
+
+        // --- EVENT LISTENERS & INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', function() {
+            renderLandCards(landData);
+            updateHeaderUI();
+            
+            document.getElementById('statusFilter').addEventListener('change', filterData);
+            document.getElementById('regionFilter').addEventListener('change', filterData);
+            document.getElementById('priceFilter').addEventListener('change', filterData);
+            document.getElementById('searchInput').addEventListener('input', filterData);
+            document.getElementById('logout-button')?.addEventListener('click', handleLogout);
+        });
+        
+        // --- SIMULATION INTERVALS ---
+        setInterval(()=>{landData.forEach(land=>{if("bidding"===land.status&&Math.random()>.7){land.buyerPrice+=Math.floor(50*Math.random())+5;land.bidCount+=1;land.lastUpdate="剛剛";if(land.buyerPrice>=.95*land.sellerPrice){land.status=Math.random()>.6?"sold":"negotiating";if("sold"===land.status)land.dealPrice=Math.round((land.sellerPrice+land.buyerPrice)/2)}}else if("negotiating"===land.status&&Math.random()>.9){const result=Math.random();result>.6?(land.status="sold",land.dealPrice=Math.round((land.sellerPrice+land.buyerPrice)/2)):result<.3&&(land.status="bidding");land.lastUpdate="剛剛"}else"overpriced"===land.status&&Math.random()>.85&&(land.sellerPrice=Math.round(.97*land.sellerPrice),land.sellerPrice<=1.05*land.buyerPrice&&(land.status="bidding"),land.lastUpdate="剛剛")});filterData()},12e3);
+        setInterval(()=>{if(Math.random()>.8){const newLand=generateRandomLand(Date.now());landData.unshift(newLand);filterData()}},2e4);
     </script>
 </body>
 </html>

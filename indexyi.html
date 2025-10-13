@@ -240,95 +240,29 @@
             background-color: #e0f2f1;
         }
 
-        /* PDF 匯出時隱藏按鈕 */
         @media print {
-            .open-map-btn,
-            .action-buttons,
-            .header {
-                display: none !important;
-            }
-            
-            body {
-                padding: 0;
-                background: white;
-            }
-            
-            .container {
-                margin: 0;
-                padding: 20px;
-                box-shadow: none;
-                border-radius: 0;
-            }
+            .open-map-btn, .action-buttons, .header { display: none !important; }
+            body { padding: 0; background: white; }
+            .container { margin: 0; padding: 20px; box-shadow: none; border-radius: 0; }
         }
 
-        .pdf-mode .open-map-btn,
-        .pdf-mode .action-buttons,
-        .pdf-mode .header {
-            display: none !important;
-        }
+        .pdf-mode .open-map-btn, .pdf-mode .action-buttons, .pdf-mode .header { display: none !important; }
+        .pdf-mode { background: white !important; padding: 0 !important; }
+        .pdf-mode .container { margin: 0 !important; padding: 0 !important; box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; }
+        .pdf-mode .analysis-table, .pdf-mode .property-info, .pdf-mode .section-title { page-break-inside: avoid; }
 
-        .pdf-mode {
-            background: white !important;
-            padding: 0 !important;
-        }
-
-        .pdf-mode .container {
-            margin: 0 !important;
-            padding: 20px !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            max-width: 100% !important;
-        }
-
-        .pdf-mode .analysis-table,
-        .pdf-mode .property-info,
-        .pdf-mode .section-title {
-            page-break-inside: avoid;
-        }
-
-        .map-container {
-            height: 350px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #e2e8f0;
-        }
-
-        .land-section {
-            margin-bottom: 30px;
-        }
-
-        .building-section {
-            margin-top: 30px;
-        }
+        .map-container { height: 350px; border-radius: 8px; overflow: hidden; background: #e2e8f0; }
+        .land-section { margin-bottom: 30px; }
+        .building-section { margin-top: 30px; }
 
         @media (max-width: 968px) {
-            .gis-grid {
-                grid-template-columns: 1fr;
-            }
-
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 15px;
-            }
-
-            .analysis-table {
-                font-size: 12px;
-            }
-
-            .analysis-table th, .analysis-table td {
-                padding: 6px 4px;
-            }
-
-            .map-container {
-                height: 300px;
-            }
-
-            .streetview-container {
-                height: 350px;
-            }
+            .gis-grid { grid-template-columns: 1fr; }
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            .analysis-table { font-size: 12px; }
+            .analysis-table th, .analysis-table td { padding: 6px 4px; }
+            .map-container { height: 300px; }
+            .streetview-container { height: 350px; }
         }
     </style>
 </head>
@@ -352,30 +286,13 @@
             <table class="analysis-table">
                 <thead>
                     <tr>
-                        <th rowspan="2">地號</th>
-                        <th rowspan="2">土地<br>分區</th>
-                        <th>公告現值 (114年)</th>
-                        <th colspan="2">面積</th>
-                        <th rowspan="2">所有權<br>人數</th>
-                        <th colspan="2">土地持分</th>
-                        <th colspan="3">伊土地持分面積</th>
-                        <th colspan="1">有無地上物</th>
+                        <th rowspan="2">地號</th><th rowspan="2">土地<br>分區</th><th>公告現值 (114年)</th><th colspan="2">面積</th><th rowspan="2">所有權<br>人數</th><th colspan="2">土地持分</th><th colspan="3">伊土地持分面積</th><th colspan="1">有無地上物</th>
                     </tr>
                     <tr class="sub-header">
-                        <th>元/m²</th>
-                        <th>m²</th>
-                        <th>坪</th>
-                        <th>分子</th>
-                        <th>分母</th>
-                        <th>m²</th>
-                        <th>坪</th>
-                        <th>比例</th>
-                        <th>地上物建號</th>
+                        <th>元/m²</th><th>m²</th><th>坪</th><th>分子</th><th>分母</th><th>m²</th><th>坪</th><th>比例</th><th>地上物建號</th>
                     </tr>
                 </thead>
-                <tbody id="landTableBody">
-                    <!-- 由JavaScript動態生成 -->
-                </tbody>
+                <tbody id="landTableBody"></tbody>
             </table>
         </div>
 
@@ -388,69 +305,29 @@
             <table class="analysis-table">
                 <thead>
                     <tr>
-                        <th rowspan="2">建號</th>
-                        <th rowspan="2">所含樓<br>層</th>
-                        <th rowspan="2">建物所有權<br>人數</th>
-                        <th colspan="2">建物面積</th>
-                        <th colspan="2">建物持分</th>
-                        <th colspan="3">建物持分面積</th>
-                        <th rowspan="2">備註</th>
+                        <th rowspan="2">建號</th><th rowspan="2">所含樓<br>層</th><th rowspan="2">建物所有權<br>人數</th><th colspan="2">建物面積</th><th colspan="2">建物持分</th><th colspan="3">建物持分面積</th><th rowspan="2">備註</th>
                     </tr>
                     <tr class="sub-header">
-                        <th>m²</th>
-                        <th>坪</th>
-                        <th>分子</th>
-                        <th>分母</th>
-                        <th>m²</th>
-                        <th>坪</th>
-                        <th>比例</th>
+                        <th>m²</th><th>坪</th><th>分子</th><th>分母</th><th>m²</th><th>坪</th><th>比例</th>
                     </tr>
                 </thead>
-                <tbody id="buildingTableBody">
-                    <!-- 由JavaScript動態生成 -->
-                </tbody>
+                <tbody id="buildingTableBody"></tbody>
             </table>
         </div>
 
         <div class="gis-section">
             <h2 class="section-title">GIS 圖資展示</h2>
             <div class="gis-grid">
-                <div class="gis-card">
-                    <h3>
-                        <span>土地使用分區圖</span>
-                        <button class="open-map-btn" onclick="openExternalMap('zoning')">🗺️ 開啟地圖</button>
-                    </h3>
-                    <div class="map-container" id="zoningMap"></div>
-                </div>
-                <div class="gis-card">
-                    <h3>
-                        <span>地籍圖</span>
-                        <button class="open-map-btn" onclick="openExternalMap('cadastral')">🗺️ 開啟地圖</button>
-                    </h3>
-                    <div class="map-container" id="cadastralMap"></div>
-                </div>
-                <div class="gis-card">
-                    <h3>
-                        <span>地形圖</span>
-                        <button class="open-map-btn" onclick="openExternalMap('topographic')">🗺️ 開啟地圖</button>
-                    </h3>
-                    <div class="map-container" id="topographicMap"></div>
-                </div>
-                <div class="gis-card">
-                    <h3>
-                        <span>航照圖</span>
-                        <button class="open-map-btn" onclick="openExternalMap('aerial')">🗺️ 開啟地圖</button>
-                    </h3>
-                    <div class="map-container" id="aerialMap"></div>
-                </div>
+                <div class="gis-card"><h3><span>土地使用分區圖</span><button class="open-map-btn" onclick="openExternalMap('zoning')">🗺️ 開啟地圖</button></h3><div class="map-container" id="zoningMap"></div></div>
+                <div class="gis-card"><h3><span>地籍圖</span><button class="open-map-btn" onclick="openExternalMap('cadastral')">🗺️ 開啟地圖</button></h3><div class="map-container" id="cadastralMap"></div></div>
+                <div class="gis-card"><h3><span>地形圖</span><button class="open-map-btn" onclick="openExternalMap('topographic')">🗺️ 開啟地圖</button></h3><div class="map-container" id="topographicMap"></div></div>
+                <div class="gis-card"><h3><span>航照圖</span><button class="open-map-btn" onclick="openExternalMap('aerial')">🗺️ 開啟地圖</button></h3><div class="map-container" id="aerialMap"></div></div>
             </div>
         </div>
 
         <div class="streetview-section">
             <h2 class="section-title">Google 街景圖</h2>
-            <div class="streetview-container" id="streetviewContainer">
-                <!-- 街景地圖將由 JavaScript 動態生成 -->
-            </div>
+            <div class="streetview-container" id="streetviewContainer"></div>
         </div>
 
         <div class="analysis-section real-price-section">
@@ -458,18 +335,10 @@
             <table class="analysis-table real-price-table">
                 <thead>
                     <tr>
-                        <th>交易時間</th>
-                        <th>地址/地段</th>
-                        <th>型態</th>
-                        <th>總價</th>
-                        <th>土地坪數</th>
-                        <th>單價</th>
-                        <th>備註</th>
+                        <th>交易時間</th><th>地址/地段</th><th>型態</th><th>總價</th><th>土地坪數</th><th>單價</th><th>備註</th>
                     </tr>
                 </thead>
-                <tbody id="realPriceTableBody">
-                    <!-- 由JavaScript動態生成 -->
-                </tbody>
+                <tbody id="realPriceTableBody"></tbody>
             </table>
         </div>
     </div>
@@ -477,460 +346,109 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <script>
         const PING_TO_M2 = 3.305785;
-        let currentCoords = [25.0330, 121.5654]; // 儲存當前座標供外部地圖使用
+        let currentCoords = [25.0330, 121.5654];
         
-        // 從 sessionStorage 或 URL 獲取土地資料
         function getLandData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const landId = urlParams.get('landId');
-            
             const storedData = sessionStorage.getItem('selectedLand');
-            if (storedData) {
-                return JSON.parse(storedData);
-            }
-            
-            // 如果沒有存儲的資料，返回示例資料
-            return {
-                id: landId || 1,
-                title: "桃園市八德區廣福段一小段1001地號",
-                region: "桃園市",
-                district: "八德區",
-                area: 179.6,
-                sellerPrice: 23000,
-                buyerPrice: 13050,
-                pricePerPing: 130.5,
-                landUseZone: "工一",
-                ownerCount: 15,
-                shareNumerator: 1,
-                shareDenominator: 15,
-                buildingNumber: "建號10233",
-                marketPrice: 110
-            };
+            if (storedData) return JSON.parse(storedData);
+            return { id: new URLSearchParams(window.location.search).get('landId') || 1, title: "桃園市八德區廣福段一小段1001地號", region: "桃園市", district: "八德區", area: 179.6, sellerPrice: 23000, buyerPrice: 13050, pricePerPing: 130.5, landUseZone: "工一", ownerCount: 15, shareNumerator: 1, shareDenominator: 15, buildingNumber: "建號10233", marketPrice: 110 };
         }
 
         function renderLandTable(land) {
             const areaM2 = land.area * PING_TO_M2;
             const announcedValuePerM2 = Math.round(land.marketPrice * 10000 / PING_TO_M2);
-            
             const shareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0;
             const shareAreaM2 = areaM2 * shareRatio;
             const shareAreaPing = land.area * shareRatio;
             const sharePercentage = (shareRatio * 100).toFixed(2);
-
             document.getElementById('landAddress').innerHTML = `<strong>地段：${land.title}</strong>`;
-            
-            const landTableBody = document.getElementById('landTableBody');
-            landTableBody.innerHTML = `
-                <tr>
-                    <td>${land.id}</td>
-                    <td class="zone-cell">${land.landUseZone}</td>
-                    <td>${announcedValuePerM2.toLocaleString()}</td>
-                    <td>${areaM2.toFixed(2)}</td>
-                    <td>${land.area.toFixed(2)}</td>
-                    <td>${land.ownerCount}</td>
-                    <td>${land.shareNumerator}</td>
-                    <td>${land.shareDenominator}</td>
-                    <td>${shareAreaM2.toFixed(2)}</td>
-                    <td>${shareAreaPing.toFixed(2)}</td>
-                    <td>${sharePercentage}%</td>
-                    <td>${land.buildingNumber || ''}</td>
-                </tr>
-                <tr class="subtotal-row">
-                    <td colspan="3">小計</td>
-                    <td>${areaM2.toFixed(2)}</td>
-                    <td>${land.area.toFixed(2)}</td>
-                    <td colspan="3"></td>
-                    <td>${shareAreaM2.toFixed(2)}</td>
-                    <td>${shareAreaPing.toFixed(2)}</td>
-                    <td>${sharePercentage}%</td>
-                    <td></td>
-                </tr>
-            `;
+            document.getElementById('landTableBody').innerHTML = `<tr><td>${land.id}</td><td class="zone-cell">${land.landUseZone}</td><td>${announcedValuePerM2.toLocaleString()}</td><td>${areaM2.toFixed(2)}</td><td>${land.area.toFixed(2)}</td><td>${land.ownerCount}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${shareAreaM2.toFixed(2)}</td><td>${shareAreaPing.toFixed(2)}</td><td>${sharePercentage}%</td><td>${land.buildingNumber || ''}</td></tr><tr class="subtotal-row"><td colspan="3">小計</td><td>${areaM2.toFixed(2)}</td><td>${land.area.toFixed(2)}</td><td colspan="3"></td><td>${shareAreaM2.toFixed(2)}</td><td>${shareAreaPing.toFixed(2)}</td><td>${sharePercentage}%</td><td></td></tr>`;
         }
 
         function renderBuildingTable(land) {
-            if (!land.buildingNumber) {
-                document.getElementById('buildingTableBody').innerHTML = `
-                    <tr>
-                        <td colspan="11" style="text-align: center; padding: 20px; color: #666;">此筆土地無地上物</td>
-                    </tr>
-                `;
-                return;
-            }
-
-            // 生成建物資料示例
-            const buildingAreaPing = (Math.random() * 20 + 10).toFixed(2);
-            const buildingAreaM2 = (buildingAreaPing * PING_TO_M2).toFixed(2);
-            const buildingOwners = Math.floor(Math.random() * 15) + 5;
-            const buildingShareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0;
-            const buildingShareAreaM2 = (buildingAreaM2 * buildingShareRatio).toFixed(2);
-            const buildingShareAreaPing = (buildingAreaPing * buildingShareRatio).toFixed(2);
-            const buildingSharePercentage = (buildingShareRatio * 100).toFixed(2);
-
+            if (!land.buildingNumber) { document.getElementById('buildingTableBody').innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 20px; color: #666;">此筆土地無地上物</td></tr>`; return; }
+            const buildingAreaPing = (Math.random()*20+10).toFixed(2), buildingAreaM2 = (buildingAreaPing*PING_TO_M2).toFixed(2), buildingOwners = Math.floor(Math.random()*15)+5, buildingShareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0, buildingShareAreaM2 = (buildingAreaM2*buildingShareRatio).toFixed(2), buildingShareAreaPing = (buildingAreaPing*buildingShareRatio).toFixed(2), buildingSharePercentage = (buildingShareRatio*100).toFixed(2);
             document.getElementById('buildingAddress').innerHTML = `<strong>地址：${land.region}${land.district}○○街○○巷1號</strong>`;
-            
-            const buildingTableBody = document.getElementById('buildingTableBody');
-            buildingTableBody.innerHTML = `
-                <tr>
-                    <td rowspan="2">10233</td>
-                    <td>1</td>
-                    <td rowspan="2">${buildingOwners}</td>
-                    <td>${(buildingAreaM2 / 2).toFixed(2)}</td>
-                    <td>${(buildingAreaPing / 2).toFixed(2)}</td>
-                    <td>${land.shareNumerator}</td>
-                    <td>${land.shareDenominator}</td>
-                    <td>${(buildingShareAreaM2 / 2).toFixed(2)}</td>
-                    <td>${(buildingShareAreaPing / 2).toFixed(2)}</td>
-                    <td>${buildingSharePercentage}%</td>
-                    <td rowspan="2"></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>${(buildingAreaM2 / 2).toFixed(2)}</td>
-                    <td>${(buildingAreaPing / 2).toFixed(2)}</td>
-                    <td>${land.shareNumerator}</td>
-                    <td>${land.shareDenominator}</td>
-                    <td>${(buildingShareAreaM2 / 2).toFixed(2)}</td>
-                    <td>${(buildingShareAreaPing / 2).toFixed(2)}</td>
-                    <td>${buildingSharePercentage}%</td>
-                </tr>
-                <tr class="subtotal-row">
-                    <td colspan="3">小計</td>
-                    <td>${buildingAreaM2}</td>
-                    <td>${buildingAreaPing}</td>
-                    <td colspan="2"></td>
-                    <td>${buildingShareAreaM2}</td>
-                    <td>${buildingShareAreaPing}</td>
-                    <td>${(parseFloat(buildingSharePercentage) * 2).toFixed(2)}%</td>
-                    <td></td>
-                </tr>
-            `;
+            document.getElementById('buildingTableBody').innerHTML = `<tr><td rowspan="2">10233</td><td>1</td><td rowspan="2">${buildingOwners}</td><td>${(buildingAreaM2/2).toFixed(2)}</td><td>${(buildingAreaPing/2).toFixed(2)}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${(buildingShareAreaM2/2).toFixed(2)}</td><td>${(buildingShareAreaPing/2).toFixed(2)}</td><td>${buildingSharePercentage}%</td><td rowspan="2"></td></tr><tr><td>2</td><td>${(buildingAreaM2/2).toFixed(2)}</td><td>${(buildingAreaPing/2).toFixed(2)}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${(buildingShareAreaM2/2).toFixed(2)}</td><td>${(buildingShareAreaPing/2).toFixed(2)}</td><td>${buildingSharePercentage}%</td></tr><tr class="subtotal-row"><td colspan="3">小計</td><td>${buildingAreaM2}</td><td>${buildingAreaPing}</td><td colspan="2"></td><td>${buildingShareAreaM2}</td><td>${buildingShareAreaPing}</td><td>${(parseFloat(buildingSharePercentage)*2).toFixed(2)}%</td><td></td></tr>`;
         }
         
         function renderRealPriceTable(land) {
-            const tableBody = document.getElementById('realPriceTableBody');
             let contentHTML = '';
-
             for (let i = 0; i < 8; i++) {
-                const transactionMonth = Math.floor(Math.random() * 5) + 1;
-                const transactionDate = `114/${String(transactionMonth).padStart(2, '0')}`;
-                
-                const randomStreets = ["中正路", "中山路", "成功路", "大業路", "文心路", "中華路", "民生東路", "羅斯福路"];
-                const street = randomStreets[Math.floor(Math.random() * randomStreets.length)];
-                const address = `${land.district}${street}${Math.floor(Math.random() * 200) + 1}號`;
-                
-                const types = ["住宅用地/建", "商業用地/商", "工業用地/工", "農業用地/農"];
-                const type = types[Math.floor(Math.random() * types.length)];
-
-                const areaVariation = (Math.random() - 0.5) * 0.8; // -40% to +40% variation
-                const area = land.area * (1 + areaVariation);
-
-                const priceVariation = (Math.random() - 0.5) * 0.6; // -30% to +30% variation
-                const unitPrice = land.pricePerPing * (1 + priceVariation);
-                const totalPrice = area * unitPrice;
-                
-                const remarks = Math.random() > 0.85 ? "親友交易" : "";
-
-                contentHTML += `
-                    <tr>
-                        <td class="center-align">${transactionDate}</td>
-                        <td>${address}</td>
-                        <td class="center-align">${type}</td>
-                        <td class="center-align price-highlight">${(totalPrice / 10000).toFixed(1)} 億</td>
-                        <td class="center-align">${area.toFixed(2)} 坪</td>
-                        <td class="center-align price-highlight">${unitPrice.toFixed(1)} 萬/坪</td>
-                        <td class="center-align">${remarks}</td>
-                    </tr>
-                `;
+                const transactionDate = `114/${String(Math.floor(Math.random()*5)+1).padStart(2,'0')}`;
+                const address = `${land.district}${[ "中正路", "中山路", "成功路", "大業路"][Math.floor(Math.random()*4)]}${Math.floor(Math.random()*200)+1}號`;
+                const type = ["住宅用地/建", "商業用地/商", "工業用地/工"][Math.floor(Math.random()*3)];
+                const area = land.area*(1+(Math.random()-.5)*.8), unitPrice = land.pricePerPing*(1+(Math.random()-.5)*.6), totalPrice = area*unitPrice;
+                contentHTML += `<tr><td class="center-align">${transactionDate}</td><td>${address}</td><td class="center-align">${type}</td><td class="center-align price-highlight">${(totalPrice/1e4).toFixed(1)} 億</td><td class="center-align">${area.toFixed(2)} 坪</td><td class="center-align price-highlight">${unitPrice.toFixed(1)} 萬/坪</td><td class="center-align">${Math.random()>.85?"親友交易":""}</td></tr>`;
             }
-            tableBody.innerHTML = contentHTML;
+            document.getElementById('realPriceTableBody').innerHTML = contentHTML;
         }
 
         function initializeMaps(land) {
-            // 台灣中心座標（示例使用台北）
-            const defaultCoords = [25.0330, 121.5654];
-            
-            // 根據地區調整座標
-            let coords = defaultCoords;
-            if (land.region === "桃園市") coords = [24.9936, 121.3010];
-            else if (land.region === "台中市") coords = [24.1477, 120.6736];
-            else if (land.region === "台南市") coords = [22.9997, 120.2270];
-            else if (land.region === "高雄市") coords = [22.6273, 120.3014];
-            else if (land.region === "新北市") coords = [25.0116, 121.4647];
-
-            // 儲存當前座標供外部地圖使用
+            let coords = [25.0330, 121.5654];
+            if (land.region === "桃園市") coords = [24.9936, 121.3010]; else if (land.region === "台中市") coords = [24.1477, 120.6736]; else if (land.region === "台南市") coords = [22.9997, 120.2270]; else if (land.region === "高雄市") coords = [22.6273, 120.3014];
             currentCoords = coords;
-
-            // 土地使用分區圖
-            const zoningMap = L.map('zoningMap').setView(coords, 16);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(zoningMap);
-            L.polygon([
-                [coords[0] + 0.001, coords[1] - 0.001],
-                [coords[0] + 0.001, coords[1] + 0.001],
-                [coords[0] - 0.001, coords[1] + 0.001],
-                [coords[0] - 0.001, coords[1] - 0.001]
-            ], {
-                color: '#DC2626',
-                fillColor: '#ffcdd2',
-                fillOpacity: 0.5
-            }).addTo(zoningMap).bindPopup(`使用分區：${land.landUseZone}<br>面積：${land.area}坪`);
-
-            // 地籍圖
-            const cadastralMap = L.map('cadastralMap').setView(coords, 17);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(cadastralMap);
-            L.marker(coords).addTo(cadastralMap)
-                .bindPopup(`地號：${land.id}<br>${land.title}`);
-            L.polygon([
-                [coords[0] + 0.0008, coords[1] - 0.0008],
-                [coords[0] + 0.0008, coords[1] + 0.0008],
-                [coords[0] - 0.0008, coords[1] + 0.0008],
-                [coords[0] - 0.0008, coords[1] - 0.0008]
-            ], {
-                color: '#2563eb',
-                weight: 2,
-                fillOpacity: 0.1
-            }).addTo(cadastralMap);
-
-            // 地形圖
-            const topographicMap = L.map('topographicMap').setView(coords, 15);
-            L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenTopoMap contributors'
-            }).addTo(topographicMap);
-            L.marker(coords).addTo(topographicMap)
-                .bindPopup(`地形位置<br>${land.region}${land.district}`);
-
-            // 航照圖
-            const aerialMap = L.map('aerialMap').setView(coords, 18);
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '© Esri'
-            }).addTo(aerialMap);
-            L.circle(coords, {
-                color: '#059669',
-                fillColor: '#10b981',
-                fillOpacity: 0.3,
-                radius: 50
-            }).addTo(aerialMap).bindPopup('土地位置');
+            const zoningMap = L.map('zoningMap').setView(coords,16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(zoningMap); L.polygon([[coords[0]+.001,coords[1]-.001],[coords[0]+.001,coords[1]+.001],[coords[0]-.001,coords[1]+.001],[coords[0]-.001,coords[1]-.001]],{color:'#DC2626',fillColor:'#ffcdd2',fillOpacity:.5}).addTo(zoningMap).bindPopup(`使用分區：${land.landUseZone}`);
+            const cadastralMap = L.map('cadastralMap').setView(coords,17); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(cadastralMap); L.marker(coords).addTo(cadastralMap).bindPopup(`地號：${land.id}`); L.polygon([[coords[0]+.0008,coords[1]-.0008],[coords[0]+.0008,coords[1]+.0008],[coords[0]-.0008,coords[1]+.0008],[coords[0]-.0008,coords[1]-.0008]],{color:'#2563eb',weight:2,fillOpacity:.1}).addTo(cadastralMap);
+            const topographicMap = L.map('topographicMap').setView(coords,15); L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png').addTo(topographicMap); L.marker(coords).addTo(topographicMap).bindPopup(`地形位置`);
+            const aerialMap = L.map('aerialMap').setView(coords,18); L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(aerialMap); L.circle(coords,{color:'#059669',fillColor:'#10b981',fillOpacity:.3,radius:50}).addTo(aerialMap).bindPopup('土地位置');
         }
 
         function initializeStreetView(land) {
-            // 根據地區調整座標
-            const defaultCoords = [25.0330, 121.5654];
-            let coords = defaultCoords;
-            if (land.region === "桃園市") coords = [24.9936, 121.3010];
-            else if (land.region === "台中市") coords = [24.1477, 120.6736];
-            else if (land.region === "台南市") coords = [22.9997, 120.2270];
-            else if (land.region === "高雄市") coords = [22.6273, 120.3014];
-            else if (land.region === "新北市") coords = [25.0116, 121.4647];
-
-            // 創建 Leaflet 地圖作為街景圖的基礎
-            const streetviewMap = L.map('streetviewContainer').setView(coords, 18);
-            
-            // 使用衛星影像圖層
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '© Esri'
-            }).addTo(streetviewMap);
-            
-            // 添加標記並綁定開啟 Google 街景的連結
-            const marker = L.marker(coords).addTo(streetviewMap);
-            const streetviewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${coords[0]},${coords[1]}&heading=0&pitch=0&fov=90`;
-            
-            marker.bindPopup(`
-                <div style="text-align: center;">
-                    <strong>${land.title}</strong><br>
-                    <a href="${streetviewUrl}" target="_blank" style="
-                        display: inline-block;
-                        margin-top: 10px;
-                        padding: 8px 16px;
-                        background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
-                        color: white;
-                        text-decoration: none;
-                        border-radius: 6px;
-                        font-weight: 600;
-                    ">🌍 開啟 Google 街景</a>
-                </div>
-            `).openPopup();
-            
-            // 添加圓形標示區域
-            L.circle(coords, {
-                color: '#4285f4',
-                fillColor: '#4285f4',
-                fillOpacity: 0.2,
-                radius: 30
-            }).addTo(streetviewMap);
+            let coords = [25.0330, 121.5654];
+            if (land.region === "桃園市") coords = [24.9936, 121.3010]; else if (land.region === "台中市") coords = [24.1477, 120.6736];
+            const streetviewMap = L.map('streetviewContainer').setView(coords, 18); L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(streetviewMap);
+            const marker = L.marker(coords).addTo(streetviewMap); const streetviewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${coords[0]},${coords[1]}`;
+            marker.bindPopup(`<div style="text-align:center;"><strong>${land.title}</strong><br><a href="${streetviewUrl}" target="_blank" style="display:inline-block;margin-top:10px;padding:8px 16px;background:linear-gradient(135deg, #4285f4 0%, #34a853 100%);color:white;text-decoration:none;border-radius:6px;font-weight:600;">🌍 開啟 Google 街景</a></div>`).openPopup();
         }
 
         function openExternalMap(mapType) {
-            const lat = currentCoords[0];
-            const lng = currentCoords[1];
-            let url = '';
-            
-            switch(mapType) {
-                case 'zoning':
-                case 'cadastral':
-                case 'topographic':
-                    // 開啟 OpenStreetMap
-                    url = `https://www.openstreetmap.org/#map=17/${lat}/${lng}`;
-                    break;
-                case 'aerial':
-                    // 開啟 Google Maps 衛星圖
-                    url = `https://www.google.com/maps/@${lat},${lng},18z/data=!3m1!1e3`;
-                    break;
-            }
-            
-            if (url) {
-                window.open(url, '_blank');
-            }
+            let url = `https://www.openstreetmap.org/#map=17/${currentCoords[0]}/${currentCoords[1]}`;
+            if (mapType === 'aerial') url = `https://www.google.com/maps/@${currentCoords[0]},${currentCoords[1]},18z/data=!3m1!1e3`;
+            window.open(url, '_blank');
         }
 
         async function exportToPDF() {
             const button = document.getElementById('exportBtn');
             const originalText = button.innerHTML;
-            
             try {
-                // 禁用按鈕並顯示載入狀態
-                button.disabled = true;
-                button.innerHTML = '⏳ 產生中...';
-                
-                // 添加 PDF 模式樣式
+                button.disabled = true; button.innerHTML = '⏳ 產生中...';
                 document.body.classList.add('pdf-mode');
-                
-                // 等待樣式套用
                 await new Promise(resolve => setTimeout(resolve, 500));
-                
-                // 獲取要匯出的內容
                 const content = document.getElementById('pdfContent');
-                
-                // 取得原始寬度並設定固定寬度用於截圖
-                const originalWidth = content.style.width;
-                content.style.width = '1200px';
-                
-                // 使用 html2canvas 將內容轉換為圖片
-                const canvas = await html2canvas(content, {
-                    scale: 1.5,
-                    useCORS: true,
-                    allowTaint: true,
-                    logging: false,
-                    backgroundColor: '#ffffff',
-                    width: 1200,
-                    windowWidth: 1200
-                });
-                
-                // 恢復原始樣式
-                content.style.width = originalWidth;
+                const canvas = await html2canvas(content, { scale: 2, useCORS: true, allowTaint: true, logging: false, backgroundColor: '#ffffff' });
                 document.body.classList.remove('pdf-mode');
-                
-                // 創建 PDF
-                const { jsPDF } = window.jspdf;
-                
-                // A4 尺寸 (mm)
-                const pdfWidth = 210;
-                const pdfHeight = 297;
-                const margin = 15;
-                
-                // 計算圖片尺寸
-                const imgWidth = canvas.width;
-                const imgHeight = canvas.height;
-                
-                // 計算可用空間
-                const availableWidth = pdfWidth - (2 * margin);
-                const availableHeight = pdfHeight - (2 * margin);
-                
-                // 計算縮放比例
-                const widthRatio = availableWidth / (imgWidth * 0.264583); // px to mm
-                const heightRatio = availableHeight / (imgHeight * 0.264583);
-                const ratio = Math.min(widthRatio, heightRatio, 1);
-                
-                // 計算最終尺寸
-                const finalWidth = (imgWidth * 0.264583) * ratio;
-                const finalHeight = (imgHeight * 0.264583) * ratio;
-                
-                // 計算需要的頁數
-                const pagesNeeded = Math.ceil(finalHeight / availableHeight);
-                
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-                
-                // 將圖片轉為 base64
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                
-                // 如果內容高度小於一頁，直接放入
-                if (pagesNeeded <= 1) {
-                    pdf.addImage(imgData, 'JPEG', margin, margin, finalWidth, finalHeight);
-                } else {
-                    // 需要分頁
-                    for (let page = 0; page < pagesNeeded; page++) {
-                        if (page > 0) {
-                            pdf.addPage();
-                        }
-                        
-                        // 計算每頁要裁切的位置
-                        const sourceY = page * (imgHeight / pagesNeeded);
-                        const sourceHeight = imgHeight / pagesNeeded;
-                        
-                        // 創建臨時 canvas 來裁切當前頁
-                        const tempCanvas = document.createElement('canvas');
-                        tempCanvas.width = imgWidth;
-                        tempCanvas.height = sourceHeight;
-                        const tempCtx = tempCanvas.getContext('2d');
-                        
-                        // 繪製裁切的部分
-                        tempCtx.drawImage(
-                            canvas,
-                            0, sourceY, imgWidth, sourceHeight,
-                            0, 0, imgWidth, sourceHeight
-                        );
-                        
-                        const pageImgData = tempCanvas.toDataURL('image/jpeg', 0.95);
-                        const pageHeight = availableHeight;
-                        
-                        pdf.addImage(pageImgData, 'JPEG', margin, margin, finalWidth, pageHeight);
-                    }
+                const { jsPDF } = window.jspdf; const pdfWidth = 210, pdfHeight = 297, margin = 0; const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const imgWidth = canvas.width, imgHeight = canvas.height; const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                const ratio = imgWidth / imgHeight, pageRatio = pdfWidth / pdfHeight;
+                let canvasHeightOnPage, canvasWidthOnPage;
+                if (ratio > pageRatio) { canvasWidthOnPage = pdfWidth; canvasHeightOnPage = pdfWidth / ratio; } else { canvasHeightOnPage = pdfHeight; canvasWidthOnPage = pdfHeight * ratio; }
+                const totalPages = Math.ceil(imgHeight / (canvasHeightOnPage / (canvasWidthOnPage / imgWidth)));
+                let capturedHeight = 0;
+                for (let i = 1; i <= totalPages; i++) {
+                    const sourceY = capturedHeight;
+                    const sourceHeight = Math.min(imgHeight - capturedHeight, imgWidth * (pdfHeight/pdfWidth));
+                    const tempCanvas = document.createElement('canvas'); tempCanvas.width = imgWidth; tempCanvas.height = sourceHeight;
+                    const tempCtx = tempCanvas.getContext('2d');
+                    tempCtx.drawImage(canvas, 0, sourceY, imgWidth, sourceHeight, 0, 0, imgWidth, sourceHeight);
+                    const pageImgData = tempCanvas.toDataURL('image/jpeg', 0.95);
+                    if (i > 1) pdf.addPage();
+                    pdf.addImage(pageImgData, 'JPEG', margin, margin, pdfWidth, pdfHeight);
+                    capturedHeight += sourceHeight;
                 }
-                
-                // 獲取土地資料以生成檔名
-                const land = getLandData();
-                const today = new Date();
-                const dateStr = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
-                const filename = `產調分析表_${land.title}_${dateStr}.pdf`;
-                
-                // 下載 PDF
-                pdf.save(filename);
-                
-                // 顯示成功訊息
-                button.innerHTML = '✅ 匯出成功！';
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }, 2000);
-                
+                const land = getLandData(); const today = new Date(); const dateStr = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+                pdf.save(`產調分析表_${land.title}_${dateStr}.pdf`);
+                button.innerHTML = '✅ 匯出成功！'; setTimeout(() => { button.innerHTML = originalText; button.disabled = false; }, 2000);
             } catch (error) {
-                console.error('匯出 PDF 時發生錯誤：', error);
-                alert('匯出 PDF 失敗，請稍後再試。\n錯誤訊息：' + error.message);
-                button.innerHTML = originalText;
-                button.disabled = false;
-                document.body.classList.remove('pdf-mode');
+                console.error('匯出 PDF 時發生錯誤：', error); alert('匯出 PDF 失敗，請稍後再試。');
+                button.innerHTML = originalText; button.disabled = false; document.body.classList.remove('pdf-mode');
             }
         }
 
-        // 初始化頁面
         document.addEventListener('DOMContentLoaded', function() {
             const land = getLandData();
-            renderLandTable(land);
-            renderBuildingTable(land);
-            renderRealPriceTable(land);
-            
-            // 延遲初始化地圖以確保 DOM 元素已渲染
-            setTimeout(() => {
-                initializeMaps(land);
-                initializeStreetView(land);
-            }, 100);
+            renderLandTable(land); renderBuildingTable(land); renderRealPriceTable(land);
+            setTimeout(() => { initializeMaps(land); initializeStreetView(land); }, 100);
         });
     </script>
 </body>
