@@ -348,36 +348,10 @@
         const PING_TO_M2 = 3.305785;
         let currentCoords = [25.0330, 121.5654];
         
-        // MODIFIED: This function now ensures all data fields are complete and randomized if missing.
         function getLandData() {
             const storedData = sessionStorage.getItem('selectedLand');
-            let baseData = {};
-            if (storedData) {
-                baseData = JSON.parse(storedData);
-            }
-
-            // Define a complete default structure with random generation for missing parts
-            const defaults = {
-                id: new URLSearchParams(window.location.search).get('landId') || Math.floor(Math.random() * 100) + 1,
-                title: "高雄市鼓山區農地3地號",
-                region: "高雄市",
-                district: "鼓山區",
-                area: 60.19,
-                pricePerPing: 130.5,
-                landUseZone: ["住宅區", "商業區", "工業一", "農業區", "保護區"][Math.floor(Math.random() * 5)],
-                ownerCount: Math.floor(Math.random() * 15) + 2,
-                shareNumerator: 1,
-                shareDenominator: Math.floor(Math.random() * 15) + 5,
-                marketPrice: Math.floor(Math.random() * 50) + 80
-            };
-            
-            // Create the final object by overriding defaults with any available storedData
-            const finalData = { ...defaults, ...baseData };
-
-            // Ensure share numerator is not greater than denominator
-            finalData.shareNumerator = Math.min(finalData.shareNumerator, finalData.shareDenominator);
-
-            return finalData;
+            if (storedData) return JSON.parse(storedData);
+            return { id: new URLSearchParams(window.location.search).get('landId') || 1, title: "桃園市八德區廣福段一小段1001地號", region: "桃園市", district: "八德區", area: 179.6, sellerPrice: 23000, buyerPrice: 13050, pricePerPing: 130.5, landUseZone: "工一", ownerCount: 15, shareNumerator: 1, shareDenominator: 15, buildingNumber: "建號10233", marketPrice: 110 };
         }
 
         function renderLandTable(land) {
@@ -387,85 +361,15 @@
             const shareAreaM2 = areaM2 * shareRatio;
             const shareAreaPing = land.area * shareRatio;
             const sharePercentage = (shareRatio * 100).toFixed(2);
-            
-            const buildingDisplay = land.hasBuilding ? land.buildingId : '無';
-            const announcedValueDisplay = announcedValuePerM2 > 0 ? announcedValuePerM2.toLocaleString() : '非數值';
-
-
             document.getElementById('landAddress').innerHTML = `<strong>地段:${land.title}</strong>`;
-            document.getElementById('landTableBody').innerHTML = `<tr><td>${land.id}</td><td class="zone-cell">${land.landUseZone}</td><td>${announcedValueDisplay}</td><td>${areaM2.toFixed(2)}</td><td>${land.area.toFixed(2)}</td><td>${land.ownerCount}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${shareAreaM2.toFixed(2)}</td><td>${shareAreaPing.toFixed(2)}</td><td>${sharePercentage}%</td><td>${buildingDisplay}</td></tr><tr class="subtotal-row"><td colspan="3">小計</td><td>${areaM2.toFixed(2)}</td><td>${land.area.toFixed(2)}</td><td colspan="3"></td><td>${shareAreaM2.toFixed(2)}</td><td>${shareAreaPing.toFixed(2)}</td><td>${sharePercentage}%</td><td></td></tr>`;
+            document.getElementById('landTableBody').innerHTML = `<tr><td>${land.id}</td><td class="zone-cell">${land.landUseZone}</td><td>${announcedValuePerM2.toLocaleString()}</td><td>${areaM2.toFixed(2)}</td><td>${land.area.toFixed(2)}</td><td>${land.ownerCount}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${shareAreaM2.toFixed(2)}</td><td>${shareAreaPing.toFixed(2)}</td><td>${sharePercentage}%</td><td>${land.buildingNumber || ''}</td></tr><tr class="subtotal-row"><td colspan="3">小計</td><td>${areaM2.toFixed(2)}</td><td>${land.area.toFixed(2)}</td><td colspan="3"></td><td>${shareAreaM2.toFixed(2)}</td><td>${shareAreaPing.toFixed(2)}</td><td>${sharePercentage}%</td><td></td></tr>`;
         }
-        
+
         function renderBuildingTable(land) {
-            if (!land.hasBuilding) {
-                document.getElementById('buildingAddress').innerHTML = `<strong>地址: 無</strong>`;
-                document.getElementById('buildingTableBody').innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 20px; color: #666;">此筆土地無地上物</td></tr>`;
-                return;
-            }
-
-            const streets = ["中正路", "中山路", "成功路", "大業路", "和平路", "建國路", "廣福路"];
-            const randomStreet = streets[Math.floor(Math.random() * streets.length)];
-            const randomLane = Math.floor(Math.random() * 100) + 1;
-            const randomNum = Math.floor(Math.random() * 200) + 1;
-            const fullAddress = `${land.region}${land.district}${randomStreet}${randomLane}巷${randomNum}號`;
-            document.getElementById('buildingAddress').innerHTML = `<strong>地址: ${fullAddress}</strong>`;
-            
-            const buildingOwners = Math.floor(Math.random() * 15) + 1;
-            const buildingShareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0;
-            const totalFloors = Math.floor(Math.random() * 3) + 1;
-            
-            let totalBuildingAreaM2 = 0;
-            let totalShareAreaM2 = 0;
-            let tableRowsHTML = '';
-
-            for(let i = 1; i <= totalFloors; i++) {
-                const floorAreaPing = (Math.random() * 15 + 10).toFixed(2);
-                const floorAreaM2 = (floorAreaPing * PING_TO_M2);
-                const floorShareAreaM2 = (floorAreaM2 * buildingShareRatio);
-                const floorShareAreaPing = (floorAreaPing * buildingShareRatio);
-                
-                totalBuildingAreaM2 += floorAreaM2;
-                totalShareAreaM2 += floorShareAreaM2;
-
-                const firstCol = (i === 1) ? `<td rowspan="${totalFloors}">${land.buildingId}</td>` : '';
-                const thirdCol = (i === 1) ? `<td rowspan="${totalFloors}">${buildingOwners}</td>` : '';
-                const lastCol = (i === 1) ? `<td rowspan="${totalFloors}"></td>` : '';
-
-                tableRowsHTML += `
-                    <tr>
-                        ${firstCol}
-                        <td>${i}</td>
-                        ${thirdCol}
-                        <td>${floorAreaM2.toFixed(2)}</td>
-                        <td>${floorAreaPing}</td>
-                        <td>${land.shareNumerator}</td>
-                        <td>${land.shareDenominator}</td>
-                        <td>${floorShareAreaM2.toFixed(2)}</td>
-                        <td>${floorShareAreaPing.toFixed(2)}</td>
-                        <td>${(buildingShareRatio * 100).toFixed(2)}%</td>
-                        ${lastCol}
-                    </tr>
-                `;
-            }
-            
-            const totalBuildingAreaPing = (totalBuildingAreaM2 / PING_TO_M2).toFixed(2);
-            const totalShareAreaPing = (totalShareAreaM2 / PING_TO_M2).toFixed(2);
-            const totalSharePercentage = ((buildingShareRatio * 100) * totalFloors).toFixed(2);
-
-            const subtotalRow = `
-                <tr class="subtotal-row">
-                    <td colspan="3">小計</td>
-                    <td>${totalBuildingAreaM2.toFixed(2)}</td>
-                    <td>${totalBuildingAreaPing}</td>
-                    <td colspan="2"></td>
-                    <td>${totalShareAreaM2.toFixed(2)}</td>
-                    <td>${totalShareAreaPing}</td>
-                    <td>${totalSharePercentage}%</td>
-                    <td></td>
-                </tr>
-            `;
-            
-            document.getElementById('buildingTableBody').innerHTML = tableRowsHTML + subtotalRow;
+            if (!land.buildingNumber) { document.getElementById('buildingTableBody').innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 20px; color: #666;">此筆土地無地上物</td></tr>`; return; }
+            const buildingAreaPing = (Math.random()*20+10).toFixed(2), buildingAreaM2 = (buildingAreaPing*PING_TO_M2).toFixed(2), buildingOwners = Math.floor(Math.random()*15)+5, buildingShareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0, buildingShareAreaM2 = (buildingAreaM2*buildingShareRatio).toFixed(2), buildingShareAreaPing = (buildingAreaPing*buildingShareRatio).toFixed(2), buildingSharePercentage = (buildingShareRatio*100).toFixed(2);
+            document.getElementById('buildingAddress').innerHTML = `<strong>地址:${land.region}${land.district}○○街○○巷1號</strong>`;
+            document.getElementById('buildingTableBody').innerHTML = `<tr><td rowspan="2">10233</td><td>1</td><td rowspan="2">${buildingOwners}</td><td>${(buildingAreaM2/2).toFixed(2)}</td><td>${(buildingAreaPing/2).toFixed(2)}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${(buildingShareAreaM2/2).toFixed(2)}</td><td>${(buildingShareAreaPing/2).toFixed(2)}</td><td>${buildingSharePercentage}%</td><td rowspan="2"></td></tr><tr><td>2</td><td>${(buildingAreaM2/2).toFixed(2)}</td><td>${(buildingAreaPing/2).toFixed(2)}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${(buildingShareAreaM2/2).toFixed(2)}</td><td>${(buildingShareAreaPing/2).toFixed(2)}</td><td>${buildingSharePercentage}%</td></tr><tr class="subtotal-row"><td colspan="3">小計</td><td>${buildingAreaM2}</td><td>${buildingAreaPing}</td><td colspan="2"></td><td>${buildingShareAreaM2}</td><td>${buildingShareAreaPing}</td><td>${(parseFloat(buildingSharePercentage)*2).toFixed(2)}%</td><td></td></tr>`;
         }
         
         function renderRealPriceTable(land) {
@@ -508,48 +412,91 @@
             const button = document.getElementById('exportBtn');
             const originalText = button.innerHTML;
             try {
+                // 1. 準備階段
                 button.disabled = true;
                 button.innerHTML = '⏳ 生成中...';
                 document.body.classList.add('pdf-mode');
                 await new Promise(resolve => setTimeout(resolve, 500));
 
+                // 2. 擷取整個頁面為 Canvas
                 const canvas = await html2canvas(document.body, {
-                    scale: 2, useCORS: true, allowTaint: true, logging: false, backgroundColor: '#e0f2f1',
-                    windowWidth: document.documentElement.scrollWidth, windowHeight: document.documentElement.scrollHeight
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false,
+                    backgroundColor: '#e0f2f1',
+                    windowWidth: document.documentElement.scrollWidth,
+                    windowHeight: document.documentElement.scrollHeight
                 });
                 document.body.classList.remove('pdf-mode');
 
+                // 3. 初始化 jsPDF
                 const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+                const pdf = new jsPDF({ 
+                    orientation: 'portrait', 
+                    unit: 'mm', 
+                    format: 'a4',
+                    compress: true
+                });
                 
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = pdf.internal.pageSize.getHeight();
+                
+                // 4. 計算比例 - 保持寬高比
                 const canvasWidth = canvas.width;
                 const canvasHeight = canvas.height;
+                
+                // Canvas 與 PDF 的比例 (mm per pixel)
                 const ratio = pdfWidth / canvasWidth;
+                
+                // 計算實際圖片在PDF中的高度
                 const imgHeightInPDF = canvasHeight * ratio;
+                
+                // 計算需要多少頁
                 const totalPages = Math.ceil(imgHeightInPDF / pdfHeight);
                 
+                // 5. 分頁處理
                 for (let pageNum = 0; pageNum < totalPages; pageNum++) {
-                    if (pageNum > 0) pdf.addPage();
+                    if (pageNum > 0) {
+                        pdf.addPage();
+                    }
+                    
+                    // 計算當前頁在 Canvas 中的起始位置和高度
                     const startY = (pageNum * pdfHeight) / ratio;
                     const heightToCut = Math.min(pdfHeight / ratio, canvasHeight - startY);
+                    
+                    // 創建臨時 Canvas 存放當前頁內容
                     const pageCanvas = document.createElement('canvas');
                     pageCanvas.width = canvasWidth;
                     pageCanvas.height = heightToCut;
+                    
                     const ctx = pageCanvas.getContext('2d');
-                    ctx.drawImage(canvas, 0, startY, canvasWidth, heightToCut, 0, 0, canvasWidth, heightToCut);
+                    ctx.drawImage(
+                        canvas,
+                        0, startY,           // 源起始位置
+                        canvasWidth, heightToCut,  // 源尺寸
+                        0, 0,                // 目標起始位置
+                        canvasWidth, heightToCut   // 目標尺寸
+                    );
+                    
+                    // 轉換為圖片並加入 PDF
                     const imgData = pageCanvas.toDataURL('image/jpeg', 0.95);
-                    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, heightToCut * ratio);
+                    const imgHeight = heightToCut * ratio;
+                    
+                    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, imgHeight);
                 }
 
+                // 6. 儲存 PDF
                 const land = getLandData();
                 const today = new Date();
                 const dateStr = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
                 pdf.save(`產調分析表_${land.title}_${dateStr}.pdf`);
                 
                 button.innerHTML = '✅ 匯出成功!';
-                setTimeout(() => { button.innerHTML = originalText; button.disabled = false; }, 2000);
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 2000);
 
             } catch (error) {
                 console.error('匯出 PDF 時發生錯誤:', error);
@@ -560,22 +507,11 @@
             }
         }
 
+
         document.addEventListener('DOMContentLoaded', function() {
             const land = getLandData();
-            
-            land.hasBuilding = Math.random() > 0.2; // 80% chance to have a building
-            if (land.hasBuilding) {
-                land.buildingId = Math.floor(Math.random() * 5000) + 10000;
-            }
-
-            renderLandTable(land); 
-            renderBuildingTable(land); 
-            renderRealPriceTable(land);
-            
-            setTimeout(() => { 
-                initializeMaps(land); 
-                initializeStreetView(land); 
-            }, 100);
+            renderLandTable(land); renderBuildingTable(land); renderRealPriceTable(land);
+            setTimeout(() => { initializeMaps(land); initializeStreetView(land); }, 100);
         });
     </script>
 </body>

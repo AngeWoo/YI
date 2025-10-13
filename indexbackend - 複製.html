@@ -695,6 +695,7 @@
                             <th>總價</th>
                             <th>業務專員</th>
                             <th>聯絡資訊</th>
+                            <th>備註</th>
                             <th>資料完整度</th>
                             <th>狀態</th>
                             <th>提交時間</th>
@@ -877,6 +878,20 @@
                     </div>
                 </div>
 
+                <!-- Notes -->
+                <div class="form-section">
+                    <h3>📝 內部備註</h3>
+                    <div class="form-field">
+                        <label>備註說明</label>
+                        <textarea id="editNotes" placeholder="請輸入內部備註、注意事項、特殊條件等資訊（此欄位不會顯示在前台）" style="min-height: 120px;"></textarea>
+                    </div>
+                    <div style="padding: 12px; background: #e7f3ff; border-radius: 8px; margin-top: 10px;">
+                        <p style="font-size: 0.85rem; color: #004085; margin: 0;">
+                            ℹ️ 此備註僅供內部管理使用，不會在前台顯示給客戶。可記錄案件進度、客戶需求、特殊條件等資訊。
+                        </p>
+                    </div>
+                </div>
+
                 <!-- Documents Upload -->
                 <div class="form-section">
                     <h3>📎 相關文件上傳</h3>
@@ -1009,6 +1024,7 @@
                     phone: Math.random() > 0.3 ? `0912-${String(Math.floor(Math.random() * 1000000)).padStart(6, '0')}` : '',
                     lineId: Math.random() > 0.3 ? `@yiru${i}` : '',
                     assignedAgent: salesAgents[Math.floor(Math.random() * salesAgents.length)].id,
+                    notes: generateRandomNote(i),
                     documents: generateRandomDocuments()
                 });
             }
@@ -1020,6 +1036,24 @@
             const daysAgo = Math.floor(Math.random() * 30);
             const date = new Date(now - daysAgo * 24 * 60 * 60 * 1000);
             return date.toLocaleDateString('zh-TW');
+        }
+
+        function generateRandomNote(id) {
+            const notes = [
+                '地主急售，可議價空間大',
+                '已聯繫地主，等待回覆中',
+                '需確認土地使用分區細節',
+                '客戶已預約現場勘查',
+                '附近有開發計畫，具增值潛力',
+                '地主要求先看買方資格',
+                '價格已與地主確認過',
+                '需注意土地有部分被佔用',
+                '周邊環境優良，適合開發',
+                '已完成初步評估',
+                '',
+                ''
+            ];
+            return notes[Math.floor(Math.random() * notes.length)];
         }
 
         function generateRandomDocuments() {
@@ -1085,6 +1119,11 @@
                     ? `<div style="font-size: 0.8rem; line-height: 1.6; text-align: left;">${contactInfo.join('<br>')}</div>` 
                     : '<span style="color: #999;">未填寫</span>';
 
+                // 備註顯示
+                const notesDisplay = land.notes 
+                    ? `<div style="max-width: 200px; font-size: 0.8rem; color: #666; text-align: left; white-space: normal; line-height: 1.4;">${land.notes}</div>` 
+                    : '<span style="color: #999;">無</span>';
+
                 row.innerHTML = `
                     <td>${land.id}</td>
                     <td style="text-align: left; max-width: 200px; white-space: normal;">${land.title}</td>
@@ -1093,6 +1132,7 @@
                     <td style="font-weight: bold; color: #DC2626;">${formatPrice(land.totalPrice)}</td>
                     <td>${agentDisplay}</td>
                     <td style="max-width: 180px;">${contactDisplay}</td>
+                    <td style="max-width: 200px;">${notesDisplay}</td>
                     <td>
                         <div style="display: flex; align-items: center; gap: 8px; justify-content: center;">
                             <div style="width: 80px; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
@@ -1169,6 +1209,7 @@
             document.getElementById('editEmail').value = currentEditingLand.email || '';
             document.getElementById('editPhone').value = currentEditingLand.phone || '';
             document.getElementById('editLineId').value = currentEditingLand.lineId || '';
+            document.getElementById('editNotes').value = currentEditingLand.notes || '';
 
             // Render documents
             renderDocumentList();
@@ -1317,6 +1358,7 @@
             currentEditingLand.email = document.getElementById('editEmail').value;
             currentEditingLand.phone = document.getElementById('editPhone').value;
             currentEditingLand.lineId = document.getElementById('editLineId').value;
+            currentEditingLand.notes = document.getElementById('editNotes').value;
             currentEditingLand.completion = completion;
 
             alert('資料已儲存成功！');

@@ -274,7 +274,7 @@
         .modal-header h2 { font-size: 1.8rem; margin-bottom: 5px; }
         .modal-header p { font-size: 0.9rem; color: #666; }
         .modal-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; }
-        .modal-section h3 { margin-bottom: 15px; color: #333; font-size: 1.1rem; }
+        .modal-section h3 { margin-bottom: 15px; color: #333; font-size: 1.1rem; text-align: left; }
         .custom-file-upload {
             border: 2px dashed #ccc;
             border-radius: 8px;
@@ -382,7 +382,6 @@
             color: #495057;
         }
         .submit-case-btn {
-            grid-column: 1 / -1;
             margin-top: 25px;
             width: 100%;
             padding: 12px;
@@ -398,6 +397,24 @@
         .submit-case-btn:hover {
             background: #b91c1c;
         }
+        
+        /* NEW: Styles for Online Signing View */
+        .terms-container {
+            height: 200px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            background: #f8f9fa;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        .terms-container p { margin-bottom: 10px; }
+        .signature-group { display: flex; flex-direction: column; gap: 15px; }
+        .signature-group .form-group { gap: 5px; }
+        #signatureName { text-align: left; }
 
 
         @media (max-width: 768px) {
@@ -465,127 +482,170 @@
         <div class="modal-content">
             <button class="close-modal-btn">&times;</button>
             <div class="modal-header">
-                <h2>委託代銷契約簽署</h2>
+                <h2 id="modalTitle">委託代銷契約簽署</h2>
                 <p id="modalCaseInfo"></p>
             </div>
             
-            <div class="modal-section">
-                <h3>選項一：上傳現有合約</h3>
-                <label for="contractFile" class="custom-file-upload">
-                    <span>點擊此處選擇檔案</span>
-                    <small>(支援 PDF, PNG, JPG)</small>
-                </label>
-                <input type="file" id="contractFile" accept=".pdf,.png,.jpg,.jpeg">
-                <button class="upload-action-btn" onclick="handleContractUpload()">確認上傳</button>
+            <div id="initialConsignmentView">
+                <div class="modal-section">
+                    <h3>選項一：上傳現有合約</h3>
+                    <label for="contractFile" class="custom-file-upload">
+                        <span>點擊此處選擇檔案</span>
+                        <small>(支援 PDF, PNG, JPG)</small>
+                    </label>
+                    <input type="file" id="contractFile" accept=".pdf,.png,.jpg,.jpeg">
+                    <button class="upload-action-btn" onclick="handleContractUpload()">確認上傳</button>
+                </div>
+
+                <div class="modal-section">
+                    <h3>選項二：進行線上簽約</h3>
+                    <div class="online-sign-action">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="agreeTerms">
+                            <label for="agreeTerms">我已閱讀並同意一如永續土地委託代銷條款</label>
+                        </div>
+                        <button id="onlineSignBtn" class="sign-action-btn" onclick="initiateOnlineSigning()" disabled>立即線上簽署</button>
+                    </div>
+                </div>
             </div>
 
-            <div class="modal-section">
-                <h3>選項二：進行線上簽約</h3>
-                <div class="online-sign-action">
+            <!-- NEW: Online Signing View (hidden by default) -->
+            <div id="onlineSigningView" style="display: none;">
+                <div class="terms-container" id="termsContent"></div>
+                <div class="signature-group">
                     <div class="checkbox-group">
-                        <input type="checkbox" id="agreeTerms">
-                        <label for="agreeTerms">我已閱讀並同意一如永續土地委託代銷條款</label>
+                        <input type="checkbox" id="finalAgreeTerms" disabled>
+                        <label for="finalAgreeTerms">我已閱讀並同意上述所有條款</label>
                     </div>
-                    <button id="onlineSignBtn" class="sign-action-btn" onclick="handleOnlineSign()" disabled>立即線上簽署</button>
+                    <div class="form-group">
+                        <label for="signatureName">請在此輸入您的姓名以完成簽署：</label>
+                        <input type="text" id="signatureName" placeholder="請輸入姓名">
+                    </div>
+                    <button id="confirmSignBtn" class="sign-action-btn" disabled>確認簽署</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Add Case Modal HTML (NEW) -->
+    <!-- Add Case Modal HTML -->
     <div id="addCaseModal" class="modal-overlay">
         <div class="modal-content">
             <button class="close-modal-btn">&times;</button>
             <div class="modal-header">
                 <h2>新增永續案件</h2>
-                <p>請填寫以下土地詳細資訊</p>
+                <p>請填寫以下地主與土地資訊</p>
             </div>
             <form id="addCaseForm" onsubmit="handleAddCaseSubmit(event)">
-                <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label for="case-photo">照片 (可上傳多張)</label>
-                        <input type="file" id="case-photo" multiple accept="image/*">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-land-type">土地類型</label>
-                        <input type="text" id="case-land-type" placeholder="例如：農地、建地">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-total-price">總價</label>
-                        <div class="input-group">
-                            <input type="number" id="case-total-price" placeholder="請輸入數字">
-                            <span class="input-group-text">萬元</span>
+                <div class="modal-section" style="border-top: none; padding-top: 0; margin-top: 0;">
+                    <h3>地主聯絡資訊</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="case-owner-name">姓名</label>
+                            <input type="text" id="case-owner-name" placeholder="請輸入您的姓名" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-owner-tel">聯絡電話 (Tel)</label>
+                            <input type="tel" id="case-owner-tel" placeholder="例如：0912345678" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-owner-email">電子郵件 (Email)</label>
+                            <input type="email" id="case-owner-email" placeholder="例如：example@mail.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-owner-lineid">Line ID</label>
+                            <input type="text" id="case-owner-lineid" placeholder="請輸入您的Line ID">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="case-area">面積</label>
-                        <div class="input-group">
-                            <input type="number" step="0.01" id="case-area" placeholder="請輸入數字">
-                             <span class="input-group-text">坪</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="case-section">地段</label>
-                        <input type="text" id="case-section" placeholder="例如：XX段XX小段">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-land-number">地號</label>
-                        <input type="text" id="case-land-number" placeholder="請輸入地號">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-zoning">使用分區</label>
-                        <input type="text" id="case-zoning" placeholder="例如：特定農業區">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-ratio">建蔽容積</label>
-                        <input type="text" id="case-ratio" placeholder="例如：60% / 180%">
-                    </div>
-                    <div class="form-group">
-                        <label for="case-buildable-area">可建總坪</label>
-                         <div class="input-group">
-                            <input type="number" step="0.01" id="case-buildable-area" placeholder="請輸入數字">
-                            <span class="input-group-text">坪</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="case-road-width">臨路路寬</label>
-                        <div class="input-group">
-                            <input type="number" id="case-road-width" placeholder="請輸入數字">
-                            <span class="input-group-text">米</span>
-                        </div>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="case-infrastructure">基礎設施</label>
-                        <textarea id="case-infrastructure" placeholder="例如：水、電、網路是否已到位"></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="case-current-status">現況</label>
-                        <textarea id="case-current-status" placeholder="例如：空地、有農作物、有平房"></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="case-suitable-use">適合用途</label>
-                        <textarea id="case-suitable-use" placeholder="例如：倉儲、太陽能、休閒農場"></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="case-undesirable-facilities">嫌惡設施</label>
-                        <textarea id="case-undesirable-facilities" placeholder="附近是否有墓地、高壓電塔等設施"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="case-down-payment">自備款</label>
-                        <div class="input-group">
-                            <input type="number" id="case-down-payment" placeholder="請輸入數字">
-                            <span class="input-group-text">萬元</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="case-subdivision">可否分割出售</label>
-                        <select id="case-subdivision">
-                            <option value="no">否</option>
-                            <option value="yes">是</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="submit-case-btn">儲存案件</button>
                 </div>
+
+                <div class="modal-section">
+                    <h3>土地詳細資訊</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="case-photo">照片 (可上傳多張)</label>
+                            <input type="file" id="case-photo" multiple accept="image/*">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-land-type">土地類型</label>
+                            <input type="text" id="case-land-type" placeholder="例如：農地、建地">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-total-price">總價</label>
+                            <div class="input-group">
+                                <input type="number" id="case-total-price" placeholder="請輸入數字">
+                                <span class="input-group-text">萬元</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-area">面積</label>
+                            <div class="input-group">
+                                <input type="number" step="0.01" id="case-area" placeholder="請輸入數字">
+                                 <span class="input-group-text">坪</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-section">地段</label>
+                            <input type="text" id="case-section" placeholder="例如：XX段XX小段">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-land-number">地號</label>
+                            <input type="text" id="case-land-number" placeholder="請輸入地號">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-zoning">使用分區</label>
+                            <input type="text" id="case-zoning" placeholder="例如：特定農業區">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-ratio">建蔽容積</label>
+                            <input type="text" id="case-ratio" placeholder="例如：60% / 180%">
+                        </div>
+                        <div class="form-group">
+                            <label for="case-buildable-area">可建總坪</label>
+                             <div class="input-group">
+                                <input type="number" step="0.01" id="case-buildable-area" placeholder="請輸入數字">
+                                <span class="input-group-text">坪</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-road-width">臨路路寬</label>
+                            <div class="input-group">
+                                <input type="number" id="case-road-width" placeholder="請輸入數字">
+                                <span class="input-group-text">米</span>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="case-infrastructure">基礎設施</label>
+                            <textarea id="case-infrastructure" placeholder="例如：水、電、網路是否已到位"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="case-current-status">現況</label>
+                            <textarea id="case-current-status" placeholder="例如：空地、有農作物、有平房"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="case-suitable-use">適合用途</label>
+                            <textarea id="case-suitable-use" placeholder="例如：倉儲、太陽能、休閒農場"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="case-undesirable-facilities">嫌惡設施</label>
+                            <textarea id="case-undesirable-facilities" placeholder="附近是否有墓地、高壓電塔等設施"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-down-payment">自備款</label>
+                            <div class="input-group">
+                                <input type="number" id="case-down-payment" placeholder="請輸入數字">
+                                <span class="input-group-text">萬元</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="case-subdivision">可否分割出售</label>
+                            <select id="case-subdivision">
+                                <option value="no">否</option>
+                                <option value="yes">是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="submit-case-btn">上傳審核</button>
             </form>
         </div>
     </div>
@@ -673,7 +733,6 @@
                 sessionStorage.removeItem('currentUser');
                 alert(`使用者 ${storedUser.name} 已登出。`);
                 updateHeaderUI();
-                // After logout, show the "Please log in" message in the table
                 renderMyCasesTable([], false);
             }
         }
@@ -692,6 +751,11 @@
 
         function closeConsignmentModal() {
             document.getElementById('consignmentModal').classList.remove('show');
+            // Reset both views to their initial state for the next time the modal is opened
+            document.getElementById('initialConsignmentView').style.display = 'block';
+            document.getElementById('onlineSigningView').style.display = 'none';
+            document.getElementById('modalTitle').textContent = '委託代銷契約簽署';
+
             document.getElementById('contractFile').value = '';
             document.getElementById('agreeTerms').checked = false;
             document.getElementById('onlineSignBtn').disabled = true;
@@ -708,22 +772,78 @@
             if (caseIndex !== -1) {
                 myCasesData[caseIndex].consignmentStatus = 'uploaded';
                 alert(`案件 ${currentSigningCaseId} 的合約已成功上傳！`);
-                renderMyCasesTable(myCasesData, true); // Re-render with logged-in status
+                renderMyCasesTable(myCasesData, true); 
                 closeConsignmentModal();
             }
         }
 
-        function handleOnlineSign() {
+        // --- NEW: Online Signing Flow ---
+        function generateRandomTerms() {
+            return `
+                <p><strong>第一條：定義</strong><br>在本合約中，「委託方」指土地所有權人，「受託方」指一如土地資訊平台。本合約旨在規範委託方委託受託方進行土地永續案件之代為銷售及相關事宜。</p>
+                <p><strong>第二條：委託期間</strong><br>本委託合約期間自簽署日起生效，為期一百八十（180）日。期滿前三十日內，若任一方未以書面提出反對，本合約將自動續約一百八十日。</p>
+                <p><strong>第三條：權利與義務</strong><br>委託方保證其為土地之合法所有權人，並擁有完全處分權。受託方應以善良管理人之注意義務，為委託方尋找適合之買方，並協助處理相關交易流程。</p>
+                <p><strong>第四條：服務費用</strong><br>成交後，委託方應支付成交總價之百分之四（4%）作為受託方之服務費用。此費用應於買賣雙方簽訂正式買賣契約並支付第一期款項時，由委託方支付予受託方。</p>
+                <p><strong>第五條：保密條款</strong><br>雙方對於因本合約而知悉或持有之對方商業秘密及個人資料，均負有保密義務，不得洩漏予任何第三方。</p>
+                <p><strong>第六條：準據法及管轄法院</strong><br>本合約之解釋與適用，以中華民國法律為準據法。因本合約所生之任何爭議，雙方同意以台灣台北地方法院為第一審管轄法院。</p>
+                <p><strong>第七條：其他事項</strong><br>本合約一式兩份，由雙方各執一份為憑。合約內容之任何修改，需經雙方書面同意後始生效力。請詳細閱讀以上條款，確認無誤後請捲動至最下方進行簽署。</p>
+            `;
+        }
+
+        function initiateOnlineSigning() {
+            document.getElementById('initialConsignmentView').style.display = 'none';
+            document.getElementById('onlineSigningView').style.display = 'block';
+            document.getElementById('modalTitle').textContent = '線上簽署委託代銷合約';
+
+            const termsContent = document.getElementById('termsContent');
+            termsContent.innerHTML = generateRandomTerms();
+            
+            const finalAgreeCheckbox = document.getElementById('finalAgreeTerms');
+            const signatureNameInput = document.getElementById('signatureName');
+            const confirmSignBtn = document.getElementById('confirmSignBtn');
+
+            // Reset fields
+            finalAgreeCheckbox.checked = false;
+            finalAgreeCheckbox.disabled = true;
+            signatureNameInput.value = '';
+            confirmSignBtn.disabled = true;
+
+            // Check if the confirmation button should be enabled
+            const checkConfirmState = () => {
+                confirmSignBtn.disabled = !(finalAgreeCheckbox.checked && signatureNameInput.value.trim() !== '');
+            };
+            
+            finalAgreeCheckbox.addEventListener('change', checkConfirmState);
+            signatureNameInput.addEventListener('input', checkConfirmState);
+            
+            // Enable checkbox on scroll to bottom
+            termsContent.onscroll = () => {
+                const isScrolledToBottom = termsContent.scrollHeight - termsContent.scrollTop <= termsContent.clientHeight + 1;
+                if (isScrolledToBottom) {
+                    finalAgreeCheckbox.disabled = false;
+                }
+            };
+            
+            confirmSignBtn.onclick = handleFinalSign;
+        }
+
+        function handleFinalSign() {
+            const signature = document.getElementById('signatureName').value.trim();
+            if (!signature) {
+                alert('請輸入您的姓名以完成簽署！');
+                return;
+            }
+            
             const caseIndex = myCasesData.findIndex(c => c.id === currentSigningCaseId);
             if (caseIndex !== -1) {
                 myCasesData[caseIndex].consignmentStatus = 'signed';
-                alert(`案件 ${currentSigningCaseId} 已完成線上簽約！`);
-                renderMyCasesTable(myCasesData, true); // Re-render with logged-in status
+                alert(`案件 ${currentSigningCaseId} 已由 ${signature} 完成線上簽約！`);
+                renderMyCasesTable(myCasesData, true); 
                 closeConsignmentModal();
             }
         }
         
-        // Add Case Modal (NEW)
+        // Add Case Modal
         function openAddCaseModal() {
             document.getElementById('addCaseModal').classList.add('show');
         }
@@ -734,10 +854,8 @@
         }
 
         function handleAddCaseSubmit(event) {
-            event.preventDefault(); // Prevent actual form submission
-            // Here you would normally collect form data and send to a server
-            alert('案件已儲存為草稿！');
-            // You could create a new case object and add it to myCasesData here
+            event.preventDefault(); 
+            alert('案件已成功提交審核！');
             closeAddCaseModal();
         }
 
@@ -768,7 +886,7 @@
                 onlineSignBtn.disabled = !agreeTermsCheckbox.checked;
             });
             
-            // Add Case Modal Listeners (NEW)
+            // Add Case Modal Listeners
             const addCaseModal = document.getElementById('addCaseModal');
             addCaseModal.querySelector('.close-modal-btn')?.addEventListener('click', closeAddCaseModal);
             addCaseModal.addEventListener('click', (e) => {
@@ -778,4 +896,4 @@
         });
     </script>
 </body>
-</html>```
+</html>
