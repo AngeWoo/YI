@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+  <title>多圖層地籍地圖</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css">
+  <style>
+    html, body, #viewDiv { padding: 0; margin: 0; height: 100%; width: 100%; }
+    #info-footer { position: absolute; bottom: 10px; right: 10px; padding: 5px; background: rgba(255, 255, 255, 0.7); font-size: 12px; border-radius: 4px; }
+    #top-bar { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); padding: 10px 15px; background-color: white; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); border-radius: 4px; display: flex; align-items: center; gap: 10px; z-index: 2; }
+    #top-bar label { white-space: nowrap; }
+    #top-bar input[type="text"] { width: 250px; }
+    #coordsInfo { font-size: 14px; font-family: monospace; color: #333; white-space: nowrap; }
+    #layer-control-panel { position: absolute; top: 10px; right: 10px; background-color: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.3); z-index: 1; width: 200px; }
+    #layer-control-panel h4 { margin: 0 0 10px 0; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+    .layer-group { margin-bottom: 10px; }
+    .layer-group-title { font-weight: bold; margin-bottom: 5px; }
+    .layer-item, .basemap-item { display: block; margin-bottom: 8px; }
+    .layer-item label, .basemap-item label { display: flex; align-items: center; cursor: pointer; }
+    .slider-container { display: flex; align-items: center; gap: 8px; margin-left: 10px; margin-top: 4px; }
+    .slider-container input[type="range"] { width: 100%; margin: 0; }
+    .slider-container span { font-size: 12px; width: 35px; }
+    #legend-panel { position: absolute; bottom: 10px; left: 10px; background-color: rgba(255, 255, 255, 0.9); padding: 10px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.3); z-index: 1; display: none; }
+    #legend-panel h4 { margin: 0 0 10px 0; text-align: center; font-size: 16px; }
+    #legend-panel .legend-item { display: flex; align-items: center; margin-bottom: 5px; }
+    #legend-panel .legend-color { width: 20px; height: 20px; margin-right: 8px; border: 1px solid #aaa; }
+    .esri-popup__content { font-style: normal; }
+  </style>
+  
+  <script src="https://js.arcgis.com/4.28/"></script>
+  <script>
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/layers/WMTSLayer",
+      "esri/layers/WebTileLayer",
+      "esri/Basemap",              
+      "esri/rest/locator",
+      "esri/Graphic"
+    ], function(Map, MapView, WMTSLayer, WebTileLayer, Basemap, locator, Graphic) {
+      
+      let lastSearchedLocation = null;
+      const osmBasemap = new Basemap({
+        baseLayers: [ new WebTileLayer({
+            urlTemplate: "https://{subDomain}.tile.openstreetmap.org/{level}/{col}/{row}.png",
+            subDomains: ["a", "b", "c"],
+            copyright: "© OpenStreetMap contributors"
+        }) ],
+        title: "街道圖"
+      });
+      const satelliteBasemap = "satellite";
+      const terrainLayer = new WMTSLayer({
+          url: "https://wmts.nlsc.gov.tw/wmts",
+          activeLayer: { id: "EMAP" },
+          copyright: "國土測繪中心通用電子地圖",
+          id: "terrain",
+          visible: false,
+          opacity: 0.7
+      });
+      const ntpcUrbanPlanLayer = new WMTSLayer({
+          url: "https://wmts.nlsc.gov.tw/wmts",
+          activeLayer: { id: "ntpc_urban_plan" },
+          copyright: "國土測繪中心 / 新北市政府",
+          id: "ntpc-urban-plan",
+          visible: false,
+          opacity: 0.7
+      });
+      const landUseLayer = new WMTSLayer({
+          url: "https://wmts.nlsc.gov.tw/wmts",
+          activeLayer: { id: "URBAN_LAND" },
+          copyright: "國土測繪中心使用分區圖",
+          id: "landuse",
+          visible: false,
+          opacity: 0.7
+      });
+      
+      // **修正**：將地籍圖層的 activeLayer ID 更換為 "CADASTRAL"
+      const parcelLayer = new WMTSLayer({
+        url: "https://wmts.nlsc.gov.tw/wmts",
+        activeLayer: { id: "CADASTRAL" },
+        copyright: "國土測繪中心地籍圖",
+        id: "parcel",
+        visible: true,
+        opacity: 0.7
+      });
+      
+      const map = new Map({
+        basemap: osmBasemap,
+        layers: [terrainLayer, landUseLayer, parcelLayer, ntpcUrbanPlanLayer]
+      });
+
+      const view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [121.57, 25.043],
+        zoom: 18,
+        ui: { components: ["attribution"] },
+        popup: {
+            autoOpenEnabled: false
+        }
+      });
+      view.ui.add("zoom", "bottom-right");
+      
+      const queryParcelBtn = document.getElementById("queryParcelBtn");
+      queryParcelBtn.addEventListener("click", function() {
+          const location = lastSearchedLocation || view.center;
+          const lon = location.longitude;
+          const lat = location.latitude;
+          const nlscUrl = `https://maps.nlsc.gov.tw/T09/mapshow.action?mode=_&lon=${lon}&lat=${lat}&zoom=19`;
+          window.open(nlscUrl, '_blank');
+      });
+      
+      const legendPanel = document.getElementById("legend-panel");
+      const basemapSlider = document.getElementById("basemapSlider");
+      const basemapValue = document.getElementById("basemapValue");
+      document.querySelectorAll("input[name='basemap']").forEach(radio => {
+          radio.addEventListener("change", function() {
+              if (this.checked) {
+                  map.basemap = (this.value === "osm") ? osmBasemap : satelliteBasemap;
+                  map.basemap.load().then(() => {
+                      map.basemap.baseLayers.forEach(layer => {
+                          layer.opacity = parseFloat(basemapSlider.value);
+                      });
+                  });
+              }
+          });
+      });
+      basemapSlider.addEventListener("input", function() {
+          const opacityValue = parseFloat(this.value);
+          if (map.basemap) {
+              map.basemap.baseLayers.forEach(layer => {
+                  layer.opacity = opacityValue;
+              });
+          }
+          basemapValue.textContent = `${Math.round(opacityValue * 100)}%`;
+      });
+      function setupLayerToggle(checkboxId, sliderId, valueId, layer) {
+          const checkbox = document.getElementById(checkboxId);
+          const slider = document.getElementById(sliderId);
+          const valueLabel = document.getElementById(valueId);
+          checkbox.addEventListener("change", function() {
+              layer.visible = this.checked;
+          });
+          slider.addEventListener("input", function() {
+              const opacityValue = parseFloat(this.value);
+              layer.opacity = opacityValue;
+              valueLabel.textContent = `${Math.round(opacityValue * 100)}%`;
+          });
+      }
+      setupLayerToggle("terrainToggle", "terrainSlider", "terrainValue", terrainLayer);
+      setupLayerToggle("ntpcUrbanPlanToggle", "ntpcUrbanPlanSlider", "ntpcUrbanPlanValue", ntpcUrbanPlanLayer);
+      setupLayerToggle("landUseToggle", "landUseSlider", "landUseValue", landUseLayer);
+      setupLayerToggle("parcelToggle", "parcelSlider", "parcelValue", parcelLayer);
+      document.getElementById("landUseToggle").addEventListener("change", function() {
+          legendPanel.style.display = this.checked ? "block" : "none";
+      });
+      const searchButton = document.getElementById("searchAddressBtn");
+      const addressInput = document.getElementById("addressInput");
+      const coordsInfoDiv = document.getElementById("coordsInfo");
+      const streetViewBtn = document.getElementById("streetViewBtn");
+      searchButton.addEventListener("click", geocodeAddress);
+      addressInput.addEventListener("keydown", (event) => { if (event.key === "Enter") geocodeAddress(); });
+      streetViewBtn.addEventListener("click", openStreetView);
+      const geocodeServiceUrl = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer";
+      function openStreetView() {
+        const locationToOpen = lastSearchedLocation || view.center;
+        if (locationToOpen) {
+          const lat = locationToOpen.latitude;
+          const lon = locationToOpen.longitude;
+          const streetViewUrl = `https://www.google.com/maps?q&layer=c&cbll=${lat},${lon}`;
+          window.open(streetViewUrl, '_blank');
+        } else {
+            alert("目前沒有有效的位置可開啟街景。");
+        }
+      }
+      function geocodeAddress() {
+        const address = addressInput.value;
+        if (!address) { alert("請輸入地址！"); return; }
+        const params = {
+            address: { "SingleLine": address },
+            langCode: "zh-TW"
+        };
+        locator.addressToLocations(geocodeServiceUrl, params)
+        .then((results) => {
+          if (results.length > 0) {
+            const result = results[0];
+            const lon = result.location.longitude;
+            const lat = result.location.latitude;
+            coordsInfoDiv.innerHTML = `緯度: ${lat.toFixed(5)}, 經度: ${lon.toFixed(5)}`;
+            lastSearchedLocation = result.location;
+            view.goTo({ target: result.location, zoom: 18 });
+            view.graphics.removeAll();
+            const graphic = new Graphic({
+              geometry: result.location,
+              symbol: {
+                type: "simple-marker",
+                color: [255, 0, 0],
+                outline: { color: [255, 255, 255], width: 1.5 }
+              }
+            });
+            view.graphics.add(graphic);
+          } else {
+            coordsInfoDiv.innerHTML = "找不到地址";
+            lastSearchedLocation = null;
+            alert("找不到您輸入的地址，請嘗試更詳細的地址。");
+          }
+        }).catch((error) => {
+          console.error("地理編碼服務錯誤: ", error);
+          coordsInfoDiv.innerHTML = "查詢時發生錯誤";
+          lastSearchedLocation = null;
+          alert("地理編碼服務發生錯誤，請稍後再試。");
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+  <!-- **修正**：將遺漏的 HTML 內容全部加回來 -->
+  <div id="top-bar">
+      <div id="search-controls">
+        <label for="addressInput">輸入地址:</label>
+        <input type="text" id="addressInput" placeholder="例如：新北市板橋區中山路一段161號">
+        <button id="searchAddressBtn">搜尋</button>
+        <button id="streetViewBtn">切換街景</button>
+        <button id="queryParcelBtn">查詢地號</button>
+        <div id="coordsInfo"></div>
+      </div>
+  </div>
+  <div id="layer-control-panel">
+      <h4>圖層控制</h4>
+      <div class="layer-group">
+          <div class="layer-group-title">底圖</div>
+          <div class="basemap-item">
+              <label><input type="radio" name="basemap" value="osm" checked> 街道圖</label>
+          </div>
+          <div class="basemap-item">
+              <label><input type="radio" name="basemap" value="satellite"> 航照圖</label>
+          </div>
+          <div class="slider-container">
+              <input type="range" id="basemapSlider" min="0" max="1" step="0.01" value="1.0">
+              <span id="basemapValue">100%</span>
+          </div>
+      </div>
+      <div class="layer-group">
+          <div class="layer-group-title">疊加圖層</div>
+          <div class="layer-item">
+              <label><input type="checkbox" id="terrainToggle"> 地形圖 (通用)</label>
+              <div class="slider-container">
+                  <input type="range" id="terrainSlider" min="0" max="1" step="0.01" value="0.7">
+                  <span id="terrainValue">70%</span>
+              </div>
+          </div>
+          <div class="layer-item">
+              <label><input type="checkbox" id="ntpcUrbanPlanToggle"> 地形圖 (新北都市計畫)</label>
+              <div class="slider-container">
+                  <input type="range" id="ntpcUrbanPlanSlider" min="0" max="1" step="0.01" value="0.7">
+                  <span id="ntpcUrbanPlanValue">70%</span>
+              </div>
+          </div>
+          <div class="layer-item">
+              <label><input type="checkbox" id="landUseToggle"> 使用分區圖</label>
+              <div class="slider-container">
+                  <input type="range" id="landUseSlider" min="0" max="1" step="0.01" value="0.7">
+                  <span id="landUseValue">70%</span>
+              </div>
+          </div>
+          <div class="layer-item">
+              <label><input type="checkbox" id="parcelToggle" checked> 地籍圖</label>
+              <div class="slider-container">
+                  <input type="range" id="parcelSlider" min="0" max="1" step="0.01" value="0.7">
+                  <span id="parcelValue">70%</span>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <div id="viewDiv"></div>
+
+  <div id="legend-panel">
+      <h4>土地使用分區圖例</h4>
+      <div class="legend-item"><div class="legend-color" style="background-color: #ffff00;"></div><span>住宅區</span></div>
+      <div class="legend-item"><div class="legend-color" style="background-color: #ff0000;"></div><span>商業區</span></div>
+      <div class="legend-item"><div class="legend-color" style="background-color: #a52a2a;"></div><span>工業區</span></div>
+      <div class="legend-item"><div class="legend-color" style="background-color: #00ff00;"></div><span>公園、綠地</span></div>
+      <div class="legend-item"><div class="legend-color" style="background-color: #800080;"></div><span>機關用地</span></div>
+      <div class="legend-item"><div class="legend-color" style="background-color: #ffa500;"></div><span>文教區</span></div>
+      <div class="legend-item"><div class="legend-color" style="background-color: #ffc0cb;"></div><span>道路用地</span></div>
+  </div>
+
+  <div id="info-footer">
+    Esri, © OpenStreetMap | 內政部國土測繪中心
+  </div>
+</body>
+</html>
