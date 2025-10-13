@@ -492,7 +492,7 @@
         </div>
     </div>
 
-    <!-- Add Case Modal HTML -->
+    <!-- Add Case Modal HTML (NEW) -->
     <div id="addCaseModal" class="modal-overlay">
         <div class="modal-content">
             <button class="close-modal-btn">&times;</button>
@@ -584,7 +584,7 @@
                             <option value="yes">是</option>
                         </select>
                     </div>
-                    <button type="submit" class="submit-case-btn">上傳審核</button>
+                    <button type="submit" class="submit-case-btn">儲存案件</button>
                 </div>
             </form>
         </div>
@@ -723,7 +723,7 @@
             }
         }
         
-        // Add Case Modal
+        // Add Case Modal (NEW)
         function openAddCaseModal() {
             document.getElementById('addCaseModal').classList.add('show');
         }
@@ -736,7 +736,7 @@
         function handleAddCaseSubmit(event) {
             event.preventDefault(); // Prevent actual form submission
             // Here you would normally collect form data and send to a server
-            alert('案件已成功提交審核！'); // <-- MODIFIED ALERT
+            alert('案件已儲存為草稿！');
             // You could create a new case object and add it to myCasesData here
             closeAddCaseModal();
         }
@@ -768,7 +768,7 @@
                 onlineSignBtn.disabled = !agreeTermsCheckbox.checked;
             });
             
-            // Add Case Modal Listeners
+            // Add Case Modal Listeners (NEW)
             const addCaseModal = document.getElementById('addCaseModal');
             addCaseModal.querySelector('.close-modal-btn')?.addEventListener('click', closeAddCaseModal);
             addCaseModal.addEventListener('click', (e) => {
@@ -778,4 +778,4 @@
         });
     </script>
 </body>
-</html>
+</html>```
