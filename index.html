@@ -1211,6 +1211,33 @@
                 padding: 25px 20px;
             }
         }
+        
+        /* New Styles for Admin Button */
+        .admin-footer {
+            text-align: center;
+            padding: 20px 40px;
+            margin-top: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .admin-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #64748b; /* A neutral, admin-like color */
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .admin-button:hover {
+            background: #475569;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -1341,6 +1368,10 @@
 
         <div class="pagination" id="pagination"></div>
     </main>
+
+    <footer class="admin-footer">
+        <a href="indexbackend.html" class="admin-button">後臺管理</a>
+    </footer>
 
     <!-- AI Assistant HTML -->
     <div id="ai-assistant-button">
@@ -1661,7 +1692,7 @@
                     case 'price-asc': return a.totalPrice - b.totalPrice;
                     case 'price-desc': return b.totalPrice - a.totalPrice;
                     case 'area-asc': return a.area - b.area;
-                    case 'area-desc': return b.area - a.area;
+                    case 'area-desc': return b.area - b.area;
                     default: return 0;
                 }
             });

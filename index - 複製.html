@@ -30,7 +30,7 @@
             transform: translateY(-50%);
             display: flex;
             gap: 10px;
-            align-items: center; /* Vertically align items */
+            align-items: center;
         }
 
         .nav-link {
@@ -415,6 +415,23 @@
             transform: translateY(-1px);
         }
 
+        .contact-btn {
+            padding: 6px 14px;
+            background: #059669;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .contact-btn:hover {
+            background: #047857;
+            transform: translateY(-1px);
+        }
+
         .tags {
             display: flex;
             gap: 8px;
@@ -463,7 +480,6 @@
             border-color: #DC2626;
         }
 
-        /* 表格樣式 */
         .table-container {
             overflow-x: auto;
             border-radius: 12px;
@@ -534,7 +550,7 @@
 
         .table-id-column { width: 5%; }
         .table-ownership-column { width: 7%; }
-        .table-title-column { width: 28%; }
+        .table-title-column { width: 25%; }
         .table-region-column { width: 9%; }
         .table-area-column { width: 8%; }
         .table-price-column { width: 9%; font-weight: bold; }
@@ -542,7 +558,7 @@
         td.table-total-column { color: #DC2626; }
         .table-type-column { width: 7%; }
         .table-image-column { width: 8%; }
-        .table-action-column { width: 10%; }
+        .table-action-column { width: 13%; }
 
         .table-land-image {
             width: 80px;
@@ -582,9 +598,10 @@
             display: flex;
             gap: 5px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .table-action-btn, .table-member-btn {
+        .table-action-btn, .table-member-btn, .table-contact-btn {
             padding: 4px 8px;
             border-radius: 6px;
             cursor: pointer;
@@ -615,7 +632,139 @@
             transform: translateY(-1px);
         }
 
-        /* --- AI Assistant Styles --- */
+        .table-contact-btn {
+            background: #059669;
+            color: white;
+        }
+
+        .table-contact-btn:hover {
+            background: #047857;
+            transform: translateY(-1px);
+        }
+
+        /* Contact Modal Styles */
+        .contact-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .contact-modal-content {
+            background: white;
+            padding: 35px 40px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .contact-modal-overlay.show .contact-modal-content {
+            transform: scale(1);
+        }
+
+        .close-contact-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .close-contact-modal:hover {
+            color: #333;
+        }
+
+        .contact-modal-content h2 {
+            text-align: center;
+            color: #059669;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .contact-info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid #059669;
+            transition: all 0.3s;
+        }
+
+        .contact-info-item:hover {
+            background: #ecfdf5;
+            transform: translateX(5px);
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: #059669;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .contact-details {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .contact-value {
+            font-size: 1.05rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .contact-value a {
+            color: #059669;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-value a:hover {
+            color: #047857;
+            text-decoration: underline;
+        }
+
+        /* AI Assistant Styles */
         #ai-assistant-button {
             position: fixed;
             bottom: 30px;
@@ -648,7 +797,7 @@
             background: white;
             border-radius: 15px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-            display: none; /* Initially hidden */
+            display: none;
             flex-direction: column;
             z-index: 999;
             overflow: hidden;
@@ -903,7 +1052,7 @@
         
         /* Styles for Login State */
         #user-info-display {
-            display: none; /* Initially hidden */
+            display: none;
             align-items: center;
             gap: 15px;
         }
@@ -1021,15 +1170,17 @@
             }
 
             .view-detail-btn,
-            .member-view-btn {
-                font-size: 0.8rem;
-                padding: 6px 12px;
+            .member-view-btn,
+            .contact-btn {
+                font-size: 0.75rem;
+                padding: 6px 10px;
             }
 
             .table-action-btn,
-            .table-member-btn {
-                font-size: 0.75rem;
-                padding: 4px 8px;
+            .table-member-btn,
+            .table-contact-btn {
+                font-size: 0.7rem;
+                padding: 4px 6px;
             }
 
             .land-price {
@@ -1041,7 +1192,6 @@
                 margin-bottom: 10px;
             }
 
-            /* AI Chat Popup Adjustments for Mobile */
             #ai-chat-popup {
                 width: 100%;
                 height: 100%;
@@ -1055,6 +1205,11 @@
                 bottom: 20px;
                 right: 20px;
             }
+
+            .contact-modal-content {
+                width: 95%;
+                padding: 25px 20px;
+            }
         }
     </style>
 </head>
@@ -1065,13 +1220,11 @@
             <a href="index1.html" class="nav-link">競價看板</a>
             <a href="index5.html" class="nav-link">我的案件</a>
             
-            <!-- User Info Display (Logged In) -->
             <div id="user-info-display">
                 <span id="username-display"></span>
                 <a id="logout-button" class="nav-link">登出</a>
             </div>
             
-            <!-- Login Button (Logged Out) -->
             <a id="login-nav-button" class="nav-link">會員登入</a>
         </nav>
         <div class="header">
@@ -1164,9 +1317,7 @@
             </div>
         </div>
 
-        <div class="land-grid" id="landGrid">
-            <!-- 土地卡片將由JavaScript動態生成 -->
-        </div>
+        <div class="land-grid" id="landGrid"></div>
 
         <div class="table-container" id="tableContainer">
             <table class="land-table">
@@ -1184,15 +1335,11 @@
                         <th class="table-action-column">操作</th>
                     </tr>
                 </thead>
-                <tbody id="landTableBody">
-                    <!-- 表格內容將由JavaScript動態生成 -->
-                </tbody>
+                <tbody id="landTableBody"></tbody>
             </table>
         </div>
 
-        <div class="pagination" id="pagination">
-            <!-- 分頁按鈕將由JavaScript動態生成 -->
-        </div>
+        <div class="pagination" id="pagination"></div>
     </main>
 
     <!-- AI Assistant HTML -->
@@ -1206,7 +1353,7 @@
             <button id="close-chat-btn">&times;</button>
         </div>
         <div class="chat-messages" id="chat-messages">
-            <div class="message ai">你好！我是 AI 小助手，有什麼關於平台的問題嗎？</div>
+            <div class="message ai">你好!我是 AI 小助手,有什麼關於平台的問題嗎?</div>
         </div>
         <div class="chat-input-area">
             <input type="text" id="chat-input" placeholder="輸入您的問題...">
@@ -1230,7 +1377,7 @@
                     <input type="password" id="loginPassword" placeholder="請輸入您的密碼">
                 </div>
                 <button class="modal-action-btn" onclick="handleLogin()">登入</button>
-                <p class="form-switcher">還不是會員？ <a href="#" id="showRegisterLink">立即註冊</a></p>
+                <p class="form-switcher">還不是會員? <a href="#" id="showRegisterLink">立即註冊</a></p>
             </div>
 
             <div id="registerForm" style="display: none;">
@@ -1257,15 +1404,51 @@
                     </div>
                 </div>
                 <button class="modal-action-btn" onclick="handleRegister()">註冊</button>
-                <p class="form-switcher">已經是會員？ <a href="#" id="showLoginLink">返回登入</a></p>
+                <p class="form-switcher">已經是會員? <a href="#" id="showLoginLink">返回登入</a></p>
             </div>
+        </div>
+    </div>
 
+    <!-- Contact Modal HTML -->
+    <div id="contactModal" class="contact-modal-overlay">
+        <div class="contact-modal-content">
+            <button class="close-contact-modal">&times;</button>
+            <h2>
+                <span>📞</span>
+                與我聯絡
+            </h2>
+            <ul class="contact-info-list">
+                <li class="contact-info-item">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-details">
+                        <div class="contact-label">電子郵件</div>
+                        <div class="contact-value">
+                            <a href="mailto:123@yiru.com.tw">123@yiru.com.tw</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="contact-info-item">
+                    <div class="contact-icon">📱</div>
+                    <div class="contact-details">
+                        <div class="contact-label">聯絡電話</div>
+                        <div class="contact-value">
+                            <a href="tel:02-987654321">02-987654321</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="contact-info-item">
+                    <div class="contact-icon">💬</div>
+                    <div class="contact-details">
+                        <div class="contact-label">Line ID</div>
+                        <div class="contact-value">123@yiru.com</div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 
 
     <script>
-        // --- Login/Logout State Logic ---
         let currentUser = null;
 
         function updateHeaderUI() {
@@ -1288,14 +1471,12 @@
             }
         }
         
-        // --- Main Page Logic ---
         let currentView = 'card';
         let landData = [];
         let filteredData = [];
         let currentPage = 1;
         const itemsPerPage = 12;
 
-        // ... (The rest of your script: switchView, renderTable, generateRandomLand, etc.)
         function switchView(view) {
             currentView = view;
             const cardView = document.getElementById('landGrid');
@@ -1311,9 +1492,14 @@
             } else {
                 cardView.style.display = 'none';
                 tableView.classList.add('active');
+                buttons[1].classList.add('active');
             }
-            // Re-render based on current view
             renderCurrentView();
+        }
+
+        function showContactModal() {
+            const modal = document.getElementById('contactModal');
+            modal.classList.add('show');
         }
 
         function renderTable(data) {
@@ -1342,6 +1528,7 @@
                         <div class="table-button-group">
                             <button class="table-action-btn" onclick="viewDetail(${land.id})">查看詳情</button>
                             <button class="table-member-btn" onclick="window.open('indexyi2.html?landId=${land.id}', '_blank')">會員查看</button>
+                            <button class="table-contact-btn" onclick="event.stopPropagation(); showContactModal()">與我聯絡</button>
                         </div>
                     </td>
                 `;
@@ -1398,6 +1585,7 @@
                             <div class="button-group-card">
                                 <button class="view-detail-btn" onclick="event.stopPropagation(); viewDetail(${land.id})">查看詳情</button>
                                 <button class="member-view-btn" onclick="event.stopPropagation(); window.open('indexyi2.html?landId=${land.id}', '_blank')">會員查看</button>
+                                <button class="contact-btn" onclick="event.stopPropagation(); showContactModal()">與我聯絡</button>
                             </div>
                         </div>
                     </div>`;
@@ -1490,7 +1678,6 @@
             if (region && districtsMap[region]) { districtsMap[region].forEach(d => { districtSelect.innerHTML += `<option value="${d}">${d}</option>`; }); }
         });
 
-        // Event Listeners for filters
         ['regionFilter', 'districtFilter', 'priceFilter', 'areaFilter'].forEach(id => { document.getElementById(id).addEventListener('change', filterData); });
 
         // AI Assistant Logic
@@ -1514,7 +1701,25 @@
                 setTimeout(() => appendMessage(getAIResponse(userMessage), 'ai'), 800);
             }
             function appendMessage(text, sender) { const msg = document.createElement('div'); msg.classList.add('message', sender); msg.textContent = text; chatMessages.appendChild(msg); chatMessages.scrollTop = chatMessages.scrollHeight; }
-            function getAIResponse(q) { q = q.toLowerCase(); if (q.includes('搜尋')) return '您可以在上方的搜尋區塊，透過選擇「地區」、「價格範圍」、「坪數範圍」等條件來篩選您理想的土地。'; if (q.includes('競價')) return '點擊「競價看板」頁面可以看到所有正在競價中的土地。在土地卡片上點擊「我要出價」即可參與競價。'; if (q.includes('會員')) return '成為會員後，您可以查看更詳細的土地資訊。點擊右上角的「會員登入」即可登入或註冊。'; return '抱歉，我無法回答此問題。'; }
+            function getAIResponse(q) { q = q.toLowerCase(); if (q.includes('搜尋')) return '您可以在上方的搜尋區塊,透過選擇「地區」、「價格範圍」、「坪數範圍」等條件來篩選您理想的土地。'; if (q.includes('競價')) return '點擊「競價看板」頁面可以看到所有正在競價中的土地。在土地卡片上點擊「我要出價」即可參與競價。'; if (q.includes('會員')) return '成為會員後,您可以查看更詳細的土地資訊。點擊右上角的「會員登入」即可登入或註冊。'; if (q.includes('聯絡')) return '每個土地卡片上都有「與我聯絡」按鈕,點擊即可查看聯絡資訊。'; return '抱歉,我無法回答此問題。'; }
+            
+            // Contact Modal Logic
+            const contactModal = document.getElementById('contactModal');
+            const closeContactBtn = contactModal.querySelector('.close-contact-modal');
+            
+            if (closeContactBtn) {
+                closeContactBtn.addEventListener('click', () => {
+                    contactModal.classList.remove('show');
+                });
+            }
+            
+            if (contactModal) {
+                contactModal.addEventListener('click', (e) => {
+                    if (e.target === contactModal) {
+                        contactModal.classList.remove('show');
+                    }
+                });
+            }
         });
         
         // Modal Logic and Initialization
@@ -1534,7 +1739,6 @@
             if (showRegisterLink) showRegisterLink.addEventListener('click', (e) => { e.preventDefault(); loginForm.style.display = 'none'; registerForm.style.display = 'block'; });
             if (showLoginLink) showLoginLink.addEventListener('click', (e) => { e.preventDefault(); registerForm.style.display = 'none'; loginForm.style.display = 'block'; });
 
-            // Initial Load
             landData = Array.from({ length: 50 }, (_, i) => generateRandomLand(i + 1));
             filteredData = [...landData];
             document.getElementById('resultCount').textContent = landData.length;
@@ -1544,12 +1748,12 @@
 
         function handleLogin() {
             const username = document.getElementById('loginUsername').value.trim();
-            if (!username) { alert('請輸入帳號！'); return; }
+            if (!username) { alert('請輸入帳號!'); return; }
             const roles = ['一般', '地主', '法人', '仲介'];
             const randomRole = roles[Math.floor(Math.random() * roles.length)];
             currentUser = { name: username, role: randomRole };
             sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-            alert(`登入成功！歡迎回來, ${currentUser.name}`);
+            alert(`登入成功!歡迎回來, ${currentUser.name}`);
             document.getElementById('loginModal').classList.remove('show');
             updateHeaderUI();
         }
@@ -1557,16 +1761,16 @@
         function handleRegister() {
             const username = document.getElementById('registerUsername').value.trim();
             const selectedRole = document.querySelector('input[name="role"]:checked').value;
-            if (!username) { alert('請輸入帳號！'); return; }
+            if (!username) { alert('請輸入帳號!'); return; }
             currentUser = { name: username, role: selectedRole };
             sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-            alert(`註冊成功！\n帳號：${currentUser.name}\n角色：${currentUser.role}\n歡迎您的加入！`);
+            alert(`註冊成功!\n帳號:${currentUser.name}\n角色:${currentUser.role}\n歡迎您的加入!`);
             document.getElementById('loginModal').classList.remove('show');
             updateHeaderUI();
         }
 
         function handleLogout() {
-            if (confirm('您確定要登出嗎？')) {
+            if (confirm('您確定要登出嗎?')) {
                 alert(`使用者 ${currentUser.name} 已登出。`);
                 sessionStorage.removeItem('currentUser');
                 currentUser = null;
