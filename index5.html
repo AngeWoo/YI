@@ -30,6 +30,7 @@
             transform: translateY(-50%);
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
         .nav-link {
@@ -41,6 +42,7 @@
             font-weight: 500;
             background: transparent;
             border: 2px solid transparent;
+            cursor: pointer;
         }
 
         .nav-link:hover {
@@ -123,8 +125,6 @@
             box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
         }
 
-
-        /* 表格樣式 */
         .table-container {
             overflow-x: auto;
             border-radius: 12px;
@@ -152,9 +152,7 @@
             white-space: nowrap;
         }
 
-        .land-table th:last-child {
-            border-right: none;
-        }
+        .land-table th:last-child { border-right: none; }
 
         .land-table td {
             padding: 12px 10px;
@@ -163,13 +161,7 @@
             vertical-align: middle;
         }
         
-        .land-table tbody tr {
-            transition: all 0.2s ease;
-        }
-
-        .land-table tbody tr:hover {
-            background-color: #f1f5f9;
-        }
+        .land-table tbody tr:hover { background-color: #f1f5f9; }
 
         .land-table .table-case-title {
             text-align: left;
@@ -179,8 +171,7 @@
             font-weight: 500;
         }
 
-        /* Status Badge Styles */
-        .status-badge {
+        .status-badge, .consignment-badge {
             padding: 4px 12px;
             border-radius: 15px;
             font-size: 0.8rem;
@@ -188,12 +179,15 @@
             color: white;
             display: inline-block;
         }
-        .status-draft { background-color: #6c757d; } /* 灰色 - 草稿 */
-        .status-review { background-color: #007bff; } /* 藍色 - 審核中 */
-        .status-required { background-color: #ffc107; color: #333; } /* 黃色 - 資料補件 */
-        .status-approved { background-color: #28a745; } /* 綠色 - 已核准 */
-        .status-rejected { background-color: #dc3545; } /* 紅色 - 已退回 */
-
+        .status-draft { background-color: #6c757d; }
+        .status-review { background-color: #007bff; }
+        .status-required { background-color: #ffc107; color: #333; }
+        .status-approved { background-color: #28a745; }
+        .status-rejected { background-color: #dc3545; }
+        
+        .consignment-unsigned { background-color: #6c757d; }
+        .consignment-uploaded { background-color: #17a2b8; }
+        .consignment-signed { background-color: #28a745; }
 
         .table-button-group {
             display: flex;
@@ -220,30 +214,115 @@
         .view-btn { background: #6c757d; }
         .view-btn:hover { background: #5a6268; }
 
-        @media (max-width: 768px) {
-            .header-container {
-                padding: 15px 20px;
-            }
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            .header p {
-                display: none;
-            }
-            .header-nav {
-                position: static;
-                transform: none;
-                justify-content: center;
-                width: 100%;
-                margin-top: 15px;
-            }
-            .title-container {
-                margin-bottom: 0;
-            }
+        .consignment-btn { background: #218838; }
+        .consignment-btn:hover { background: #1e7e34; }
+        .consignment-btn:disabled { background: #6c757d; cursor: not-allowed; opacity: 0.7; }
 
-            .main-content {
-                padding: 0 20px;
-            }
+        #user-info-display {
+            display: none;
+            align-items: center;
+            gap: 15px;
+        }
+        #username-display { font-size: 0.9rem; font-weight: 600; color: #333; }
+        #logout-button { padding: 6px 15px; background: #f0f0f0; color: #DC2626; border: 2px solid #f0f0f0; }
+        #logout-button:hover { border: 2px solid #DC2626; color: #DC2626; background: white; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .close-modal-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .close-modal-btn:hover { color: #333; }
+        .modal-header { text-align: center; color: #DC2626; margin-bottom: 20px; }
+        .modal-header h2 { font-size: 1.8rem; margin-bottom: 5px; }
+        .modal-header p { font-size: 0.9rem; color: #666; }
+        .modal-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; }
+        .modal-section h3 { margin-bottom: 15px; color: #333; font-size: 1.1rem; }
+        .custom-file-upload {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: block;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .custom-file-upload:hover { border-color: #DC2626; }
+        .custom-file-upload span { display: block; font-size: 0.9rem; color: #888; }
+        #contractFile { display: none; }
+        .upload-action-btn {
+            width: 100%;
+            padding: 10px;
+            background: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .online-sign-action {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; }
+        .checkbox-group label { font-size: 0.9rem; color: #555; cursor: pointer; }
+        .sign-action-btn {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .sign-action-btn:disabled { background: #6c757d; cursor: not-allowed; }
+
+        @media (max-width: 768px) {
+            .header-container { padding: 15px 20px; }
+            .header h1 { font-size: 1.5rem; }
+            .header p { display: none; }
+            .header-nav { position: static; transform: none; justify-content: center; width: 100%; margin-top: 15px; }
+            .title-container { margin-bottom: 0; }
+            .main-content { padding: 0 20px; }
         }
     </style>
 </head>
@@ -253,20 +332,14 @@
             <a href="index.html" class="nav-link">土地買賣</a>
             <a href="index1.html" class="nav-link">競價看板</a>
             <a href="index5.html" class="nav-link active">我的永續案件</a>
-            <a href="#" class="nav-link">會員登入</a>
+            <div id="user-info-display"><span id="username-display"></span><a id="logout-button" class="nav-link">登出</a></div>
+            <a href="index.html" id="login-nav-button" class="nav-link">會員登入</a>
         </nav>
         <div class="header">
             <div class="title-container">
                 <div class="logo-container">
                     <svg width="60" height="75" viewBox="0 0 100 125" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="50" cy="45" rx="45" ry="40" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <line x1="15" y1="20" x2="85" y2="20" stroke="#DC2626" stroke-width="4"/>
-                        <line x1="25" y1="40" x2="25" y2="70" stroke="#DC2626" stroke-width="4"/>
-                        <circle cx="35" cy="50" r="10" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <circle cx="35" cy="65" r="8" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <line x1="65" y1="45" x2="65" y2="75" stroke="#DC2626" stroke-width="4"/>
-                        <path d="M 65 45 Q 75 40 85 45 Q 85 50 85 75" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <text x="50" y="110" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#DC2626" letter-spacing="3px">YIRU</text>
+                        <ellipse cx="50" cy="45" rx="45" ry="40" stroke="#DC2626" stroke-width="4" fill="none"/><line x1="15" y1="20" x2="85" y2="20" stroke="#DC2626" stroke-width="4"/><line x1="25" y1="40" x2="25" y2="70" stroke="#DC2626" stroke-width="4"/><circle cx="35" cy="50" r="10" stroke="#DC2626" stroke-width="4" fill="none"/><circle cx="35" cy="65" r="8" stroke="#DC2626" stroke-width="4" fill="none"/><line x1="65" y1="45" x2="65" y2="75" stroke="#DC2626" stroke-width="4"/><path d="M 65 45 Q 75 40 85 45 Q 85 50 85 75" stroke="#DC2626" stroke-width="4" fill="none"/><text x="50" y="110" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#DC2626" letter-spacing="3px">YIRU</text>
                     </svg>
                 </div>
                 <h1>我的一如永續案件</h1>
@@ -278,9 +351,7 @@
     <main class="main-content">
         <div class="result-header">
             <h2 class="page-title">案件列表</h2>
-            <button class="add-case-btn" onclick="alert('開啟新增案件表單')">
-                <span>+</span> 新增永續案件
-            </button>
+            <button class="add-case-btn" onclick="alert('開啟新增案件表單')"><span>+</span> 新增永續案件</button>
         </div>
 
         <div class="table-container">
@@ -288,97 +359,89 @@
                 <thead>
                     <tr>
                         <th style="width: 8%;">案件編號</th>
-                        <th style="width: 30%;">案件標題</th>
-                        <th style="width: 12%;">地區</th>
+                        <th style="width: 25%;">案件標題</th>
+                        <th style="width: 10%;">地區</th>
                         <th style="width: 10%;">土地面積</th>
-                        <th style="width: 15%;">送審日期</th>
-                        <th style="width: 15%;">核准進度</th>
+                        <th style="width: 12%;">送審日期</th>
+                        <th style="width: 12%;">核准進度</th>
+                        <th style="width: 12%;">委託狀態</th>
                         <th style="width: 15%;">操作</th>
                     </tr>
                 </thead>
-                <tbody id="myCasesTableBody">
-                    <!-- 案件列表將由JavaScript動態生成 -->
-                </tbody>
+                <tbody id="myCasesTableBody"></tbody>
             </table>
         </div>
     </main>
+    
+    <!-- Consignment Modal HTML -->
+    <div id="consignmentModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal-btn">&times;</button>
+            <div class="modal-header">
+                <h2>委託代銷契約簽署</h2>
+                <p id="modalCaseInfo"></p>
+            </div>
+            
+            <div class="modal-section">
+                <h3>選項一：上傳現有合約</h3>
+                <label for="contractFile" class="custom-file-upload">
+                    <span>點擊此處選擇檔案</span>
+                    <small>(支援 PDF, PNG, JPG)</small>
+                </label>
+                <input type="file" id="contractFile" accept=".pdf,.png,.jpg,.jpeg">
+                <button class="upload-action-btn" onclick="handleContractUpload()">確認上傳</button>
+            </div>
+
+            <div class="modal-section">
+                <h3>選項二：進行線上簽約</h3>
+                <div class="online-sign-action">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="agreeTerms">
+                        <label for="agreeTerms">我已閱讀並同意一如永續土地委託代銷條款</label>
+                    </div>
+                    <button id="onlineSignBtn" class="sign-action-btn" onclick="handleOnlineSign()" disabled>立即線上簽署</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script>
-        // 模擬使用者上傳的案件資料
-        const myCasesData = [
-            {
-                id: 'YIRU-S-001',
-                title: '台北市信義區永續綠地計畫',
-                region: '台北市信義區',
-                area: 150.75,
-                submissionDate: '2025-09-15',
-                status: 'review' // review, required, approved, rejected, draft
-            },
-            {
-                id: 'YIRU-S-002',
-                title: '台中市西屯區太陽能農電共生專案',
-                region: '台中市西屯區',
-                area: 580.50,
-                submissionDate: '2025-09-10',
-                status: 'approved'
-            },
-            {
-                id: 'YIRU-S-003',
-                title: '新北市林口區智慧農業實驗基地',
-                region: '新北市林口區',
-                area: 320.00,
-                submissionDate: '2025-08-22',
-                status: 'required'
-            },
-            {
-                id: 'YIRU-S-004',
-                title: '高雄市亞洲新灣區碳中和示範區',
-                region: '高雄市苓雅區',
-                area: 1250.00,
-                submissionDate: '2025-08-05',
-                status: 'approved'
-            },
-            {
-                id: 'YIRU-S-005',
-                title: '桃園市航空城都市廢土活化專案',
-                region: '桃園市大園區',
-                area: 85.30,
-                submissionDate: '2025-07-18',
-                status: 'rejected'
-            },
-            {
-                id: 'YIRU-S-006',
-                title: '台南市安南區生態滯洪池建設計畫 (草稿)',
-                region: '台南市安南區',
-                area: 210.60,
-                submissionDate: '2025-10-01',
-                status: 'draft'
-            }
+        // --- DATA ---
+        let myCasesData = [
+            { id: 'YIRU-S-001', title: '台北市信義區永續綠地計畫', region: '台北市信義區', area: 150.75, submissionDate: '2025-09-15', status: 'review', consignmentStatus: 'unsigned' },
+            { id: 'YIRU-S-002', title: '台中市西屯區太陽能農電共生專案', region: '台中市西屯區', area: 580.50, submissionDate: '2025-09-10', status: 'approved', consignmentStatus: 'signed' },
+            { id: 'YIRU-S-003', title: '新北市林口區智慧農業實驗基地', region: '新北市林口區', area: 320.00, submissionDate: '2025-08-22', status: 'required', consignmentStatus: 'unsigned' },
+            { id: 'YIRU-S-004', title: '高雄市亞洲新灣區碳中和示範區', region: '高雄市苓雅區', area: 1250.00, submissionDate: '2025-08-05', status: 'approved', consignmentStatus: 'signed' },
+            { id: 'YIRU-S-005', title: '桃園市航空城都市廢土活化專案', region: '桃園市大園區', area: 85.30, submissionDate: '2025-07-18', status: 'rejected', consignmentStatus: 'unsigned' },
+            { id: 'YIRU-S-006', title: '台南市安南區生態滯洪池建設計畫 (草稿)', region: '台南市安南區', area: 210.60, submissionDate: '2025-10-01', status: 'draft', consignmentStatus: 'uploaded' }
         ];
 
-        // 渲染案件列表表格
-        function renderMyCasesTable(data) {
+        let currentSigningCaseId = null;
+
+        // --- RENDER FUNCTIONS ---
+        function renderMyCasesTable(data, isLoggedIn) {
             const tableBody = document.getElementById('myCasesTableBody');
-            tableBody.innerHTML = ''; // 清空現有內容
+            tableBody.innerHTML = ''; 
 
             if (!data || data.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="7" style="padding: 30px;">您目前沒有任何永續案件。</td></tr>`;
+                if(isLoggedIn) {
+                    tableBody.innerHTML = `<tr><td colspan="8" style="padding: 30px; text-align: center;">您目前沒有任何永續案件。</td></tr>`;
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="8" style="padding: 30px; text-align: center;">請先 <a href="index.html" style="color: #DC2626; font-weight: bold; text-decoration: none;">登入</a> 以查看您的案件列表。</td></tr>`;
+                }
                 return;
             }
 
             data.forEach(caseItem => {
                 const row = document.createElement('tr');
+                const statusMap = { draft: { text: '草稿', class: 'status-draft' }, review: { text: '審核中', class: 'status-review' }, required: { text: '資料補件', class: 'status-required' }, approved: { text: '已核准', class: 'status-approved' }, rejected: { text: '已退回', class: 'status-rejected' } };
+                const consignmentMap = { unsigned: { text: '未簽署', class: 'consignment-unsigned' }, uploaded: { text: '已上傳', class: 'consignment-uploaded' }, signed: { text: '已簽約', class: 'consignment-signed' } };
                 
-                const statusMap = {
-                    draft: { text: '草稿', class: 'status-draft' },
-                    review: { text: '審核中', class: 'status-review' },
-                    required: { text: '資料補件', class: 'status-required' },
-                    approved: { text: '已核准', class: 'status-approved' },
-                    rejected: { text: '已退回', class: 'status-rejected' }
-                };
-
                 const currentStatus = statusMap[caseItem.status] || { text: '未知', class: '' };
+                const currentConsignment = consignmentMap[caseItem.consignmentStatus] || { text: '未知', class: '' };
                 const isUploadDisabled = caseItem.status === 'approved' || caseItem.status === 'review';
+                const isConsignmentDone = caseItem.consignmentStatus === 'signed' || caseItem.consignmentStatus === 'uploaded';
 
                 row.innerHTML = `
                     <td>${caseItem.id}</td>
@@ -387,8 +450,12 @@
                     <td>${caseItem.area.toFixed(2)} 坪</td>
                     <td>${caseItem.submissionDate}</td>
                     <td><span class="status-badge ${currentStatus.class}">${currentStatus.text}</span></td>
+                    <td><span class="consignment-badge ${currentConsignment.class}">${currentConsignment.text}</span></td>
                     <td>
                         <div class="table-button-group">
+                            <button class="table-action-btn consignment-btn" onclick="openConsignmentModal('${caseItem.id}')" ${isConsignmentDone ? 'disabled' : ''}>
+                                ${isConsignmentDone ? '已委託' : '簽署委託'}
+                            </button>
                             <button class="table-action-btn upload-btn" onclick="alert('為案件 ${caseItem.id} 上傳資料')" ${isUploadDisabled ? 'disabled' : ''}>資料上傳</button>
                             <button class="table-action-btn view-btn" onclick="alert('查看/編輯案件 ${caseItem.id}')">查看/編輯</button>
                         </div>
@@ -397,12 +464,107 @@
                 tableBody.appendChild(row);
             });
         }
+        
+        // --- LOGIN STATE MANAGEMENT ---
+        function updateHeaderUI() {
+            const loginButton = document.getElementById('login-nav-button');
+            const userInfoDisplay = document.getElementById('user-info-display');
+            const usernameDisplay = document.getElementById('username-display');
+            const storedUser = sessionStorage.getItem('currentUser');
+            if (storedUser) {
+                const currentUser = JSON.parse(storedUser);
+                loginButton.style.display = 'none';
+                userInfoDisplay.style.display = 'flex';
+                usernameDisplay.textContent = `歡迎, ${currentUser.name} (${currentUser.role})`;
+            } else {
+                loginButton.style.display = 'block';
+                userInfoDisplay.style.display = 'none';
+            }
+        }
 
-        // 頁面載入時執行
+        function handleLogout() {
+            if(confirm('您確定要登出嗎？')) {
+                const storedUser = JSON.parse(sessionStorage.getItem('currentUser'));
+                sessionStorage.removeItem('currentUser');
+                alert(`使用者 ${storedUser.name} 已登出。`);
+                updateHeaderUI();
+                // After logout, show the "Please log in" message in the table
+                renderMyCasesTable([], false);
+            }
+        }
+
+        // --- CONSIGNMENT MODAL LOGIC ---
+        function openConsignmentModal(caseId) {
+            currentSigningCaseId = caseId;
+            const caseData = myCasesData.find(c => c.id === caseId);
+            if (!caseData) return;
+
+            document.getElementById('modalCaseInfo').textContent = `案件編號: ${caseData.id} - ${caseData.title}`;
+            document.getElementById('consignmentModal').classList.add('show');
+        }
+
+        function closeConsignmentModal() {
+            document.getElementById('consignmentModal').classList.remove('show');
+            document.getElementById('contractFile').value = '';
+            document.getElementById('agreeTerms').checked = false;
+            document.getElementById('onlineSignBtn').disabled = true;
+            currentSigningCaseId = null;
+        }
+
+        function handleContractUpload() {
+            const fileInput = document.getElementById('contractFile');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('請先選擇要上傳的合約檔案！');
+                return;
+            }
+            const caseIndex = myCasesData.findIndex(c => c.id === currentSigningCaseId);
+            if (caseIndex !== -1) {
+                myCasesData[caseIndex].consignmentStatus = 'uploaded';
+                alert(`案件 ${currentSigningCaseId} 的合約已成功上傳！`);
+                renderMyCasesTable(myCasesData, true); // Re-render with logged-in status
+                closeConsignmentModal();
+            }
+        }
+
+        function handleOnlineSign() {
+            const caseIndex = myCasesData.findIndex(c => c.id === currentSigningCaseId);
+            if (caseIndex !== -1) {
+                myCasesData[caseIndex].consignmentStatus = 'signed';
+                alert(`案件 ${currentSigningCaseId} 已完成線上簽約！`);
+                renderMyCasesTable(myCasesData, true); // Re-render with logged-in status
+                closeConsignmentModal();
+            }
+        }
+
+        // --- PAGE INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', function() {
-            renderMyCasesTable(myCasesData);
-        });
+            const isLoggedIn = sessionStorage.getItem('currentUser') !== null;
+            
+            updateHeaderUI();
 
+            if (isLoggedIn) {
+                renderMyCasesTable(myCasesData, true);
+            } else {
+                renderMyCasesTable([], false);
+            }
+            
+            // Event listeners
+            const logoutButton = document.getElementById('logout-button');
+            if(logoutButton) logoutButton.addEventListener('click', handleLogout);
+
+            const consignmentModal = document.getElementById('consignmentModal');
+            const closeModalBtn = consignmentModal.querySelector('.close-modal-btn');
+            const agreeTermsCheckbox = document.getElementById('agreeTerms');
+            const onlineSignBtn = document.getElementById('onlineSignBtn');
+            
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeConsignmentModal);
+            if (consignmentModal) consignmentModal.addEventListener('click', (e) => {
+                if (e.target === consignmentModal) closeConsignmentModal();
+            });
+            if (agreeTermsCheckbox) agreeTermsCheckbox.addEventListener('change', () => {
+                onlineSignBtn.disabled = !agreeTermsCheckbox.checked;
+            });
+        });
     </script>
 </body>
 </html>

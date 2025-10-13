@@ -204,11 +204,20 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            text-decoration: none;
+        }
+        
+        .open-map-btn.overlay-btn {
+             background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
         }
 
         .open-map-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(5, 150, 105, 0.4);
+        }
+        
+        .open-map-btn.overlay-btn:hover {
+            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.5);
         }
         
         .real-price-section {
@@ -535,6 +544,20 @@
                 <!-- 由JavaScript動態生成 -->
             </div>
         </div>
+        
+        <!-- ----- MOVED & UPDATED SECTION START ----- -->
+        <div class="analysis-section">
+            <h2 class="section-title">所有圖資套圖</h2>
+            <div class="gis-card">
+                 <h3>
+                    <span>多圖層套疊預覽</span>
+                    <a href="index6.html" target="_blank" class="open-map-btn overlay-btn">🚀 開啟全功能套圖分析</a>
+                </h3>
+                <div class="map-container" id="overlayMap" style="height: 500px;"></div>
+            </div>
+        </div>
+        <!-- ----- MOVED & UPDATED SECTION END ----- -->
+        
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
@@ -833,6 +856,36 @@
                 fillOpacity: 0.3,
                 radius: 50
             }).addTo(aerialMap).bindPopup('土地位置');
+
+            // Overlay Map (now at the bottom)
+            const overlayMap = L.map('overlayMap').setView(coords, 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(overlayMap);
+            // Add zoning-like layer
+            L.polygon([
+                [coords[0] + 0.001, coords[1] - 0.001],
+                [coords[0] + 0.001, coords[1] + 0.001],
+                [coords[0] - 0.001, coords[1] + 0.001],
+                [coords[0] - 0.001, coords[1] - 0.001]
+            ], {
+                color: '#DC2626',
+                fillColor: '#ffcdd2',
+                fillOpacity: 0.4
+            }).addTo(overlayMap);
+            // Add cadastral-like layer
+            L.polygon([
+                [coords[0] + 0.0008, coords[1] - 0.0008],
+                [coords[0] + 0.0008, coords[1] + 0.0008],
+                [coords[0] - 0.0008, coords[1] + 0.0008],
+                [coords[0] - 0.0008, coords[1] - 0.0008]
+            ], {
+                color: '#2563eb',
+                weight: 2,
+                fillOpacity: 0
+            }).addTo(overlayMap);
+            L.marker(coords).addTo(overlayMap)
+                .bindPopup('多圖層套圖預覽。<br>點擊上方按鈕開啟全功能分析。').openPopup();
         }
 
         function initializeStreetView(land) {
