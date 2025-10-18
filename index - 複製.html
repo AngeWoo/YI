@@ -102,23 +102,71 @@
             font-weight: 600;
         }
 
-        .filters {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+        .filter-row {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .filter-row:last-of-type {
+            border-bottom: none;
         }
 
         .filter-group {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            align-items: flex-start;
+            gap: 15px;
         }
 
         .filter-label {
             font-size: 0.9rem;
+            color: #333;
+            font-weight: 600;
+            min-width: 80px;
+            padding-top: 8px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            flex: 1;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .checkbox-group label:hover {
+            color: #DC2626;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            accent-color: #DC2626;
+        }
+
+        .range-input {
+            width: 100px;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .checkbox-group span {
+            font-size: 0.9rem;
             color: #666;
-            font-weight: 500;
         }
 
         select, input {
@@ -642,7 +690,6 @@
             transform: translateY(-1px);
         }
 
-        /* Contact Modal Styles */
         .contact-modal-overlay {
             position: fixed;
             top: 0;
@@ -764,7 +811,6 @@
             text-decoration: underline;
         }
 
-        /* AI Assistant Styles */
         #ai-assistant-button {
             position: fixed;
             bottom: 30px;
@@ -902,7 +948,6 @@
             background: #b91c1c;
         }
         
-        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1050,7 +1095,6 @@
             border-color: #c4c4c4;
         }
         
-        /* Styles for Login State */
         #user-info-display {
             display: none;
             align-items: center;
@@ -1076,6 +1120,31 @@
             background: white;
         }
 
+        .admin-footer {
+            text-align: center;
+            padding: 20px 40px;
+            margin-top: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .admin-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #64748b;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .admin-button:hover {
+            background: #475569;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
 
         @media (max-width: 768px) {
             .header-container {
@@ -1103,11 +1172,24 @@
                 padding: 0 20px;
             }
 
-            .land-grid {
-                grid-template-columns: 1fr;
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
             }
 
-            .filters {
+            .filter-label {
+                padding-top: 0;
+            }
+
+            .checkbox-group {
+                width: 100%;
+            }
+
+            .range-input {
+                width: 80px;
+            }
+
+            .land-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -1250,47 +1332,128 @@
     <section class="search-section">
         <div class="search-content">
             <h2 class="search-title">🔍 搜尋理想土地</h2>
-            <div class="filters">
+            
+            <div class="filter-row">
                 <div class="filter-group">
-                    <label class="filter-label">地區</label>
-                    <select id="regionFilter">
-                        <option value="">全部地區</option>
-                        <option value="台北市">台北市</option>
-                        <option value="新北市">新北市</option>
-                        <option value="桃園市">桃園市</option>
-                        <option value="台中市">台中市</option>
-                        <option value="台南市">台南市</option>
-                        <option value="高雄市">高雄市</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">行政區</label>
-                    <select id="districtFilter">
-                        <option value="">全部行政區</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">價格範圍</label>
-                    <select id="priceFilter">
-                        <option value="">不限</option>
-                        <option value="0-1000">1000萬以下</option>
-                        <option value="1000-5000">1000-5000萬</option>
-                        <option value="5000-10000">5000萬-1億</option>
-                        <option value="10000+">1億以上</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">坪數範圍</label>
-                    <select id="areaFilter">
-                        <option value="">不限</option>
-                        <option value="0-50">50坪以下</option>
-                        <option value="50-100">50-100坪</option>
-                        <option value="100-200">100-200坪</option>
-                        <option value="200+">200坪以上</option>
-                    </select>
+                    <label class="filter-label">台北市</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" value="全區" class="district-check"> 全區</label>
+                        <label><input type="checkbox" value="中山區" class="district-check"> 中山區</label>
+                        <label><input type="checkbox" value="大安區" class="district-check"> 大安區</label>
+                        <label><input type="checkbox" value="內湖區" class="district-check"> 內湖區</label>
+                        <label><input type="checkbox" value="信義區" class="district-check"> 信義區</label>
+                        <label><input type="checkbox" value="士林區" class="district-check"> 士林區</label>
+                        <label><input type="checkbox" value="松山區" class="district-check"> 松山區</label>
+                        <label><input type="checkbox" value="北投區" class="district-check"> 北投區</label>
+                        <label><input type="checkbox" value="文山區" class="district-check"> 文山區</label>
+                        <label><input type="checkbox" value="中正區" class="district-check"> 中正區</label>
+                        <label><input type="checkbox" value="南港區" class="district-check"> 南港區</label>
+                        <label><input type="checkbox" value="萬華區" class="district-check"> 萬華區</label>
+                        <label><input type="checkbox" value="大同區" class="district-check"> 大同區</label>
+                    </div>
                 </div>
             </div>
-            <div style="display: flex; gap: 10px; align-items: center;">
+
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">類型</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" value="不限" class="type-check" checked> 不限</label>
+                        <label><input type="checkbox" value="住宅用地" class="type-check"> 住宅用地</label>
+                        <label><input type="checkbox" value="商業用地" class="type-check"> 商業用地</label>
+                        <label><input type="checkbox" value="工業用地" class="type-check"> 工業用地</label>
+                        <label><input type="checkbox" value="休閒用地" class="type-check"> 休閒用地</label>
+                        <label><input type="checkbox" value="道路用地" class="type-check"> 道路用地</label>
+                        <label><input type="checkbox" value="山坡地" class="type-check"> 山坡地</label>
+                        <label><input type="checkbox" value="建地" class="type-check"> 建地</label>
+                        <label><input type="checkbox" value="農地" class="type-check"> 農地</label>
+                        <label><input type="checkbox" value="林地" class="type-check"> 林地</label>
+                        <label><input type="checkbox" value="其他" class="type-check"> 其他</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">售價</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" value="不限" class="price-check" checked> 不限</label>
+                        <label><input type="checkbox" value="0-1500" class="price-check"> 1500萬以下</label>
+                        <label><input type="checkbox" value="1500-4000" class="price-check"> 1500~4000萬</label>
+                        <label><input type="checkbox" value="4000-10000" class="price-check"> 4000萬~1億</label>
+                        <label><input type="checkbox" value="10000-20000" class="price-check"> 1~2億</label>
+                        <label><input type="checkbox" value="20000+" class="price-check"> 2億以上</label>
+                        <input type="number" id="priceMin" placeholder="最低" class="range-input">
+                        <span>~</span>
+                        <input type="number" id="priceMax" placeholder="最高" class="range-input">
+                        <span>萬</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">坪數</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" value="不限" class="area-check" checked> 不限</label>
+                        <label><input type="checkbox" value="0-50" class="area-check"> 50坪以下</label>
+                        <label><input type="checkbox" value="50-100" class="area-check"> 50-100坪</label>
+                        <label><input type="checkbox" value="100-200" class="area-check"> 100-200坪</label>
+                        <label><input type="checkbox" value="200-400" class="area-check"> 200-400坪</label>
+                        <label><input type="checkbox" value="400-700" class="area-check"> 400-700坪</label>
+                        <label><input type="checkbox" value="700-1000" class="area-check"> 700-1000坪</label>
+                        <label><input type="checkbox" value="1000+" class="area-check"> 1000坪以上</label>
+                        <input type="number" id="areaMin" placeholder="最低" class="range-input">
+                        <span>~</span>
+                        <input type="number" id="areaMax" placeholder="最高" class="range-input">
+                        <span>坪</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">都市土地</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" value="不限" class="urban-check" checked> 不限</label>
+                        <label><input type="checkbox" value="住宅區" class="urban-check"> 住宅區</label>
+                        <label><input type="checkbox" value="商業區" class="urban-check"> 商業區</label>
+                        <label><input type="checkbox" value="工業區" class="urban-check"> 工業區</label>
+                        <label><input type="checkbox" value="文教區" class="urban-check"> 文教區</label>
+                        <label><input type="checkbox" value="行政區" class="urban-check"> 行政區</label>
+                        <label><input type="checkbox" value="體育運動區" class="urban-check"> 體育運動區</label>
+                        <label><input type="checkbox" value="風景區" class="urban-check"> 風景區</label>
+                        <label><input type="checkbox" value="保存區" class="urban-check"> 保存區</label>
+                        <label><input type="checkbox" value="保護區" class="urban-check"> 保護區</label>
+                        <label><input type="checkbox" value="農業區" class="urban-check"> 農業區</label>
+                        <label><input type="checkbox" value="特定專用區" class="urban-check"> 特定專用區</label>
+                        <label><input type="checkbox" value="其它" class="urban-check"> 其它</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">非都市土地</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" value="不限" class="non-urban-check" checked> 不限</label>
+                        <label><input type="checkbox" value="特定農業區" class="non-urban-check"> 特定農業區</label>
+                        <label><input type="checkbox" value="一般農業區" class="non-urban-check"> 一般農業區</label>
+                        <label><input type="checkbox" value="工業區" class="non-urban-check"> 工業區</label>
+                        <label><input type="checkbox" value="鄉村區" class="non-urban-check"> 鄉村區</label>
+                        <label><input type="checkbox" value="森林區" class="non-urban-check"> 森林區</label>
+                        <label><input type="checkbox" value="山坡地保育區" class="non-urban-check"> 山坡地保育區</label>
+                        <label><input type="checkbox" value="風景區" class="non-urban-check"> 風景區</label>
+                        <label><input type="checkbox" value="國家公園區" class="non-urban-check"> 國家公園區</label>
+                        <label><input type="checkbox" value="河川區" class="non-urban-check"> 河川區</label>
+                        <label><input type="checkbox" value="海域區" class="non-urban-check"> 海域區</label>
+                        <label><input type="checkbox" value="特定專用區" class="non-urban-check"> 特定專用區</label>
+                        <label><input type="checkbox" value="其它" class="non-urban-check"> 其它</label>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center; margin-top: 20px;">
                 <input type="text" id="searchInput" placeholder="輸入關鍵字搜尋..." style="flex: 1;">
                 <button class="search-button" onclick="filterData()">搜尋</button>
             </div>
@@ -1342,7 +1505,10 @@
         <div class="pagination" id="pagination"></div>
     </main>
 
-    <!-- AI Assistant HTML -->
+    <footer class="admin-footer">
+        <a href="indexbackend.html" class="admin-button">後台管理</a>
+    </footer>
+
     <div id="ai-assistant-button">
         <span>🤖</span>
     </div>
@@ -1361,7 +1527,6 @@
         </div>
     </div>
 
-    <!-- Login/Register Modal HTML -->
     <div id="loginModal" class="modal-overlay">
         <div class="modal-content">
             <button class="close-modal-btn">&times;</button>
@@ -1409,7 +1574,6 @@
         </div>
     </div>
 
-    <!-- Contact Modal HTML -->
     <div id="contactModal" class="contact-modal-overlay">
         <div class="contact-modal-content">
             <button class="close-contact-modal">&times;</button>
@@ -1447,9 +1611,13 @@
         </div>
     </div>
 
-
     <script>
         let currentUser = null;
+        let currentView = 'card';
+        let landData = [];
+        let filteredData = [];
+        let currentPage = 1;
+        const itemsPerPage = 12;
 
         function updateHeaderUI() {
             const loginButton = document.getElementById('login-nav-button');
@@ -1470,12 +1638,6 @@
                 userInfoDisplay.style.display = 'none';
             }
         }
-        
-        let currentView = 'card';
-        let landData = [];
-        let filteredData = [];
-        let currentPage = 1;
-        const itemsPerPage = 12;
 
         function switchView(view) {
             currentView = view;
@@ -1500,6 +1662,99 @@
         function showContactModal() {
             const modal = document.getElementById('contactModal');
             modal.classList.add('show');
+        }
+
+        function generateRandomLand(id) {
+            const regions = ["台北市"];
+            const districtsMap = { 
+                "台北市": ["中山區", "大安區", "信義區", "內湖區", "士林區", "松山區", "北投區", "文山區", "中正區", "南港區", "萬華區", "大同區"]
+            };
+            const types = ["建地", "農地", "工業地", "商業地"];
+            const features = ["近捷運", "臨路", "方正", "重劃區"];
+            const imageUrls = [
+                "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=300&h=200&fit=crop",
+                "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=300&h=200&fit=crop",
+                "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop"
+            ];
+            const region = regions[0];
+            const district = districtsMap[region][Math.floor(Math.random() * districtsMap[region].length)];
+            const area = (Math.random() * 200 + 10).toFixed(2);
+            const type = types[Math.floor(Math.random() * types.length)];
+            const imageUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+            const ownerCount = Math.floor(Math.random() * 20) + 1;
+            const ownership = ownerCount > 1 ? "持分" : "全部";
+            let pricePerPing = Math.random() * 300 + 150;
+            const totalPrice = Math.round(area * pricePerPing);
+            const selectedFeatures = features.sort(() => 0.5 - Math.random()).slice(0, 2);
+            return {
+                id,
+                title: `${region}${district}${type}${id}地號`,
+                region,
+                district,
+                type,
+                area: parseFloat(area),
+                pricePerPing: parseFloat(pricePerPing.toFixed(1)),
+                totalPrice,
+                features: selectedFeatures,
+                address: `${district}精華地段`,
+                ownership,
+                ownerCount,
+                imageUrl
+            };
+        }
+
+        function formatPrice(price) {
+            return price >= 10000 ? `${(price / 10000).toFixed(1)}億` : `${price}萬`;
+        }
+
+        function renderLandCards(data) {
+            const landGrid = document.getElementById('landGrid');
+            landGrid.innerHTML = '';
+            const pageData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+            
+            pageData.forEach(land => {
+                const card = document.createElement('div');
+                card.className = 'land-card';
+                const tagsHTML = land.features.map(f => 
+                    `<span class="tag ${['近捷運', '重劃區'].includes(f) ? 'highlight' : ''}">${f}</span>`
+                ).join('');
+                
+                card.innerHTML = `
+                    <div class="land-image">
+                        <img src="${land.imageUrl}" alt="${land.title}" onerror="this.parentElement.innerHTML='🏞️'">
+                        <div class="land-badge">${land.type}</div>
+                        <div class="bid-badge" onclick="event.stopPropagation(); window.location.href='index1.html'">🔥 競價</div>
+                    </div>
+                    <div class="land-info">
+                        <div class="land-title">${land.title}</div>
+                        <div class="land-location">📍 ${land.region} ${land.district} · ${land.address}</div>
+                        <div class="tags">${tagsHTML}</div>
+                        <div class="land-details-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">土地面積</span>
+                                <span class="detail-value">${land.area}坪</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">坪單價</span>
+                                <span class="detail-value">${land.pricePerPing.toFixed(1)}萬/坪</span>
+                            </div>
+                        </div>
+                        <div class="land-price">
+                            <div class="price-info">
+                                <span class="price-amount">${formatPrice(land.totalPrice)}</span>
+                                <span class="price-unit">總價</span>
+                            </div>
+                            <div class="button-group-card">
+                                <button class="view-detail-btn" onclick="event.stopPropagation(); viewDetail(${land.id})">查看詳情</button>
+                                <button class="member-view-btn" onclick="event.stopPropagation(); window.open('indexyi2.html?landId=${land.id}', '_blank')">會員查看</button>
+                                <button class="contact-btn" onclick="event.stopPropagation(); showContactModal()">與我聯絡</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                landGrid.appendChild(card);
+            });
+            updatePagination(data.length, currentPage);
         }
 
         function renderTable(data) {
@@ -1537,69 +1792,27 @@
             updatePagination(data.length, currentPage);
         }
 
-        function generateRandomLand(id) {
-            const regions = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市"];
-            const districtsMap = { "台北市": ["中正區", "大安區", "信義區"], "新北市": ["板橋區", "新莊區", "三重區"], "桃園市": ["中壢區", "桃園區", "八德區"], "台中市": ["西屯區", "南屯區", "北屯區"], "台南市": ["安平區", "東區", "永康區"], "高雄市": ["左營區", "鼓山區", "三民區"] };
-            const types = ["建地", "農地", "工業地", "商業地"];
-            const features = ["近捷運", "臨路", "方正", "重劃區"];
-            const imageUrls = [ "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=300&h=200&fit=crop", "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=300&h=200&fit=crop", "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop" ];
-            const region = regions[Math.floor(Math.random() * regions.length)];
-            const district = districtsMap[region][Math.floor(Math.random() * districtsMap[region].length)];
-            const area = (Math.random() * 200 + 10).toFixed(2);
-            const type = types[Math.floor(Math.random() * types.length)];
-            const imageUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
-            const ownerCount = Math.floor(Math.random() * 20) + 1;
-            const ownership = ownerCount > 1 ? "持分" : "全部";
-            let pricePerPing = (region === "台北市") ? Math.random() * 300 + 150 : Math.random() * 150 + 30;
-            const totalPrice = Math.round(area * pricePerPing);
-            const selectedFeatures = features.sort(() => 0.5 - Math.random()).slice(0, 2);
-            return { id, title: `${region}${district}${type}${id}地號`, region, district, type, area: parseFloat(area), pricePerPing: parseFloat(pricePerPing.toFixed(1)), totalPrice, features: selectedFeatures, address: `${district}精華地段`, ownership, ownerCount, imageUrl };
-        }
-
-        function formatPrice(price) { return price >= 10000 ? `${(price / 10000).toFixed(1)}億` : `${price}萬`; }
-
-        function renderLandCards(data) {
-            const landGrid = document.getElementById('landGrid');
-            landGrid.innerHTML = '';
-            const pageData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-            pageData.forEach(land => {
-                const card = document.createElement('div');
-                card.className = 'land-card';
-                const tagsHTML = land.features.map(f => `<span class="tag ${['近捷運', '重劃區'].includes(f) ? 'highlight' : ''}">${f}</span>`).join('');
-                card.innerHTML = `
-                    <div class="land-image">
-                        <img src="${land.imageUrl}" alt="${land.title}" onerror="this.parentElement.innerHTML='🏞️'">
-                        <div class="land-badge">${land.type}</div>
-                        <div class="bid-badge" onclick="event.stopPropagation(); window.location.href='index1.html'">🔥 競價</div>
-                    </div>
-                    <div class="land-info">
-                        <div class="land-title">${land.title}</div>
-                        <div class="land-location">📍 ${land.region} ${land.district} · ${land.address}</div>
-                        <div class="tags">${tagsHTML}</div>
-                        <div class="land-details-grid">
-                            <div class="detail-item"><span class="detail-label">土地面積</span><span class="detail-value">${land.area}坪</span></div>
-                            <div class="detail-item"><span class="detail-label">坪單價</span><span class="detail-value">${land.pricePerPing.toFixed(1)}萬/坪</span></div>
-                        </div>
-                        <div class="land-price">
-                            <div class="price-info"><span class="price-amount">${formatPrice(land.totalPrice)}</span><span class="price-unit">總價</span></div>
-                            <div class="button-group-card">
-                                <button class="view-detail-btn" onclick="event.stopPropagation(); viewDetail(${land.id})">查看詳情</button>
-                                <button class="member-view-btn" onclick="event.stopPropagation(); window.open('indexyi2.html?landId=${land.id}', '_blank')">會員查看</button>
-                                <button class="contact-btn" onclick="event.stopPropagation(); showContactModal()">與我聯絡</button>
-                            </div>
-                        </div>
-                    </div>`;
-                landGrid.appendChild(card);
-            });
-            updatePagination(data.length, currentPage);
+        function renderCurrentView() {
+            if (currentView === 'card') {
+                renderLandCards(filteredData);
+            } else {
+                renderTable(filteredData);
+            }
         }
 
         function updatePagination(totalItems, page) {
             const pagination = document.getElementById('pagination');
             const totalPages = Math.ceil(totalItems / itemsPerPage);
-            if (totalPages <= 1) { pagination.innerHTML = ''; return; }
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
             let paginationHTML = '';
-            if (page > 1) paginationHTML += `<button class="page-btn" onclick="changePage(${page - 1})">上一頁</button>`;
+            if (page > 1) {
+                paginationHTML += `<button class="page-btn" onclick="changePage(${page - 1})">上一頁</button>`;
+            }
+            
             for (let i = 1; i <= totalPages; i++) {
                 if (i === 1 || i === totalPages || (i >= page - 2 && i <= page + 2)) {
                     paginationHTML += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
@@ -1607,16 +1820,11 @@
                     paginationHTML += `<span class="page-btn" style="border: none; cursor: default;">...</span>`;
                 }
             }
-            if (page < totalPages) paginationHTML += `<button class="page-btn" onclick="changePage(${page + 1})">下一頁</button>`;
-            pagination.innerHTML = paginationHTML;
-        }
-        
-        function renderCurrentView() {
-            if (currentView === 'card') {
-                renderLandCards(filteredData);
-            } else {
-                renderTable(filteredData);
+            
+            if (page < totalPages) {
+                paginationHTML += `<button class="page-btn" onclick="changePage(${page + 1})">下一頁</button>`;
             }
+            pagination.innerHTML = paginationHTML;
         }
 
         function changePage(page) {
@@ -1626,36 +1834,85 @@
         }
 
         function filterData() {
-            const regionFilter = document.getElementById('regionFilter').value;
-            const districtFilter = document.getElementById('districtFilter').value;
-            const priceFilter = document.getElementById('priceFilter').value;
-            const areaFilter = document.getElementById('areaFilter').value;
+            const selectedDistricts = Array.from(document.querySelectorAll('.district-check:checked')).map(cb => cb.value);
+            const selectedTypes = Array.from(document.querySelectorAll('.type-check:checked')).map(cb => cb.value);
+            const selectedPrices = Array.from(document.querySelectorAll('.price-check:checked')).map(cb => cb.value);
+            const selectedAreas = Array.from(document.querySelectorAll('.area-check:checked')).map(cb => cb.value);
+            const selectedUrban = Array.from(document.querySelectorAll('.urban-check:checked')).map(cb => cb.value);
+            const selectedNonUrban = Array.from(document.querySelectorAll('.non-urban-check:checked')).map(cb => cb.value);
+            
+            const priceMin = parseFloat(document.getElementById('priceMin').value) || 0;
+            const priceMax = parseFloat(document.getElementById('priceMax').value) || Infinity;
+            const areaMin = parseFloat(document.getElementById('areaMin').value) || 0;
+            const areaMax = parseFloat(document.getElementById('areaMax').value) || Infinity;
+            
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
             filteredData = landData.filter(land => {
                 let matches = true;
-                if (regionFilter && land.region !== regionFilter) matches = false;
-                if (districtFilter && land.district !== districtFilter) matches = false;
-                if (priceFilter) {
-                    const [min, max] = priceFilter.split('-').map(p => p === '10000+' ? Infinity : Number(p));
-                    if(priceFilter === '10000+') { if(land.totalPrice < 10000) matches = false; }
-                    else if(land.totalPrice < min || land.totalPrice >= max) matches = false;
+
+                if (selectedDistricts.length > 0 && !selectedDistricts.includes('全區')) {
+                    if (!selectedDistricts.includes(land.district)) matches = false;
                 }
-                if (areaFilter) {
-                    const [min, max] = areaFilter.replace('+', '-Infinity').split('-').map(Number);
-                    if(max === Infinity) { if(land.area < min) matches = false; }
-                    else if (land.area < min || land.area >= max) matches = false;
+
+                if (selectedTypes.length > 0 && !selectedTypes.includes('不限')) {
+                    if (!selectedTypes.includes(land.type)) matches = false;
                 }
-                if (searchTerm && !`${land.title} ${land.region} ${land.district} ${land.type} ${land.features.join(' ')}`.toLowerCase().includes(searchTerm)) matches = false;
+
+                if (selectedPrices.length > 0 && !selectedPrices.includes('不限')) {
+                    let priceMatch = false;
+                    selectedPrices.forEach(range => {
+                        if (range === '0-1500' && land.totalPrice < 1500) priceMatch = true;
+                        if (range === '1500-4000' && land.totalPrice >= 1500 && land.totalPrice < 4000) priceMatch = true;
+                        if (range === '4000-10000' && land.totalPrice >= 4000 && land.totalPrice < 10000) priceMatch = true;
+                        if (range === '10000-20000' && land.totalPrice >= 10000 && land.totalPrice < 20000) priceMatch = true;
+                        if (range === '20000+' && land.totalPrice >= 20000) priceMatch = true;
+                    });
+                    if (!priceMatch) matches = false;
+                }
+
+                if (priceMin > 0 || priceMax < Infinity) {
+                    if (land.totalPrice < priceMin || land.totalPrice > priceMax) matches = false;
+                }
+
+                if (selectedAreas.length > 0 && !selectedAreas.includes('不限')) {
+                    let areaMatch = false;
+                    selectedAreas.forEach(range => {
+                        if (range === '0-50' && land.area < 50) areaMatch = true;
+                        if (range === '50-100' && land.area >= 50 && land.area < 100) areaMatch = true;
+                        if (range === '100-200' && land.area >= 100 && land.area < 200) areaMatch = true;
+                        if (range === '200-400' && land.area >= 200 && land.area < 400) areaMatch = true;
+                        if (range === '400-700' && land.area >= 400 && land.area < 700) areaMatch = true;
+                        if (range === '700-1000' && land.area >= 700 && land.area < 1000) areaMatch = true;
+                        if (range === '1000+' && land.area >= 1000) areaMatch = true;
+                    });
+                    if (!areaMatch) matches = false;
+                }
+
+                if (areaMin > 0 || areaMax < Infinity) {
+                    if (land.area < areaMin || land.area > areaMax) matches = false;
+                }
+
+                if (searchTerm && !`${land.title} ${land.region} ${land.district} ${land.type} ${land.features.join(' ')}`.toLowerCase().includes(searchTerm)) {
+                    matches = false;
+                }
+
                 return matches;
             });
+
             document.getElementById('resultCount').textContent = filteredData.length;
             currentPage = 1;
             sortData(false);
         }
-        
+
         function sortData(triggeredByUser = true) {
             const sortType = document.getElementById('sortSelect').value;
-            if (sortType === 'default' && triggeredByUser) { filteredData = [...landData]; filterData(); return; }
+            if (sortType === 'default' && triggeredByUser) {
+                filteredData = [...landData];
+                filterData();
+                return;
+            }
+            
             filteredData.sort((a, b) => {
                 switch (sortType) {
                     case 'price-asc': return a.totalPrice - b.totalPrice;
@@ -1669,25 +1926,127 @@
             renderCurrentView();
         }
 
-        function viewDetail(landId) { const land = landData.find(l => l.id === landId); if (land) { sessionStorage.setItem('selectedLand', JSON.stringify(land)); window.open(`indexyi.html?landId=${landId}`, '_blank'); } }
-        document.getElementById('regionFilter').addEventListener('change', function() {
-            const region = this.value;
-            const districtSelect = document.getElementById('districtFilter');
-            const districtsMap = { "台北市": ["中正區", "大安區", "信義區"], "新北市": ["板橋區", "新莊區", "三重區"], "桃園市": ["中壢區", "桃園區", "八德區"], "台中市": ["西屯區", "南屯區", "北屯區"], "台南市": ["安平區", "東區", "永康區"], "高雄市": ["左營區", "鼓山區", "三民區"] };
-            districtSelect.innerHTML = '<option value="">全部行政區</option>';
-            if (region && districtsMap[region]) { districtsMap[region].forEach(d => { districtSelect.innerHTML += `<option value="${d}">${d}</option>`; }); }
-        });
+        function viewDetail(landId) {
+            const land = landData.find(l => l.id === landId);
+            if (land) {
+                sessionStorage.setItem('selectedLand', JSON.stringify(land));
+                window.open(`indexyi.html?landId=${landId}`, '_blank');
+            }
+        }
 
-        ['regionFilter', 'districtFilter', 'priceFilter', 'areaFilter'].forEach(id => { document.getElementById(id).addEventListener('change', filterData); });
+        function handleLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            if (!username) {
+                alert('請輸入帳號!');
+                return;
+            }
+            const roles = ['一般', '地主', '法人', '仲介'];
+            const randomRole = roles[Math.floor(Math.random() * roles.length)];
+            currentUser = { name: username, role: randomRole };
+            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+            alert(`登入成功!歡迎回來, ${currentUser.name}`);
+            document.getElementById('loginModal').classList.remove('show');
+            updateHeaderUI();
+        }
 
-        // AI Assistant Logic
+        function handleRegister() {
+            const username = document.getElementById('registerUsername').value.trim();
+            const selectedRole = document.querySelector('input[name="role"]:checked').value;
+            if (!username) {
+                alert('請輸入帳號!');
+                return;
+            }
+            currentUser = { name: username, role: selectedRole };
+            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+            alert(`註冊成功!\n帳號:${currentUser.name}\n角色:${currentUser.role}\n歡迎您的加入!`);
+            document.getElementById('loginModal').classList.remove('show');
+            updateHeaderUI();
+        }
+
+        function handleLogout() {
+            if (confirm('您確定要登出嗎?')) {
+                alert(`使用者 ${currentUser.name} 已登出。`);
+                sessionStorage.removeItem('currentUser');
+                currentUser = null;
+                updateHeaderUI();
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            const handleUnlimitedCheckbox = (groupClass) => {
+                const checkboxes = document.querySelectorAll(`.${groupClass}`);
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        if (this.value === '不限' && this.checked) {
+                            checkboxes.forEach(cb => {
+                                if (cb.value !== '不限') cb.checked = false;
+                            });
+                        } else if (this.value !== '不限' && this.checked) {
+                            checkboxes.forEach(cb => {
+                                if (cb.value === '不限') cb.checked = false;
+                            });
+                        }
+                        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+                        if (!anyChecked) {
+                            checkboxes.forEach(cb => {
+                                if (cb.value === '不限') cb.checked = true;
+                            });
+                        }
+                        filterData();
+                    });
+                });
+            };
+
+            const districtCheckboxes = document.querySelectorAll('.district-check');
+            districtCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.value === '全區' && this.checked) {
+                        districtCheckboxes.forEach(cb => {
+                            if (cb.value !== '全區') cb.checked = false;
+                        });
+                    } else if (this.value !== '全區' && this.checked) {
+                        districtCheckboxes.forEach(cb => {
+                            if (cb.value === '全區') cb.checked = false;
+                        });
+                    }
+                    filterData();
+                });
+            });
+
+            handleUnlimitedCheckbox('type-check');
+            handleUnlimitedCheckbox('price-check');
+            handleUnlimitedCheckbox('area-check');
+            handleUnlimitedCheckbox('urban-check');
+            handleUnlimitedCheckbox('non-urban-check');
+
+            document.getElementById('priceMin').addEventListener('input', filterData);
+            document.getElementById('priceMax').addEventListener('input', filterData);
+            document.getElementById('areaMin').addEventListener('input', filterData);
+            document.getElementById('areaMax').addEventListener('input', filterData);
+
+            const loginModal = document.getElementById('loginModal');
+            const loginNavButton = document.getElementById('login-nav-button');
+            const logoutButton = document.getElementById('logout-button');
+            const closeModalBtn = loginModal.querySelector('.close-modal-btn');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const showRegisterLink = document.getElementById('showRegisterLink');
+            const showLoginLink = document.getElementById('showLoginLink');
+            
+            if (loginNavButton) loginNavButton.addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.add('show'); });
+            if (logoutButton) logoutButton.addEventListener('click', handleLogout);
+            if (closeModalBtn) closeModalBtn.addEventListener('click', () => loginModal.classList.remove('show'));
+            if (loginModal) loginModal.addEventListener('click', (e) => e.target === loginModal && loginModal.classList.remove('show'));
+            if (showRegisterLink) showRegisterLink.addEventListener('click', (e) => { e.preventDefault(); loginForm.style.display = 'none'; registerForm.style.display = 'block'; });
+            if (showLoginLink) showLoginLink.addEventListener('click', (e) => { e.preventDefault(); registerForm.style.display = 'none'; loginForm.style.display = 'block'; });
+
             const aiButton = document.getElementById('ai-assistant-button');
             const chatPopup = document.getElementById('ai-chat-popup');
             const closeChatBtn = document.getElementById('close-chat-btn');
             const sendChatBtn = document.getElementById('send-chat-btn');
             const chatInput = document.getElementById('chat-input');
             const chatMessages = document.getElementById('chat-messages');
+            
             if (aiButton) aiButton.addEventListener('click', () => chatPopup.classList.toggle('show'));
             if (closeChatBtn) closeChatBtn.addEventListener('click', () => chatPopup.classList.remove('show'));
             if (sendChatBtn) sendChatBtn.addEventListener('click', handleSendMessage);
@@ -1700,10 +2059,24 @@
                 chatInput.value = '';
                 setTimeout(() => appendMessage(getAIResponse(userMessage), 'ai'), 800);
             }
-            function appendMessage(text, sender) { const msg = document.createElement('div'); msg.classList.add('message', sender); msg.textContent = text; chatMessages.appendChild(msg); chatMessages.scrollTop = chatMessages.scrollHeight; }
-            function getAIResponse(q) { q = q.toLowerCase(); if (q.includes('搜尋')) return '您可以在上方的搜尋區塊,透過選擇「地區」、「價格範圍」、「坪數範圍」等條件來篩選您理想的土地。'; if (q.includes('競價')) return '點擊「競價看板」頁面可以看到所有正在競價中的土地。在土地卡片上點擊「我要出價」即可參與競價。'; if (q.includes('會員')) return '成為會員後,您可以查看更詳細的土地資訊。點擊右上角的「會員登入」即可登入或註冊。'; if (q.includes('聯絡')) return '每個土地卡片上都有「與我聯絡」按鈕,點擊即可查看聯絡資訊。'; return '抱歉,我無法回答此問題。'; }
             
-            // Contact Modal Logic
+            function appendMessage(text, sender) {
+                const msg = document.createElement('div');
+                msg.classList.add('message', sender);
+                msg.textContent = text;
+                chatMessages.appendChild(msg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function getAIResponse(q) {
+                q = q.toLowerCase();
+                if (q.includes('搜尋')) return '您可以在上方的搜尋區塊,透過選擇「地區」、「價格範圍」、「坪數範圍」等條件來篩選您理想的土地。';
+                if (q.includes('競價')) return '點擊「競價看板」頁面可以看到所有正在競價中的土地。在土地卡片上點擊「我要出價」即可參與競價。';
+                if (q.includes('會員')) return '成為會員後,您可以查看更詳細的土地資訊。點擊右上角的「會員登入」即可登入或註冊。';
+                if (q.includes('聯絡')) return '每個土地卡片上都有「與我聯絡」按鈕,點擊即可查看聯絡資訊。';
+                return '抱歉,我無法回答此問題。';
+            }
+
             const contactModal = document.getElementById('contactModal');
             const closeContactBtn = contactModal.querySelector('.close-contact-modal');
             
@@ -1720,24 +2093,6 @@
                     }
                 });
             }
-        });
-        
-        // Modal Logic and Initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginModal = document.getElementById('loginModal');
-            const loginNavButton = document.getElementById('login-nav-button');
-            const logoutButton = document.getElementById('logout-button');
-            const closeModalBtn = loginModal.querySelector('.close-modal-btn');
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            const showRegisterLink = document.getElementById('showRegisterLink');
-            const showLoginLink = document.getElementById('showLoginLink');
-            if (loginNavButton) loginNavButton.addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.add('show'); });
-            if (logoutButton) logoutButton.addEventListener('click', handleLogout);
-            if (closeModalBtn) closeModalBtn.addEventListener('click', () => loginModal.classList.remove('show'));
-            if (loginModal) loginModal.addEventListener('click', (e) => e.target === loginModal && loginModal.classList.remove('show'));
-            if (showRegisterLink) showRegisterLink.addEventListener('click', (e) => { e.preventDefault(); loginForm.style.display = 'none'; registerForm.style.display = 'block'; });
-            if (showLoginLink) showLoginLink.addEventListener('click', (e) => { e.preventDefault(); registerForm.style.display = 'none'; loginForm.style.display = 'block'; });
 
             landData = Array.from({ length: 50 }, (_, i) => generateRandomLand(i + 1));
             filteredData = [...landData];
@@ -1745,38 +2100,6 @@
             renderCurrentView();
             updateHeaderUI();
         });
-
-        function handleLogin() {
-            const username = document.getElementById('loginUsername').value.trim();
-            if (!username) { alert('請輸入帳號!'); return; }
-            const roles = ['一般', '地主', '法人', '仲介'];
-            const randomRole = roles[Math.floor(Math.random() * roles.length)];
-            currentUser = { name: username, role: randomRole };
-            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-            alert(`登入成功!歡迎回來, ${currentUser.name}`);
-            document.getElementById('loginModal').classList.remove('show');
-            updateHeaderUI();
-        }
-
-        function handleRegister() {
-            const username = document.getElementById('registerUsername').value.trim();
-            const selectedRole = document.querySelector('input[name="role"]:checked').value;
-            if (!username) { alert('請輸入帳號!'); return; }
-            currentUser = { name: username, role: selectedRole };
-            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-            alert(`註冊成功!\n帳號:${currentUser.name}\n角色:${currentUser.role}\n歡迎您的加入!`);
-            document.getElementById('loginModal').classList.remove('show');
-            updateHeaderUI();
-        }
-
-        function handleLogout() {
-            if (confirm('您確定要登出嗎?')) {
-                alert(`使用者 ${currentUser.name} 已登出。`);
-                sessionStorage.removeItem('currentUser');
-                currentUser = null;
-                updateHeaderUI();
-            }
-        }
     </script>
 </body>
 </html>

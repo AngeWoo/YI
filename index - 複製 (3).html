@@ -755,13 +755,11 @@
             padding: 30px 40px;
             border-radius: 12px;
             width: 90%;
-            max-width: 550px;
+            max-width: 420px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             position: relative;
             transform: scale(0.95);
             transition: transform 0.3s ease;
-            max-height: 90vh;
-            overflow-y: auto;
         }
         
         .modal-overlay.show .modal-content {
@@ -891,92 +889,6 @@
             border-color: #c4c4c4;
         }
 
-        /* 會員身分選擇標籤 */
-        .member-tabs {
-            display: flex;
-            border-bottom: 2px solid #f0f0f0;
-            margin-bottom: 25px;
-            gap: 0;
-        }
-
-        .member-tab {
-            flex: 1;
-            padding: 12px 15px;
-            text-align: center;
-            background: #f8f9fa;
-            border: none;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #666;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-        }
-
-        .member-tab:hover {
-            background: #e9ecef;
-            color: #333;
-        }
-
-        .member-tab.active {
-            background: white;
-            color: #DC2626;
-            border-bottom: 3px solid #DC2626;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .member-notice {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            color: #856404;
-            line-height: 1.6;
-        }
-
-        .member-notice strong {
-            display: block;
-            margin-bottom: 5px;
-            color: #664d03;
-        }
-
-        /* 後台管理區域 */
-        .admin-footer {
-            text-align: center;
-            padding: 40px 40px 60px;
-            margin-top: 50px;
-            background: #f8f9fa;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .admin-button {
-            display: inline-block;
-            padding: 14px 35px;
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .admin-button:hover {
-            background: linear-gradient(135deg, #475569 0%, #334155 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
         @media (max-width: 768px) {
             .land-grid {
                 grid-template-columns: 1fr;
@@ -1046,32 +958,6 @@
             .contact-btn {
                 flex: 1;
                 min-width: 90px;
-            }
-
-            .modal-content {
-                width: 95%;
-                max-width: 95%;
-                padding: 25px 20px;
-                max-height: 95vh;
-            }
-
-            .member-tabs {
-                flex-direction: column;
-            }
-
-            .member-tab {
-                font-size: 0.85rem;
-                padding: 10px;
-            }
-
-            .admin-footer {
-                padding: 30px 20px 50px;
-                margin-top: 30px;
-            }
-
-            .admin-button {
-                padding: 12px 25px;
-                font-size: 0.9rem;
             }
         }
     </style>
@@ -1306,11 +1192,6 @@
         </div>
     </div>
 
-    <!-- 後台管理區域 -->
-    <footer class="admin-footer">
-        <a href="indexbackend.html" class="admin-button">🔧 後台管理</a>
-    </footer>
-
     <!-- 登入/註冊模態框 -->
     <div id="loginModal" class="modal-overlay">
         <div class="modal-content">
@@ -1318,157 +1199,42 @@
             
             <div id="loginForm">
                 <h2>會員登入</h2>
-                
-                <!-- 身分選擇標籤 -->
-                <div class="member-tabs">
-                    <button class="member-tab active" onclick="switchMemberTab('landlord')">地主/代理人</button>
-                    <button class="member-tab" onclick="switchMemberTab('developer')">法人/建商/土開</button>
-                    <button class="member-tab" onclick="switchMemberTab('agent')">仲介營業/經紀人</button>
+                <div class="form-group">
+                    <label for="loginUsername">帳號</label>
+                    <input type="text" id="loginUsername" placeholder="請輸入您的電子郵件或手機">
                 </div>
-
-                <!-- 地主/代理人 -->
-                <div id="landlord-tab" class="tab-content active">
-                    <div class="member-notice">
-                        <strong>⚠️ 重要提醒</strong>
-                        本網站提供地主刊登土地資訊，請確保您擁有土地所有權或經所有權人授權後再進行刊登。
-                    </div>
-                    <div class="form-group">
-                        <label for="landlordAccount">帳號（手機或電子郵件）</label>
-                        <input type="text" id="landlordAccount" placeholder="請輸入您的手機號碼或電子郵件">
-                    </div>
-                    <div class="form-group">
-                        <label for="landlordPassword">密碼</label>
-                        <input type="password" id="landlordPassword" placeholder="請輸入密碼">
-                    </div>
-                    <button class="modal-action-btn" onclick="handleMemberLogin('landlord')">登入</button>
+                <div class="form-group">
+                    <label for="loginPassword">密碼</label>
+                    <input type="password" id="loginPassword" placeholder="請輸入您的密碼">
                 </div>
-
-                <!-- 法人/建商/土開 -->
-                <div id="developer-tab" class="tab-content">
-                    <div class="member-notice">
-                        <strong>⚠️ 企業會員須知</strong>
-                        法人會員需提供公司統一編號進行驗證，以確保交易安全與信用。首次登入後請至會員中心完成企業認證。
-                    </div>
-                    <div class="form-group">
-                        <label for="developerAccount">公司統一編號</label>
-                        <input type="text" id="developerAccount" placeholder="請輸入8位數統一編號" maxlength="8">
-                    </div>
-                    <div class="form-group">
-                        <label for="developerEmail">電子郵件</label>
-                        <input type="email" id="developerEmail" placeholder="請輸入公司電子郵件">
-                    </div>
-                    <div class="form-group">
-                        <label for="developerPassword">密碼</label>
-                        <input type="password" id="developerPassword" placeholder="請輸入密碼">
-                    </div>
-                    <button class="modal-action-btn" onclick="handleMemberLogin('developer')">登入</button>
-                </div>
-
-                <!-- 仲介營業/經紀人 -->
-                <div id="agent-tab" class="tab-content">
-                    <div class="member-notice">
-                        <strong>⚠️ 專業人員認證</strong>
-                        仲介營業員及不動產經紀人需提供證照字號進行身分驗證。登入後請至會員中心上傳相關證照完成認證。
-                    </div>
-                    <div class="form-group">
-                        <label for="agentLicense">證照字號</label>
-                        <input type="text" id="agentLicense" placeholder="請輸入營業員或經紀人證照字號">
-                    </div>
-                    <div class="form-group">
-                        <label for="agentAccount">帳號（手機或電子郵件）</label>
-                        <input type="text" id="agentAccount" placeholder="請輸入您的手機號碼或電子郵件">
-                    </div>
-                    <div class="form-group">
-                        <label for="agentPassword">密碼</label>
-                        <input type="password" id="agentPassword" placeholder="請輸入密碼">
-                    </div>
-                    <button class="modal-action-btn" onclick="handleMemberLogin('agent')">登入</button>
-                </div>
-
+                <button class="modal-action-btn" onclick="handleLogin()">登入</button>
                 <p class="form-switcher">還不是會員? <a href="#" id="showRegisterLink">立即註冊</a></p>
             </div>
 
             <div id="registerForm" style="display: none;">
                 <h2>加入會員</h2>
-                
-                <!-- 註冊身分選擇 -->
-                <div class="member-tabs">
-                    <button class="member-tab active" onclick="switchRegisterTab('landlord')">地主/代理人</button>
-                    <button class="member-tab" onclick="switchRegisterTab('developer')">法人/建商/土開</button>
-                    <button class="member-tab" onclick="switchRegisterTab('agent')">仲介營業/經紀人</button>
+                <div class="form-group">
+                    <label for="registerUsername">帳號</label>
+                    <input type="text" id="registerUsername" placeholder="請設定您的電子郵件或手機">
                 </div>
-
-                <!-- 地主註冊 -->
-                <div id="register-landlord-tab" class="tab-content active">
-                    <div class="member-notice">
-                        <strong>📝 註冊說明</strong>
-                        地主會員可免費刊登土地資訊，享有專屬的土地管理後台。
-                    </div>
-                    <div class="form-group">
-                        <label for="regLandlordName">姓名</label>
-                        <input type="text" id="regLandlordName" placeholder="請輸入真實姓名">
-                    </div>
-                    <div class="form-group">
-                        <label for="regLandlordAccount">手機或電子郵件</label>
-                        <input type="text" id="regLandlordAccount" placeholder="請輸入手機號碼或電子郵件">
-                    </div>
-                    <div class="form-group">
-                        <label for="regLandlordPassword">設定密碼</label>
-                        <input type="password" id="regLandlordPassword" placeholder="請設定至少6位數密碼">
-                    </div>
-                    <button class="modal-action-btn" onclick="handleMemberRegister('landlord')">註冊</button>
+                <div class="form-group">
+                    <label for="registerPassword">密碼</label>
+                    <input type="password" id="registerPassword" placeholder="請設定您的密碼">
                 </div>
-
-                <!-- 法人註冊 -->
-                <div id="register-developer-tab" class="tab-content">
-                    <div class="member-notice">
-                        <strong>📝 企業會員註冊</strong>
-                        註冊後請準備公司登記證明文件，完成企業認證後即可使用完整功能。
+                <div class="form-group">
+                    <label>您的角色</label>
+                    <div class="role-selection">
+                        <input type="radio" id="role-general" name="role" value="一般" checked>
+                        <label for="role-general">一般</label>
+                        <input type="radio" id="role-landlord" name="role" value="地主">
+                        <label for="role-landlord">地主</label>
+                        <input type="radio" id="role-corp" name="role" value="法人">
+                        <label for="role-corp">法人</label>
+                        <input type="radio" id="role-agent" name="role" value="仲介">
+                        <label for="role-agent">仲介</label>
                     </div>
-                    <div class="form-group">
-                        <label for="regDeveloperCompany">公司名稱</label>
-                        <input type="text" id="regDeveloperCompany" placeholder="請輸入公司全名">
-                    </div>
-                    <div class="form-group">
-                        <label for="regDeveloperTaxId">統一編號</label>
-                        <input type="text" id="regDeveloperTaxId" placeholder="請輸入8位數統一編號" maxlength="8">
-                    </div>
-                    <div class="form-group">
-                        <label for="regDeveloperEmail">公司電子郵件</label>
-                        <input type="email" id="regDeveloperEmail" placeholder="請輸入公司電子郵件">
-                    </div>
-                    <div class="form-group">
-                        <label for="regDeveloperPassword">設定密碼</label>
-                        <input type="password" id="regDeveloperPassword" placeholder="請設定至少6位數密碼">
-                    </div>
-                    <button class="modal-action-btn" onclick="handleMemberRegister('developer')">註冊</button>
                 </div>
-
-                <!-- 仲介註冊 -->
-                <div id="register-agent-tab" class="tab-content">
-                    <div class="member-notice">
-                        <strong>📝 專業人員註冊</strong>
-                        註冊後請上傳營業員證或經紀人證照，審核通過後即可開始使用專業功能。
-                    </div>
-                    <div class="form-group">
-                        <label for="regAgentName">姓名</label>
-                        <input type="text" id="regAgentName" placeholder="請輸入真實姓名">
-                    </div>
-                    <div class="form-group">
-                        <label for="regAgentLicense">證照字號</label>
-                        <input type="text" id="regAgentLicense" placeholder="請輸入營業員或經紀人證照字號">
-                    </div>
-                    <div class="form-group">
-                        <label for="regAgentAccount">手機或電子郵件</label>
-                        <input type="text" id="regAgentAccount" placeholder="請輸入手機號碼或電子郵件">
-                    </div>
-                    <div class="form-group">
-                        <label for="regAgentPassword">設定密碼</label>
-                        <input type="password" id="regAgentPassword" placeholder="請設定至少6位數密碼">
-                    </div>
-                    <button class="modal-action-btn" onclick="handleMemberRegister('agent')">註冊</button>
-                </div>
-
+                <button class="modal-action-btn" onclick="handleRegister()">註冊</button>
                 <p class="form-switcher">已經是會員? <a href="#" id="showLoginLink">返回登入</a></p>
             </div>
         </div>
@@ -1494,46 +1260,6 @@
         let allLandData = [];
         let filteredData = [];
         let currentUser = null;
-        let currentMemberType = 'landlord'; // 當前選擇的會員類型
-        let currentRegisterType = 'landlord'; // 當前註冊的會員類型
-
-        // 切換登入身分標籤
-        window.switchMemberTab = function(type) {
-            currentMemberType = type;
-            
-            // 更新標籤樣式
-            document.querySelectorAll('#loginForm .member-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // 隱藏所有內容
-            document.querySelectorAll('#loginForm .tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // 顯示對應內容
-            document.getElementById(`${type}-tab`).classList.add('active');
-        };
-
-        // 切換註冊身分標籤
-        window.switchRegisterTab = function(type) {
-            currentRegisterType = type;
-            
-            // 更新標籤樣式
-            document.querySelectorAll('#registerForm .member-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // 隱藏所有內容
-            document.querySelectorAll('#registerForm .tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // 顯示對應內容
-            document.getElementById(`register-${type}-tab`).classList.add('active');
-        };
 
         // 檢查並更新用戶界面
         function updateHeaderUI() {
@@ -1549,135 +1275,56 @@
             if (currentUser) {
                 loginButton.style.display = 'none';
                 userInfoDisplay.style.display = 'flex';
-                usernameDisplay.textContent = `歡迎, ${currentUser.name} (${currentUser.type})`;
+                usernameDisplay.textContent = `歡迎, ${currentUser.name} (${currentUser.role})`;
             } else {
                 loginButton.style.display = 'block';
                 userInfoDisplay.style.display = 'none';
             }
         }
 
-        // 處理會員登入
-        window.handleMemberLogin = function(type) {
-            let account, password, name, additionalInfo;
+        // 處理登入
+        window.handleLogin = function() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
             
-            switch(type) {
-                case 'landlord':
-                    account = document.getElementById('landlordAccount').value.trim();
-                    password = document.getElementById('landlordPassword').value.trim();
-                    name = account;
-                    additionalInfo = '地主/代理人';
-                    break;
-                case 'developer':
-                    account = document.getElementById('developerAccount').value.trim();
-                    const email = document.getElementById('developerEmail').value.trim();
-                    password = document.getElementById('developerPassword').value.trim();
-                    name = `統編:${account}`;
-                    additionalInfo = '法人/建商';
-                    
-                    if (account.length !== 8 || isNaN(account)) {
-                        alert('請輸入正確的8位數統一編號！');
-                        return;
-                    }
-                    if (!email) {
-                        alert('請輸入電子郵件！');
-                        return;
-                    }
-                    break;
-                case 'agent':
-                    const license = document.getElementById('agentLicense').value.trim();
-                    account = document.getElementById('agentAccount').value.trim();
-                    password = document.getElementById('agentPassword').value.trim();
-                    name = account;
-                    additionalInfo = `仲介(證照:${license})`;
-                    
-                    if (!license) {
-                        alert('請輸入證照字號！');
-                        return;
-                    }
-                    break;
-            }
-            
-            if (!account) {
-                alert('請輸入帳號！');
+            if (!username) {
+                alert('請輸入帳號!');
                 return;
             }
             if (!password) {
-                alert('請輸入密碼！');
+                alert('請輸入密碼!');
                 return;
             }
             
-            currentUser = { name, type: additionalInfo, memberType: type };
+            const roles = ['一般', '地主', '法人', '仲介'];
+            const randomRole = roles[Math.floor(Math.random() * roles.length)];
+            currentUser = { name: username, role: randomRole };
             sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
             
-            alert(`登入成功！\n歡迎回來\n身分：${additionalInfo}`);
+            alert(`登入成功!歡迎回來, ${currentUser.name}`);
             document.getElementById('loginModal').classList.remove('show');
             updateHeaderUI();
         };
 
-        // 處理會員註冊
-        window.handleMemberRegister = function(type) {
-            let name, account, password, additionalInfo;
+        // 處理註冊
+        window.handleRegister = function() {
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value.trim();
+            const selectedRole = document.querySelector('input[name="role"]:checked').value;
             
-            switch(type) {
-                case 'landlord':
-                    name = document.getElementById('regLandlordName').value.trim();
-                    account = document.getElementById('regLandlordAccount').value.trim();
-                    password = document.getElementById('regLandlordPassword').value.trim();
-                    additionalInfo = '地主/代理人';
-                    
-                    if (!name) {
-                        alert('請輸入姓名！');
-                        return;
-                    }
-                    break;
-                case 'developer':
-                    const company = document.getElementById('regDeveloperCompany').value.trim();
-                    const taxId = document.getElementById('regDeveloperTaxId').value.trim();
-                    account = document.getElementById('regDeveloperEmail').value.trim();
-                    password = document.getElementById('regDeveloperPassword').value.trim();
-                    name = company;
-                    additionalInfo = '法人/建商';
-                    
-                    if (!company) {
-                        alert('請輸入公司名稱！');
-                        return;
-                    }
-                    if (taxId.length !== 8 || isNaN(taxId)) {
-                        alert('請輸入正確的8位數統一編號！');
-                        return;
-                    }
-                    break;
-                case 'agent':
-                    name = document.getElementById('regAgentName').value.trim();
-                    const license = document.getElementById('regAgentLicense').value.trim();
-                    account = document.getElementById('regAgentAccount').value.trim();
-                    password = document.getElementById('regAgentPassword').value.trim();
-                    additionalInfo = '仲介營業/經紀人';
-                    
-                    if (!name) {
-                        alert('請輸入姓名！');
-                        return;
-                    }
-                    if (!license) {
-                        alert('請輸入證照字號！');
-                        return;
-                    }
-                    break;
-            }
-            
-            if (!account) {
-                alert('請輸入帳號！');
+            if (!username) {
+                alert('請輸入帳號!');
                 return;
             }
-            if (!password || password.length < 6) {
-                alert('密碼必須至少6位數！');
+            if (!password) {
+                alert('請輸入密碼!');
                 return;
             }
             
-            currentUser = { name, type: additionalInfo, memberType: type };
+            currentUser = { name: username, role: selectedRole };
             sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
             
-            alert(`註冊成功！\n姓名/公司：${name}\n身分：${additionalInfo}\n歡迎加入一如土地平台！`);
+            alert(`註冊成功!\n帳號:${currentUser.name}\n角色:${currentUser.role}\n歡迎您的加入!`);
             document.getElementById('loginModal').classList.remove('show');
             updateHeaderUI();
         };
@@ -1694,13 +1341,6 @@
 
         // 重要：將這些函數定義在全局作用域
         window.viewDetail = function(landId) {
-            // 檢查是否已登入
-            if (!currentUser) {
-                alert('請先登入會員才能查看土地詳情！');
-                document.getElementById('loginModal').classList.add('show');
-                return;
-            }
-            
             const land = filteredData.find(l => l.id === landId);
             if (land) {
                 // 將土地資料存入 sessionStorage
@@ -1712,13 +1352,6 @@
         };
 
         window.viewMemberDetail = function(landId) {
-            // 檢查是否已登入
-            if (!currentUser) {
-                alert('請先登入會員才能查看完整資訊！');
-                document.getElementById('loginModal').classList.add('show');
-                return;
-            }
-            
             const land = filteredData.find(l => l.id === landId);
             if (land) {
                 // 將土地資料存入 sessionStorage
@@ -2085,6 +1718,36 @@
                     e.preventDefault();
                     registerForm.style.display = 'none';
                     loginForm.style.display = 'block';
+                });
+            }
+
+            // 添加 Enter 鍵支持
+            const loginUsername = document.getElementById('loginUsername');
+            const loginPassword = document.getElementById('loginPassword');
+            const registerUsername = document.getElementById('registerUsername');
+            const registerPassword = document.getElementById('registerPassword');
+            
+            if (loginPassword) {
+                loginPassword.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        handleLogin();
+                    }
+                });
+            }
+            
+            if (loginUsername) {
+                loginUsername.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        handleLogin();
+                    }
+                });
+            }
+            
+            if (registerPassword) {
+                registerPassword.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        handleRegister();
+                    }
                 });
             }
 

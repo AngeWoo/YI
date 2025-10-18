@@ -304,6 +304,7 @@
         #logout-button { padding: 6px 15px; background: #f0f0f0; color: #DC2626; border: 2px solid #f0f0f0; }
         #logout-button:hover { border: 2px solid #DC2626; color: #DC2626; background: white; }
 
+        /* Contact Modal Styles */
         .contact-modal-overlay {
             position: fixed;
             top: 0;
@@ -456,14 +457,7 @@
             <div class="title-container">
                 <div class="logo-container">
                     <svg width="60" height="75" viewBox="0 0 100 125" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="50" cy="45" rx="45" ry="40" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <line x1="15" y1="20" x2="85" y2="20" stroke="#DC2626" stroke-width="4"/>
-                        <line x1="25" y1="40" x2="25" y2="70" stroke="#DC2626" stroke-width="4"/>
-                        <circle cx="35" cy="50" r="10" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <circle cx="35" cy="65" r="8" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <line x1="65" y1="45" x2="65" y2="75" stroke="#DC2626" stroke-width="4"/>
-                        <path d="M 65 45 Q 75 40 85 45 Q 85 50 85 75" stroke="#DC2626" stroke-width="4" fill="none"/>
-                        <text x="50" y="110" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#DC2626" letter-spacing="3px">YIRU</text>
+                        <ellipse cx="50" cy="45" rx="45" ry="40" stroke="#DC2626" stroke-width="4" fill="none"/><line x1="15" y1="20" x2="85" y2="20" stroke="#DC2626" stroke-width="4"/><line x1="25" y1="40" x2="25" y2="70" stroke="#DC2626" stroke-width="4"/><circle cx="35" cy="50" r="10" stroke="#DC2626" stroke-width="4" fill="none"/><circle cx="35" cy="65" r="8" stroke="#DC2626" stroke-width="4" fill="none"/><line x1="65" y1="45" x2="65" y2="75" stroke="#DC2626" stroke-width="4"/><path d="M 65 45 Q 75 40 85 45 Q 85 50 85 75" stroke="#DC2626" stroke-width="4" fill="none"/><text x="50" y="110" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#DC2626" letter-spacing="3px">YIRU</text>
                     </svg>
                 </div>
                 <h1>一如土地交易競價看板</h1>
@@ -474,76 +468,26 @@
 
     <div class="page-content">
         <div class="market-summary">
-            <div class="summary-card">
-                <h3>進行中競價</h3>
-                <div class="value" style="color: #FF9800;">28</div>
-                <div class="change trend-down">-6 筆減少</div>
-            </div>
-            <div class="summary-card">
-                <h3>一如協商中</h3>
-                <div class="value" style="color: #9C27B0;">6</div>
-                <div class="change trend-up">+6 筆新增</div>
-            </div>
-            <div class="summary-card">
-                <h3>今日成交</h3>
-                <div class="value" style="color: #4CAF50;">18</div>
-                <div class="change trend-up">+12 (+200%)</div>
-            </div>
-            <div class="summary-card">
-                <h3>平均溢價率</h3>
-                <div class="value" style="color: #2196F3;">+8.2%</div>
-                <div class="change trend-up">+2.1%</div>
-            </div>
+            <div class="summary-card"><h3>進行中競價</h3><div class="value" style="color: #FF9800;">28</div><div class="change trend-down">-6 筆減少</div></div>
+            <div class="summary-card"><h3>一如協商中</h3><div class="value" style="color: #9C27B0;">6</div><div class="change trend-up">+6 筆新增</div></div>
+            <div class="summary-card"><h3>今日成交</h3><div class="value" style="color: #4CAF50;">18</div><div class="change trend-up">+12 (+200%)</div></div>
+            <div class="summary-card"><h3>平均溢價率</h3><div class="value" style="color: #2196F3;">+8.2%</div><div class="change trend-up">+2.1%</div></div>
         </div>
 
         <div class="dashboard">
             <div class="filters">
-                <div class="filter-group">
-                    <label>狀態:</label>
-                    <select id="statusFilter">
-                        <option value="">全部狀態</option>
-                        <option value="bidding">競價中</option>
-                        <option value="negotiating">一如協商</option>
-                        <option value="sold">已成交</option>
-                        <option value="overpriced">乏人問津</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>地區:</label>
-                    <select id="regionFilter">
-                        <option value="">全部地區</option>
-                        <option value="台北市">台北市</option>
-                        <option value="新北市">新北市</option>
-                        <option value="桃園市">桃園市</option>
-                        <option value="台中市">台中市</option>
-                        <option value="台南市">台南市</option>
-                        <option value="高雄市">高雄市</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>價格範圍:</label>
-                    <select id="priceFilter">
-                        <option value="">全部價格</option>
-                        <option value="0-1000">1000萬以下</option>
-                        <option value="1000-5000">1000-5000萬</option>
-                        <option value="5000-10000">5000萬-1億</option>
-                        <option value="10000+">1億以上</option>
-                    </select>
-                </div>
-                <div class="search-box">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="searchInput" placeholder="搜尋土地標題或地區...">
-                </div>
-                <div class="view-toggle">
-                    <button class="active" onclick="switchToCardView()">卡片式</button>
-                    <button onclick="switchToTableView()">表格式</button>
-                </div>
+                <div class="filter-group"><label>狀態:</label><select id="statusFilter"><option value="">全部狀態</option><option value="bidding">競價中</option><option value="negotiating">一如協商</option><option value="sold">已成交</option><option value="overpriced">乏人問津</option></select></div>
+                <div class="filter-group"><label>地區:</label><select id="regionFilter"><option value="">全部地區</option><option value="台北市">台北市</option><option value="新北市">新北市</option><option value="桃園市">桃園市</option><option value="台中市">台中市</option><option value="台南市">台南市</option><option value="高雄市">高雄市</option></select></div>
+                <div class="filter-group"><label>價格範圍:</label><select id="priceFilter"><option value="">全部價格</option><option value="0-1000">1000萬以下</option><option value="1000-5000">1000-5000萬</option><option value="5000-10000">5000萬-1億</option><option value="10000+">1億以上</option></select></div>
+                <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="searchInput" placeholder="搜尋土地標題或地區..."></div>
+                <div class="view-toggle"><button class="active" onclick="switchToCardView()">卡片式</button><button onclick="switchToTableView()">表格式</button></div>
             </div>
 
             <div class="land-grid" id="landGrid"></div>
         </div>
     </div>
 
+    <!-- Contact Modal HTML -->
     <div id="contactModal" class="contact-modal-overlay">
         <div class="contact-modal-content">
             <button class="close-contact-modal">&times;</button>
@@ -584,20 +528,12 @@
     <script>
         function generateRandomLand(idOffset) {
             const regions = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市"];
-            const districtsMap = {
-                "台北市": ["中正區", "大安區", "信義區"],
-                "新北市": ["板橋區", "新莊區", "三重區"],
-                "桃園市": ["中壢區", "桃園區", "八德區"],
-                "台中市": ["西屯區", "南屯區", "北屯區"],
-                "台南市": ["安平區", "東區", "永康區"],
-                "高雄市": ["左營區", "鼓山區", "三民區"]
-            };
+            const districtsMap = { "台北市": ["中正區", "大安區", "信義區"], "新北市": ["板橋區", "新莊區", "三重區"], "桃園市": ["中壢區", "桃園區", "八德區"], "台中市": ["西屯區", "南屯區", "北屯區"], "台南市": ["安平區", "東區", "永康區"], "高雄市": ["左營區", "鼓山區", "三民區"] };
             const titleFragments = ["精華地段", "重劃區", "淘金區", "商業用地", "住宅用地"];
             const landUseZones = ["商三", "住二", "住三", "工一"];
             const statusOptions = ['bidding', 'negotiating', 'sold', 'overpriced'];
             const addresses = ["復興南路", "中正路", "中山路", "成功路"];
             const lastUpdateOptions = ["剛剛", "2分鐘前", "10分鐘前", "30分鐘前", "1小時前"];
-            
             const region = regions[Math.floor(Math.random() * regions.length)];
             const district = districtsMap[region][Math.floor(Math.random() * districtsMap[region].length)];
             const area = (10 + 200 * Math.random()).toFixed(1);
@@ -607,55 +543,18 @@
             let status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
             let dealPrice = null;
             let bidCount = Math.floor(20 * Math.random()) + 1;
-            
-            if (status === 'sold') {
-                dealPrice = Math.round(sellerPrice * (0.95 + 0.05 * Math.random()));
-                buyerPrice = dealPrice;
-            } else if (status === 'negotiating') {
-                buyerPrice = Math.round(sellerPrice * (0.95 + 0.04 * Math.random()));
-            } else if (status === 'overpriced') {
-                buyerPrice = Math.round(sellerPrice * (0.6 + 0.1 * Math.random()));
-                bidCount = Math.floor(3 * Math.random()) + 1;
-            }
-            
+            if (status === 'sold') { dealPrice = Math.round(sellerPrice * (0.95 + 0.05 * Math.random())); buyerPrice = dealPrice; }
+            else if (status === 'negotiating') { buyerPrice = Math.round(sellerPrice * (0.95 + 0.04 * Math.random())); }
+            else if (status === 'overpriced') { buyerPrice = Math.round(sellerPrice * (0.6 + 0.1 * Math.random())); bidCount = Math.floor(3 * Math.random()) + 1; }
             const title = `【${titleFragments[Math.floor(Math.random() * titleFragments.length)]}】${region}${district}土地編號${1000 + idOffset}`;
             const ownerCount = Math.floor(30 * Math.random()) + 1;
-            
-            return {
-                id: Date.now() + idOffset,
-                title,
-                region,
-                district,
-                address: addresses[Math.floor(Math.random() * addresses.length)] + "路",
-                area: `${area}坪`,
-                sellerPrice,
-                buyerPrice,
-                dealPrice,
-                bidCount,
-                lastUpdate: lastUpdateOptions[Math.floor(Math.random() * lastUpdateOptions.length)],
-                status,
-                pricePerPing: `${pricePerPing.toFixed(1)}萬/坪`,
-                landUseZone: landUseZones[Math.floor(Math.random() * landUseZones.length)],
-                ownerCount,
-                shareNumerator: ownerCount > 1 ? 1 : ownerCount,
-                shareDenominator: ownerCount,
-                buildingNumber: Math.random() > 0.4 ? `建號${Math.floor(8000 * Math.random()) + 1000}` : "",
-                marketPrice: Math.round(pricePerPing * (0.8 + 0.3 * Math.random()))
-            };
+            return { id: Date.now() + idOffset, title, region, district, address: addresses[Math.floor(Math.random() * addresses.length)] + "路", area: `${area}坪`, sellerPrice, buyerPrice, dealPrice, bidCount, lastUpdate: lastUpdateOptions[Math.floor(Math.random() * lastUpdateOptions.length)], status, pricePerPing: `${pricePerPing.toFixed(1)}萬/坪`, landUseZone: landUseZones[Math.floor(Math.random() * landUseZones.length)], ownerCount, shareNumerator: ownerCount > 1 ? 1 : ownerCount, shareDenominator: ownerCount, buildingNumber: Math.random() > 0.4 ? `建號${Math.floor(8000 * Math.random()) + 1000}` : "", marketPrice: Math.round(pricePerPing * (0.8 + 0.3 * Math.random())) };
         }
-
         let landData = Array.from({ length: 30 }, (_, i) => generateRandomLand(i + 1));
         let filteredData = [...landData];
 
-        function formatPrice(price) {
-            return price >= 10000 ? `${(price / 10000).toFixed(1)}億` : `${price.toLocaleString()}萬`;
-        }
-
-        function calculateDifference(price1, price2) {
-            const diff = price1 - price2;
-            const percent = ((diff / price2) * 100).toFixed(1);
-            return { diff, percent };
-        }
+        function formatPrice(price) { return price >= 10000 ? `${(price / 10000).toFixed(1)}億` : `${price.toLocaleString()}萬`; }
+        function calculateDifference(price1, price2) { const diff = price1 - price2; const percent = ((diff / price2) * 100).toFixed(1); return { diff, percent }; }
 
         function startBidding(landId) {
             window.open(`index3.html?landId=${landId}`, '_blank');
@@ -665,20 +564,9 @@
             const land = landData.find(l => l.id === landId);
             if (land) {
                 const landForDetailsPage = {
-                    id: land.id,
-                    title: land.title,
-                    region: land.region,
-                    district: land.district,
-                    area: parseFloat(land.area),
-                    sellerPrice: land.sellerPrice,
-                    buyerPrice: land.buyerPrice,
-                    pricePerPing: parseFloat(land.pricePerPing),
-                    landUseZone: land.landUseZone || "競標用地",
-                    ownerCount: land.ownerCount || land.bidCount,
-                    shareNumerator: land.shareNumerator || 1,
-                    shareDenominator: land.shareDenominator || land.bidCount,
-                    buildingNumber: land.buildingNumber || "建號" + (10000 + land.id),
-                    marketPrice: land.marketPrice || parseFloat(land.pricePerPing) * 0.9
+                    id: land.id, title: land.title, region: land.region, district: land.district, area: parseFloat(land.area), sellerPrice: land.sellerPrice, buyerPrice: land.buyerPrice, pricePerPing: parseFloat(land.pricePerPing),
+                    landUseZone: land.landUseZone || "競標用地", ownerCount: land.ownerCount || land.bidCount, shareNumerator: land.shareNumerator || 1, shareDenominator: land.shareDenominator || land.bidCount,
+                    buildingNumber: land.buildingNumber || "建號" + (10000 + land.id), marketPrice: land.marketPrice || parseFloat(land.pricePerPing) * 0.9
                 };
                 sessionStorage.setItem('selectedLand', JSON.stringify(landForDetailsPage));
                 window.open(`indexyi.html?landId=${land.id}`, '_blank');
@@ -693,157 +581,29 @@
         function renderLandCards(data) {
             const landGrid = document.getElementById('landGrid');
             landGrid.innerHTML = '';
-            
             data.forEach(land => {
-                const statusInfo = {
-                    'bidding': { text: '🔥 競價中', class: 'status-hot' },
-                    'sold': { text: '✅ 已成交', class: 'status-sold' },
-                    'overpriced': { text: '📉 乏人問津', class: 'status-bidding' },
-                    'negotiating': { text: '🤝 一如協商', class: 'status-negotiating' }
-                };
-                
+                const statusInfo = { 'bidding': { text: '🔥 競價中', class: 'status-hot' }, 'sold': { text: '✅ 已成交', class: 'status-sold' }, 'overpriced': { text: '📉 乏人問津', class: 'status-bidding' }, 'negotiating': { text: '🤝 一如協商', class: 'status-negotiating' } };
                 const currentStatus = statusInfo[land.status];
                 const sellerBuyerDiff = calculateDifference(land.sellerPrice, land.buyerPrice);
                 const dealDiff = land.dealPrice ? calculateDifference(land.dealPrice, land.sellerPrice) : null;
-                
                 const card = document.createElement('div');
                 card.className = `land-card ${land.status}`;
-                
-                let pricingHTML = `
-                    <div class="pricing-section">
-                        <div class="price-row">
-                            <span class="price-label">賣方定價</span>
-                            <span class="price-value seller-price">${formatPrice(land.sellerPrice)}</span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">最高出價</span>
-                            <div class="bid-info">
-                                <span class="price-value buyer-price">${formatPrice(land.buyerPrice)}</span>
-                                ${land.status === 'negotiating' ? '<span class="negotiating-badge">協商中</span>' : `<span class="bid-count">${land.bidCount}次出價</span>`}
-                                <span class="price-difference negative">-${formatPrice(sellerBuyerDiff.diff)} (${sellerBuyerDiff.percent}%)</span>
-                            </div>
-                        </div>`;
-                
-                if (land.dealPrice) {
-                    pricingHTML += `
-                        <div class="price-row">
-                            <span class="price-label">成交價格</span>
-                            <div class="bid-info">
-                                <span class="price-value deal-price">${formatPrice(land.dealPrice)}</span>
-                                <span class="price-difference ${dealDiff.diff >= 0 ? 'positive' : 'negative'}">
-                                    ${dealDiff.diff >= 0 ? '+' : ''}${formatPrice(Math.abs(dealDiff.diff))} (${dealDiff.percent}%)
-                                </span>
-                            </div>
-                        </div>`;
-                }
-                
+                let pricingHTML = `<div class="pricing-section"><div class="price-row"><span class="price-label">賣方定價</span><span class="price-value seller-price">${formatPrice(land.sellerPrice)}</span></div><div class="price-row"><span class="price-label">最高出價</span><div class="bid-info"><span class="price-value buyer-price">${formatPrice(land.buyerPrice)}</span>${land.status === 'negotiating' ? '<span class="negotiating-badge">協商中</span>' : `<span class="bid-count">${land.bidCount}次出價</span>`}<span class="price-difference negative">-${formatPrice(sellerBuyerDiff.diff)} (${sellerBuyerDiff.percent}%)</span></div></div>`;
+                if (land.dealPrice) { pricingHTML += `<div class="price-row"><span class="price-label">成交價格</span><div class="bid-info"><span class="price-value deal-price">${formatPrice(land.dealPrice)}</span><span class="price-difference ${dealDiff.diff >= 0 ? 'positive' : 'negative'}">${dealDiff.diff >= 0 ? '+' : ''}${formatPrice(Math.abs(dealDiff.diff))} (${dealDiff.percent}%)</span></div></div>`; }
                 pricingHTML += `</div>`;
-                
-                card.innerHTML = `
-                    <div class="time-info">${land.lastUpdate}</div>
-                    <div class="land-header">
-                        <div class="land-title">${land.title}</div>
-                        <div class="status-indicator">
-                            <div class="status-badge ${currentStatus.class}">${currentStatus.text}</div>
-                        </div>
-                    </div>
-                    ${pricingHTML}
-                    <div class="land-details">
-                        <div class="detail-item">
-                            <span class="detail-label">地區</span>
-                            <span class="detail-value">${land.region} ${land.district}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">坪數</span>
-                            <span class="detail-value">${land.area}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">單價</span>
-                            <span class="detail-value">${land.pricePerPing}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">地址</span>
-                            <span class="detail-value">${land.address}</span>
-                        </div>
-                    </div>
-                    <div class="trading-activity">
-                        <div class="activity-info">
-                            ${land.status === 'sold' ? '成交完成' : land.status === 'negotiating' ? '一如協商進行中' : `${land.bidCount} 次出價競爭`}
-                        </div>
-                        <div class="trend-indicator">
-                            ${land.status === 'bidding' ? `<span class="trend-arrow trend-up">🔥</span><span>競價中</span>` :
-                              land.status === 'sold' ? `<span class="trend-arrow trend-up">✅</span><span>已成交</span>` :
-                              land.status === 'negotiating' ? `<span class="trend-arrow trend-negotiating">🤝</span><span>協商中</span>` :
-                              `<span class="trend-arrow trend-down">📉</span><span>冷清</span>`}
-                        </div>
-                    </div>
-                    <div class="button-group">
-                        ${land.status === 'bidding' || land.status === 'overpriced' 
-                            ? `<button class="bid-button" onclick="startBidding(${land.id})">我要出價</button>` 
-                            : land.status === 'negotiating' 
-                            ? `<button class="bid-button negotiating-disabled" onclick="startBidding(${land.id})" disabled>協商中</button>` 
-                            : `<button class="bid-button" disabled>已成交</button>`}
-                        <button class="detail-button" onclick="showDetails(${land.id})">詳細土地資料</button>
-                        <button class="contact-button" onclick="showContactModal()">與我聯絡</button>
-                    </div>
-                `;
-                
+                card.innerHTML = `<div class="time-info">${land.lastUpdate}</div><div class="land-header"><div class="land-title">${land.title}</div><div class="status-indicator"><div class="status-badge ${currentStatus.class}">${currentStatus.text}</div></div></div>${pricingHTML}<div class="land-details"><div class="detail-item"><span class="detail-label">地區</span><span class="detail-value">${land.region} ${land.district}</span></div><div class="detail-item"><span class="detail-label">坪數</span><span class="detail-value">${land.area}</span></div><div class="detail-item"><span class="detail-label">單價</span><span class="detail-value">${land.pricePerPing}</span></div><div class="detail-item"><span class="detail-label">地址</span><span class="detail-value">${land.address}</span></div></div><div class="trading-activity"><div class="activity-info">${land.status === 'sold' ? '成交完成' : land.status === 'negotiating' ? '一如協商進行中' : `${land.bidCount} 次出價競爭`}</div><div class="trend-indicator">${land.status === 'bidding' ? `<span class="trend-arrow trend-up">🔥</span><span>競價中</span>` : land.status === 'sold' ? `<span class="trend-arrow trend-up">✅</span><span>已成交</span>` : land.status === 'negotiating' ? `<span class="trend-arrow trend-negotiating">🤝</span><span>協商中</span>` : `<span class="trend-arrow trend-down">📉</span><span>冷清</span>`}</div></div><div class="button-group">${land.status === 'bidding' || land.status === 'overpriced' ? `<button class="bid-button" onclick="startBidding(${land.id})">我要出價</button>` : land.status === 'negotiating' ? `<button class="bid-button negotiating-disabled" onclick="startBidding(${land.id})" disabled>協商中</button>` : `<button class="bid-button" disabled>已成交</button>`}<button class="detail-button" onclick="showDetails(${land.id})">詳細土地資料</button><button class="contact-button" onclick="showContactModal()">與我聯絡</button></div>`;
                 landGrid.appendChild(card);
             });
         }
-
-        function filterData() {
-            const statusFilter = document.getElementById("statusFilter").value;
-            const regionFilter = document.getElementById("regionFilter").value;
-            const priceFilter = document.getElementById("priceFilter").value;
-            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-            
-            filteredData = landData.filter(land => {
-                if (statusFilter && land.status !== statusFilter) return false;
-                if (regionFilter && land.region !== regionFilter) return false;
-                
-                if (priceFilter) {
-                    const price = land.sellerPrice;
-                    switch (priceFilter) {
-                        case "0-1000":
-                            if (price >= 1000) return false;
-                            break;
-                        case "1000-5000":
-                            if (price < 1000 || price >= 5000) return false;
-                            break;
-                        case "5000-10000":
-                            if (price < 5000 || price >= 10000) return false;
-                            break;
-                        case "10000+":
-                            if (price < 10000) return false;
-                            break;
-                    }
-                }
-                
-                if (searchTerm && !land.title.toLowerCase().includes(searchTerm) && !land.address.toLowerCase().includes(searchTerm)) {
-                    return false;
-                }
-                
-                return true;
-            });
-            
-            renderLandCards(filteredData);
-        }
-
-        function switchToCardView() {
-            // Already on card view
-        }
-
-        function switchToTableView() {
-            window.location.href = 'index2.html';
-        }
-
+        function filterData(){const statusFilter=document.getElementById("statusFilter").value,regionFilter=document.getElementById("regionFilter").value,priceFilter=document.getElementById("priceFilter").value,searchTerm=document.getElementById("searchInput").value.toLowerCase();filteredData=landData.filter(land=>{if(statusFilter&&land.status!==statusFilter)return!1;if(regionFilter&&land.region!==regionFilter)return!1;if(priceFilter){const price=land.sellerPrice;switch(priceFilter){case"0-1000":if(price>=1e3)return!1;break;case"1000-5000":if(price<1e3||price>=5e3)return!1;break;case"5000-10000":if(price<5e3||price>=1e4)return!1;break;case"10000+":if(price<1e4)return!1}}if(searchTerm&&!land.title.toLowerCase().includes(searchTerm)&&!land.address.toLowerCase().includes(searchTerm))return!1;return!0}),renderLandCards(filteredData)}
+        function switchToCardView() { /* No action needed */ }
+        function switchToTableView() { window.location.href = 'index2.html'; }
+        
         function updateHeaderUI() {
             const loginButton = document.getElementById('login-nav-button');
             const userInfoDisplay = document.getElementById('user-info-display');
             const usernameDisplay = document.getElementById('username-display');
             const storedUser = sessionStorage.getItem('currentUser');
-            
             if (storedUser) {
                 const currentUser = JSON.parse(storedUser);
                 loginButton.style.display = 'none';
@@ -854,7 +614,6 @@
                 userInfoDisplay.style.display = 'none';
             }
         }
-
         function handleLogout() {
             if(confirm('您確定要登出嗎?')) {
                 const storedUser = JSON.parse(sessionStorage.getItem('currentUser'));
@@ -874,6 +633,7 @@
             document.getElementById('searchInput').addEventListener('input', filterData);
             document.getElementById('logout-button')?.addEventListener('click', handleLogout);
             
+            // Contact Modal Logic
             const contactModal = document.getElementById('contactModal');
             const closeContactBtn = contactModal.querySelector('.close-contact-modal');
             
@@ -891,47 +651,9 @@
                 });
             }
         });
-
-        setInterval(() => {
-            landData.forEach(land => {
-                if (land.status === "bidding" && Math.random() > 0.7) {
-                    land.buyerPrice += Math.floor(50 * Math.random()) + 5;
-                    land.bidCount += 1;
-                    land.lastUpdate = "剛剛";
-                    
-                    if (land.buyerPrice >= 0.95 * land.sellerPrice) {
-                        land.status = Math.random() > 0.6 ? "sold" : "negotiating";
-                        if (land.status === "sold") {
-                            land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
-                        }
-                    }
-                } else if (land.status === "negotiating" && Math.random() > 0.9) {
-                    const result = Math.random();
-                    if (result > 0.6) {
-                        land.status = "sold";
-                        land.dealPrice = Math.round((land.sellerPrice + land.buyerPrice) / 2);
-                    } else if (result < 0.3) {
-                        land.status = "bidding";
-                    }
-                    land.lastUpdate = "剛剛";
-                } else if (land.status === "overpriced" && Math.random() > 0.85) {
-                    land.sellerPrice = Math.round(0.97 * land.sellerPrice);
-                    if (land.sellerPrice <= 1.05 * land.buyerPrice) {
-                        land.status = "bidding";
-                    }
-                    land.lastUpdate = "剛剛";
-                }
-            });
-            filterData();
-        }, 12000);
-
-        setInterval(() => {
-            if (Math.random() > 0.8) {
-                const newLand = generateRandomLand(Date.now());
-                landData.unshift(newLand);
-                filterData();
-            }
-        }, 20000);
+        
+        setInterval(()=>{landData.forEach(land=>{if("bidding"===land.status&&Math.random()>.7){land.buyerPrice+=Math.floor(50*Math.random())+5;land.bidCount+=1;land.lastUpdate="剛剛";if(land.buyerPrice>=.95*land.sellerPrice){land.status=Math.random()>.6?"sold":"negotiating";if("sold"===land.status)land.dealPrice=Math.round((land.sellerPrice+land.buyerPrice)/2)}}else if("negotiating"===land.status&&Math.random()>.9){const result=Math.random();result>.6?(land.status="sold",land.dealPrice=Math.round((land.sellerPrice+land.buyerPrice)/2)):result<.3&&(land.status="bidding");land.lastUpdate="剛剛"}else"overpriced"===land.status&&Math.random()>.85&&(land.sellerPrice=Math.round(.97*land.sellerPrice),land.sellerPrice<=1.05*land.buyerPrice&&(land.status="bidding"),land.lastUpdate="剛剛")});filterData()},12e3);
+        setInterval(()=>{if(Math.random()>.8){const newLand=generateRandomLand(Date.now());landData.unshift(newLand);filterData()}},2e4);
     </script>
 </body>
 </html>
