@@ -631,7 +631,7 @@
                         <div class="form-group"><label for="case-subdivision">可否分割出售</label><select id="case-subdivision"><option value="no">否</option><option value="yes">是</option></select></div>
                     </div>
                 </div>
-                <div class="modal-section">
+                <div class="modal-section" id="shopDistributionSection" style="display: none;">
                     <h3>店配單上傳 (選填)</h3>
                     <div class="form-group full-width">
                         <label for="case-shop-distribution-file">店配單文件</label>
@@ -703,8 +703,14 @@
                 const isConsignmentDone = caseItem.consignmentStatus === 'signed' || caseItem.consignmentStatus === 'uploaded';
                 const isShopDistributed = caseItem.shopDistributionStatus === 'distributed';
                 
-                // 判斷是否為仲介身份
-                const isAgent = userRole === 'agent';
+                // 判斷是否為仲介身份 - 檢查 role 或 type
+                const storedUser = sessionStorage.getItem('currentUser');
+                let isAgent = false;
+                if (storedUser) {
+                    const currentUser = JSON.parse(storedUser);
+                    isAgent = userRole === 'agent' || 
+                             (currentUser.type && currentUser.type.includes('仲介'));
+                }
                 
                 // 生成操作按鈕
                 let actionButtons = `
@@ -755,7 +761,9 @@
             
             if (storedUser) {
                 const currentUser = JSON.parse(storedUser);
-                currentUserRole = currentUser.role;
+                // 支援 role 或 type 字段，並檢查是否包含"仲介"關鍵字
+                currentUserRole = currentUser.role || 
+                                  (currentUser.type && currentUser.type.includes('仲介') ? 'agent' : 'other');
                 loginButton.style.display = 'none';
                 userInfoDisplay.style.display = 'flex';
                 usernameDisplay.textContent = `歡迎, ${currentUser.name} [${currentUser.memberId}] (${currentUser.type})`;
@@ -967,6 +975,28 @@
         // Add Case Modal
         function openAddCaseModal() {
             document.getElementById('addCaseModal').classList.add('show');
+            
+            // 根據用戶角色決定是否顯示店配單上傳區塊
+            const shopDistributionSection = document.getElementById('shopDistributionSection');
+            console.log('當前用戶角色:', currentUserRole); // 調試用
+            
+            // 檢查角色是否為 agent 或包含"仲介"
+            const storedUser = sessionStorage.getItem('currentUser');
+            let isAgent = false;
+            
+            if (storedUser) {
+                const currentUser = JSON.parse(storedUser);
+                isAgent = currentUserRole === 'agent' || 
+                         (currentUser.type && currentUser.type.includes('仲介'));
+            }
+            
+            console.log('是否為仲介:', isAgent); // 調試用
+            
+            if (isAgent) {
+                shopDistributionSection.style.display = 'block';
+            } else {
+                shopDistributionSection.style.display = 'none';
+            }
         }
 
         function closeAddCaseModal() {
