@@ -1815,7 +1815,7 @@
 
         // 處理會員登入
         window.handleMemberLogin = function(type) {
-            let account, password, name, additionalInfo;
+            let account, password, name, additionalInfo, memberId;
             
             switch(type) {
                 case 'landlord':
@@ -1823,6 +1823,7 @@
                     password = document.getElementById('landlordPassword').value.trim();
                     name = account;
                     additionalInfo = '地主/代理人';
+                    memberId = 'LD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
                     break;
                 case 'developer':
                     account = document.getElementById('developerAccount').value.trim();
@@ -1830,6 +1831,7 @@
                     password = document.getElementById('developerPassword').value.trim();
                     name = `統編:${account}`;
                     additionalInfo = '法人/建商';
+                    memberId = 'DEV-' + account;
                     
                     if (account.length !== 8 || isNaN(account)) {
                         alert('請輸入正確的8位數統一編號!');
@@ -1845,7 +1847,8 @@
                     account = document.getElementById('agentAccount').value.trim();
                     password = document.getElementById('agentPassword').value.trim();
                     name = account;
-                    additionalInfo = `仲介(證照:${license})`;
+                    additionalInfo = '仲介營業/經紀人';
+                    memberId = 'AGT-' + license;
                     
                     if (!license) {
                         alert('請輸入證照字號!');
@@ -1863,10 +1866,16 @@
                 return;
             }
             
-            currentUser = { name, type: additionalInfo, memberType: type };
+            currentUser = { 
+                memberId: memberId,
+                name: name, 
+                type: additionalInfo, 
+                role: type,
+                account: account
+            };
             sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
             
-            alert(`登入成功!\n歡迎回來\n身分:${additionalInfo}`);
+            alert(`登入成功!\n會員ID: ${memberId}\n姓名: ${name}\n身分: ${additionalInfo}`);
             document.getElementById('loginModal').classList.remove('show');
             updateHeaderUI();
         };

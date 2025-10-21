@@ -67,10 +67,6 @@
             margin-bottom: 15px;
         }
 
-        .logo-container svg {
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }
-
         .header h1 {
             font-size: 2.5rem;
             margin: 0;
@@ -171,7 +167,7 @@
             font-weight: 500;
         }
 
-        .status-badge, .consignment-badge {
+        .status-badge, .consignment-badge, .shop-badge {
             padding: 4px 12px;
             border-radius: 15px;
             font-size: 0.8rem;
@@ -188,6 +184,9 @@
         .consignment-unsigned { background-color: #6c757d; }
         .consignment-uploaded { background-color: #17a2b8; }
         .consignment-signed { background-color: #28a745; }
+        
+        .shop-distributed { background-color: #28a745; }
+        .shop-not-distributed { background-color: #6c757d; }
 
         .table-button-group {
             display: flex;
@@ -217,6 +216,10 @@
         .consignment-btn { background: #218838; }
         .consignment-btn:hover { background: #1e7e34; }
         .consignment-btn:disabled { background: #6c757d; cursor: not-allowed; opacity: 0.7; }
+        
+        .shop-distribution-btn { background: #fd7e14; }
+        .shop-distribution-btn:hover { background: #e8590c; }
+        .shop-distribution-btn:disabled { background: #6c757d; cursor: not-allowed; opacity: 0.7; }
 
         #user-info-display {
             display: none;
@@ -224,7 +227,7 @@
             gap: 15px;
         }
         #username-display { font-size: 0.9rem; font-weight: 600; color: #333; }
-        #logout-button { padding: 6px 15px; background: #f0f0f0; color: #DC2626; border: 2px solid #f0f0f0; }
+        #logout-button { padding: 6px 15px; background: #f0f0f0; color: #DC2626; border: 2px solid #f0f0f0; border-radius: 6px; cursor: pointer; text-decoration: none; }
         #logout-button:hover { border: 2px solid #DC2626; color: #DC2626; background: white; }
 
         /* Modal Styles */
@@ -286,7 +289,7 @@
         }
         .custom-file-upload:hover { border-color: #DC2626; }
         .custom-file-upload span { display: block; font-size: 0.9rem; color: #888; }
-        #contractFile { display: none; }
+        #contractFile, #shopDistributionFile { display: none; }
         .upload-action-btn {
             width: 100%;
             padding: 10px;
@@ -398,7 +401,7 @@
             background: #b91c1c;
         }
         
-        /* NEW/MODIFIED Styles for Online Signing View */
+        /* Styles for Online Signing View */
         .terms-container {
             height: 150px;
             overflow-y: scroll;
@@ -447,7 +450,7 @@
             border: 2px dashed #ccc;
             border-radius: 8px;
             cursor: crosshair;
-            touch-action: none; /* Important for touch events */
+            touch-action: none;
         }
 
         .signature-actions {
@@ -481,11 +484,6 @@
         </nav>
         <div class="header">
             <div class="title-container">
-                <div class="logo-container">
-                    <svg width="60" height="75" viewBox="0 0 100 125" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="50" cy="45" rx="45" ry="40" stroke="#DC2626" stroke-width="4" fill="none"/><line x1="15" y1="20" x2="85" y2="20" stroke="#DC2626" stroke-width="4"/><line x1="25" y1="40" x2="25" y2="70" stroke="#DC2626" stroke-width="4"/><circle cx="35" cy="50" r="10" stroke="#DC2626" stroke-width="4" fill="none"/><circle cx="35" cy="65" r="8" stroke="#DC2626" stroke-width="4" fill="none"/><line x1="65" y1="45" x2="65" y2="75" stroke="#DC2626" stroke-width="4"/><path d="M 65 45 Q 75 40 85 45 Q 85 50 85 75" stroke="#DC2626" stroke-width="4" fill="none"/><text x="50" y="110" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#DC2626" letter-spacing="3px">YIRU</text>
-                    </svg>
-                </div>
                 <h1>我的一如永續案件</h1>
             </div>
             <p>管理並追蹤您提交的土地永續發展案件</p>
@@ -503,13 +501,14 @@
                 <thead>
                     <tr>
                         <th style="width: 8%;">案件編號</th>
-                        <th style="width: 25%;">案件標題</th>
-                        <th style="width: 10%;">地區</th>
-                        <th style="width: 10%;">土地面積</th>
-                        <th style="width: 12%;">送審日期</th>
-                        <th style="width: 12%;">核准進度</th>
-                        <th style="width: 12%;">委託狀態</th>
-                        <th style="width: 15%;">操作</th>
+                        <th style="width: 20%;">案件標題</th>
+                        <th style="width: 10%;">地址</th>
+                        <th style="width: 8%;">土地面積</th>
+                        <th style="width: 10%;">送審日期</th>
+                        <th style="width: 10%;">核准進度</th>
+                        <th style="width: 10%;">委託狀態</th>
+                        <th style="width: 10%;">店配狀態</th>
+                        <th style="width: 14%;">操作</th>
                     </tr>
                 </thead>
                 <tbody id="myCasesTableBody"></tbody>
@@ -517,10 +516,10 @@
         </div>
     </main>
     
-    <!-- Consignment Modal HTML -->
+    <!-- Consignment Modal -->
     <div id="consignmentModal" class="modal-overlay">
         <div class="modal-content">
-            <button class="close-modal-btn">&times;</button>
+            <button class="close-modal-btn" onclick="closeConsignmentModal()">&times;</button>
             <div class="modal-header">
                 <h2 id="modalTitle">委託代銷契約簽署</h2>
                 <p id="modalCaseInfo"></p>
@@ -528,17 +527,17 @@
             
             <div id="initialConsignmentView">
                 <div class="modal-section">
-                    <h3>選項一：上傳現有合約</h3>
+                    <h3>選項一:上傳現有合約</h3>
                     <label for="contractFile" class="custom-file-upload">
                         <span>點擊此處選擇檔案</span>
-                        <small>(支援 PDF, PNG, JPG)</small>
+                        <small>(支持 PDF, PNG, JPG)</small>
                     </label>
                     <input type="file" id="contractFile" accept=".pdf,.png,.jpg,.jpeg">
                     <button class="upload-action-btn" onclick="handleContractUpload()">確認上傳</button>
                 </div>
 
                 <div class="modal-section">
-                    <h3>選項二：進行線上簽約</h3>
+                    <h3>選項二:進行線上簽約</h3>
                     <div class="online-sign-action">
                         <div class="checkbox-group">
                             <input type="checkbox" id="agreeTerms">
@@ -549,13 +548,13 @@
                 </div>
             </div>
 
-            <!-- MODIFIED: Online Signing View with Canvas -->
+            <!-- Online Signing View with Canvas -->
             <div id="onlineSigningView" style="display: none;">
                 <div class="terms-container" id="termsContent"></div>
                 
                 <div class="signature-pad-container">
                     <div class="signature-pad-header">
-                         <label for="signatureCanvas">請於下方虛線框內簽名：</label>
+                         <label for="signatureCanvas">請於下方虛線框內簽名:</label>
                          <button id="clearSignatureBtn">清除</button>
                     </div>
                     <canvas id="signatureCanvas" width="400" height="150"></canvas>
@@ -572,10 +571,31 @@
         </div>
     </div>
 
-    <!-- Add Case Modal (unchanged) -->
+    <!-- Shop Distribution Modal -->
+    <div id="shopDistributionModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal-btn" onclick="closeShopDistributionModal()">&times;</button>
+            <div class="modal-header">
+                <h2>上傳店配單</h2>
+                <p id="shopModalCaseInfo"></p>
+            </div>
+            
+            <div class="modal-section" style="border-top: none; padding-top: 0;">
+                <h3>請上傳店配合約文件</h3>
+                <label for="shopDistributionFile" class="custom-file-upload">
+                    <span>點擊此處選擇店配單檔案</span>
+                    <small>(支持 PDF, PNG, JPG)</small>
+                </label>
+                <input type="file" id="shopDistributionFile" accept=".pdf,.png,.jpg,.jpeg">
+                <button class="upload-action-btn" onclick="handleShopDistributionUpload()">確認上傳店配單</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Case Modal -->
     <div id="addCaseModal" class="modal-overlay">
         <div class="modal-content">
-            <button class="close-modal-btn">&times;</button>
+            <button class="close-modal-btn" onclick="closeAddCaseModal()">&times;</button>
             <div class="modal-header">
                 <h2>新增永續案件</h2>
                 <p>請填寫以下地主與土地資訊</p>
@@ -585,8 +605,8 @@
                     <h3>地主聯絡資訊</h3>
                     <div class="form-grid">
                         <div class="form-group"><label for="case-owner-name">姓名</label><input type="text" id="case-owner-name" placeholder="請輸入您的姓名" required></div>
-                        <div class="form-group"><label for="case-owner-tel">聯絡電話 (Tel)</label><input type="tel" id="case-owner-tel" placeholder="例如：0912345678" required></div>
-                        <div class="form-group"><label for="case-owner-email">電子郵件 (Email)</label><input type="email" id="case-owner-email" placeholder="例如：example@mail.com"></div>
+                        <div class="form-group"><label for="case-owner-tel">聯絡電話</label><input type="tel" id="case-owner-tel" placeholder="例如:0912345678" required></div>
+                        <div class="form-group"><label for="case-owner-email">電子郵件</label><input type="email" id="case-owner-email" placeholder="例如:example@mail.com"></div>
                         <div class="form-group"><label for="case-owner-lineid">Line ID</label><input type="text" id="case-owner-lineid" placeholder="請輸入您的Line ID"></div>
                     </div>
                 </div>
@@ -594,21 +614,32 @@
                     <h3>土地詳細資訊</h3>
                     <div class="form-grid">
                         <div class="form-group full-width"><label for="case-photo">照片 (可上傳多張)</label><input type="file" id="case-photo" multiple accept="image/*"></div>
-                        <div class="form-group"><label for="case-land-type">土地類型</label><input type="text" id="case-land-type" placeholder="例如：農地、建地"></div>
+                        <div class="form-group"><label for="case-land-type">土地類型</label><input type="text" id="case-land-type" placeholder="例如:農地、建地"></div>
                         <div class="form-group"><label for="case-total-price">總價</label><div class="input-group"><input type="number" id="case-total-price" placeholder="請輸入數字"><span class="input-group-text">萬元</span></div></div>
                         <div class="form-group"><label for="case-area">面積</label><div class="input-group"><input type="number" step="0.01" id="case-area" placeholder="請輸入數字"><span class="input-group-text">坪</span></div></div>
-                        <div class="form-group"><label for="case-section">地段</label><input type="text" id="case-section" placeholder="例如：XX段XX小段"></div>
+                        <div class="form-group"><label for="case-section">地段</label><input type="text" id="case-section" placeholder="例如:XX段XX小段"></div>
                         <div class="form-group"><label for="case-land-number">地號</label><input type="text" id="case-land-number" placeholder="請輸入地號"></div>
-                        <div class="form-group"><label for="case-zoning">使用分區</label><input type="text" id="case-zoning" placeholder="例如：特定農業區"></div>
-                        <div class="form-group"><label for="case-ratio">建蔽容積</label><input type="text" id="case-ratio" placeholder="例如：60% / 180%"></div>
+                        <div class="form-group"><label for="case-zoning">使用分區</label><input type="text" id="case-zoning" placeholder="例如:特定農業區"></div>
+                        <div class="form-group"><label for="case-ratio">建蔽容積</label><input type="text" id="case-ratio" placeholder="例如:60% / 180%"></div>
                         <div class="form-group"><label for="case-buildable-area">可建總坪</label><div class="input-group"><input type="number" step="0.01" id="case-buildable-area" placeholder="請輸入數字"><span class="input-group-text">坪</span></div></div>
                         <div class="form-group"><label for="case-road-width">臨路路寬</label><div class="input-group"><input type="number" id="case-road-width" placeholder="請輸入數字"><span class="input-group-text">米</span></div></div>
-                        <div class="form-group full-width"><label for="case-infrastructure">基礎設施</label><textarea id="case-infrastructure" placeholder="例如：水、電、網路是否已到位"></textarea></div>
-                        <div class="form-group full-width"><label for="case-current-status">現況</label><textarea id="case-current-status" placeholder="例如：空地、有農作物、有平房"></textarea></div>
-                        <div class="form-group full-width"><label for="case-suitable-use">適合用途</label><textarea id="case-suitable-use" placeholder="例如：倉儲、太陽能、休閒農場"></textarea></div>
+                        <div class="form-group full-width"><label for="case-infrastructure">基礎設施</label><textarea id="case-infrastructure" placeholder="例如:水、電、網路是否已到位"></textarea></div>
+                        <div class="form-group full-width"><label for="case-current-status">現況</label><textarea id="case-current-status" placeholder="例如:空地、有農作物、有平房"></textarea></div>
+                        <div class="form-group full-width"><label for="case-suitable-use">適合用途</label><textarea id="case-suitable-use" placeholder="例如:倉儲、太陽能、休閒農場"></textarea></div>
                         <div class="form-group full-width"><label for="case-undesirable-facilities">嫌惡設施</label><textarea id="case-undesirable-facilities" placeholder="附近是否有墓地、高壓電塔等設施"></textarea></div>
                         <div class="form-group"><label for="case-down-payment">自備款</label><div class="input-group"><input type="number" id="case-down-payment" placeholder="請輸入數字"><span class="input-group-text">萬元</span></div></div>
                         <div class="form-group"><label for="case-subdivision">可否分割出售</label><select id="case-subdivision"><option value="no">否</option><option value="yes">是</option></select></div>
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3>店配單上傳 (選填)</h3>
+                    <div class="form-group full-width">
+                        <label for="case-shop-distribution-file">店配單文件</label>
+                        <label for="case-shop-distribution-file" class="custom-file-upload" style="margin-top: 10px;">
+                            <span>點擊此處選擇店配單檔案</span>
+                            <small>(支持 PDF, PNG, JPG)</small>
+                        </label>
+                        <input type="file" id="case-shop-distribution-file" accept=".pdf,.png,.jpg,.jpeg" style="display: none;">
                     </div>
                 </div>
                 <button type="submit" class="submit-case-btn">上傳審核</button>
@@ -616,43 +647,85 @@
         </div>
     </div>
 
-
     <script>
         // --- DATA ---
         let myCasesData = [
-            { id: 'YIRU-S-001', title: '台北市信義區永續綠地計畫', region: '台北市信義區', area: 150.75, submissionDate: '2025-09-15', status: 'review', consignmentStatus: 'unsigned' },
-            { id: 'YIRU-S-002', title: '台中市西屯區太陽能農電共生專案', region: '台中市西屯區', area: 580.50, submissionDate: '2025-09-10', status: 'approved', consignmentStatus: 'signed' },
-            { id: 'YIRU-S-003', title: '新北市林口區智慧農業實驗基地', region: '新北市林口區', area: 320.00, submissionDate: '2025-08-22', status: 'required', consignmentStatus: 'unsigned' },
-            { id: 'YIRU-S-004', title: '高雄市亞洲新灣區碳中和示範區', region: '高雄市苓雅區', area: 1250.00, submissionDate: '2025-08-05', status: 'approved', consignmentStatus: 'signed' },
-            { id: 'YIRU-S-005', title: '桃園市航空城都市廢土活化專案', region: '桃園市大園區', area: 85.30, submissionDate: '2025-07-18', status: 'rejected', consignmentStatus: 'unsigned' },
-            { id: 'YIRU-S-006', title: '台南市安南區生態滯洪池建設計畫 (草稿)', region: '台南市安南區', area: 210.60, submissionDate: '2025-10-01', status: 'draft', consignmentStatus: 'uploaded' }
+            { id: 'YIRU-S-001', title: '台北市信義區永續綠地計畫', region: '台北市信義區', area: 150.75, submissionDate: '2025-09-15', status: 'review', consignmentStatus: 'unsigned', shopDistributionStatus: 'not-distributed' },
+            { id: 'YIRU-S-002', title: '台中市西屯區太陽能農電共生專案', region: '台中市西屯區', area: 580.50, submissionDate: '2025-09-10', status: 'approved', consignmentStatus: 'signed', shopDistributionStatus: 'distributed' },
+            { id: 'YIRU-S-003', title: '新北市林口區智慧農業實驗基地', region: '新北市林口區', area: 320.00, submissionDate: '2025-08-22', status: 'required', consignmentStatus: 'unsigned', shopDistributionStatus: 'not-distributed' },
+            { id: 'YIRU-S-004', title: '高雄市亞洲新灣區碳中和示範區', region: '高雄市苓雅區', area: 1250.00, submissionDate: '2025-08-05', status: 'approved', consignmentStatus: 'signed', shopDistributionStatus: 'distributed' },
+            { id: 'YIRU-S-005', title: '桃園市航空城都市廢土活化專案', region: '桃園市大園區', area: 85.30, submissionDate: '2025-07-18', status: 'rejected', consignmentStatus: 'unsigned', shopDistributionStatus: 'not-distributed' },
+            { id: 'YIRU-S-006', title: '台南市安南區生態滯洪池建設計畫 (草稿)', region: '台南市安南區', area: 210.60, submissionDate: '2025-10-01', status: 'draft', consignmentStatus: 'uploaded', shopDistributionStatus: 'not-distributed' }
         ];
 
         let currentSigningCaseId = null;
+        let currentShopCaseId = null;
+        let currentUserRole = null;
 
         // --- RENDER FUNCTIONS ---
-        function renderMyCasesTable(data, isLoggedIn) {
+        function renderMyCasesTable(data, isLoggedIn, userRole) {
             const tableBody = document.getElementById('myCasesTableBody');
             tableBody.innerHTML = ''; 
 
             if (!data || data.length === 0) {
                 if(isLoggedIn) {
-                    tableBody.innerHTML = `<tr><td colspan="8" style="padding: 30px; text-align: center;">您目前沒有任何永續案件。</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="9" style="padding: 30px; text-align: center;">您目前沒有任何永續案件。</td></tr>`;
                 } else {
-                    tableBody.innerHTML = `<tr><td colspan="8" style="padding: 30px; text-align: center;">請先 <a href="index.html" style="color: #DC2626; font-weight: bold; text-decoration: none;">登入</a> 以查看您的案件列表。</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="9" style="padding: 30px; text-align: center;">請先 <a href="index.html" style="color: #DC2626; font-weight: bold; text-decoration: none;">登入</a> 以查看您的案件列表。</td></tr>`;
                 }
                 return;
             }
 
             data.forEach(caseItem => {
                 const row = document.createElement('tr');
-                const statusMap = { draft: { text: '草稿', class: 'status-draft' }, review: { text: '審核中', class: 'status-review' }, required: { text: '資料補件', class: 'status-required' }, approved: { text: '已核准', class: 'status-approved' }, rejected: { text: '已退回', class: 'status-rejected' } };
-                const consignmentMap = { unsigned: { text: '未簽署', class: 'consignment-unsigned' }, uploaded: { text: '已上傳', class: 'consignment-uploaded' }, signed: { text: '已簽約', class: 'consignment-signed' } };
+                const statusMap = { 
+                    draft: { text: '草稿', class: 'status-draft' }, 
+                    review: { text: '審核中', class: 'status-review' }, 
+                    required: { text: '資料補件', class: 'status-required' }, 
+                    approved: { text: '已核准', class: 'status-approved' }, 
+                    rejected: { text: '已退回', class: 'status-rejected' } 
+                };
+                const consignmentMap = { 
+                    unsigned: { text: '未簽署', class: 'consignment-unsigned' }, 
+                    uploaded: { text: '已上傳', class: 'consignment-uploaded' }, 
+                    signed: { text: '已簽約', class: 'consignment-signed' } 
+                };
+                const shopDistributionMap = {
+                    'distributed': { text: '已店配', class: 'shop-distributed' },
+                    'not-distributed': { text: '未店配', class: 'shop-not-distributed' }
+                };
                 
                 const currentStatus = statusMap[caseItem.status] || { text: '未知', class: '' };
                 const currentConsignment = consignmentMap[caseItem.consignmentStatus] || { text: '未知', class: '' };
+                const currentShopDistribution = shopDistributionMap[caseItem.shopDistributionStatus] || { text: '未知', class: '' };
+                
                 const isUploadDisabled = caseItem.status === 'approved' || caseItem.status === 'review';
                 const isConsignmentDone = caseItem.consignmentStatus === 'signed' || caseItem.consignmentStatus === 'uploaded';
+                const isShopDistributed = caseItem.shopDistributionStatus === 'distributed';
+                
+                // 判斷是否為仲介身份
+                const isAgent = userRole === 'agent';
+                
+                // 生成操作按鈕
+                let actionButtons = `
+                    <button class="table-action-btn consignment-btn" onclick="openConsignmentModal('${caseItem.id}')" ${isConsignmentDone ? 'disabled' : ''}>
+                        ${isConsignmentDone ? '已委託' : '簽署委託'}
+                    </button>
+                `;
+                
+                // 如果是仲介,加入店配按鈕
+                if (isAgent) {
+                    actionButtons += `
+                        <button class="table-action-btn shop-distribution-btn" onclick="openShopDistributionModal('${caseItem.id}')" ${isShopDistributed ? 'disabled' : ''}>
+                            ${isShopDistributed ? '已店配' : '簽署店配'}
+                        </button>
+                    `;
+                }
+                
+                actionButtons += `
+                    <button class="table-action-btn upload-btn" onclick="alert('為案件 ${caseItem.id} 上傳資料')" ${isUploadDisabled ? 'disabled' : ''}>資料上傳</button>
+                    <button class="table-action-btn view-btn" onclick="alert('查看/編輯案件 ${caseItem.id}')">查看/編輯</button>
+                `;
 
                 row.innerHTML = `
                     <td>${caseItem.id}</td>
@@ -662,13 +735,10 @@
                     <td>${caseItem.submissionDate}</td>
                     <td><span class="status-badge ${currentStatus.class}">${currentStatus.text}</span></td>
                     <td><span class="consignment-badge ${currentConsignment.class}">${currentConsignment.text}</span></td>
+                    <td><span class="shop-badge ${currentShopDistribution.class}">${currentShopDistribution.text}</span></td>
                     <td>
                         <div class="table-button-group">
-                            <button class="table-action-btn consignment-btn" onclick="openConsignmentModal('${caseItem.id}')" ${isConsignmentDone ? 'disabled' : ''}>
-                                ${isConsignmentDone ? '已委託' : '簽署委託'}
-                            </button>
-                            <button class="table-action-btn upload-btn" onclick="alert('為案件 ${caseItem.id} 上傳資料')" ${isUploadDisabled ? 'disabled' : ''}>資料上傳</button>
-                            <button class="table-action-btn view-btn" onclick="alert('查看/編輯案件 ${caseItem.id}')">查看/編輯</button>
+                            ${actionButtons}
                         </div>
                     </td>
                 `;
@@ -682,24 +752,27 @@
             const userInfoDisplay = document.getElementById('user-info-display');
             const usernameDisplay = document.getElementById('username-display');
             const storedUser = sessionStorage.getItem('currentUser');
+            
             if (storedUser) {
                 const currentUser = JSON.parse(storedUser);
+                currentUserRole = currentUser.role;
                 loginButton.style.display = 'none';
                 userInfoDisplay.style.display = 'flex';
-                usernameDisplay.textContent = `歡迎, ${currentUser.name} (${currentUser.role})`;
+                usernameDisplay.textContent = `歡迎, ${currentUser.name} [${currentUser.memberId}] (${currentUser.type})`;
             } else {
                 loginButton.style.display = 'block';
                 userInfoDisplay.style.display = 'none';
+                currentUserRole = null;
             }
         }
 
         function handleLogout() {
-            if(confirm('您確定要登出嗎？')) {
+            if(confirm('您確定要登出嗎?')) {
                 const storedUser = JSON.parse(sessionStorage.getItem('currentUser'));
                 sessionStorage.removeItem('currentUser');
                 alert(`使用者 ${storedUser.name} 已登出。`);
                 updateHeaderUI();
-                renderMyCasesTable([], false);
+                renderMyCasesTable([], false, null);
             }
         }
 
@@ -730,19 +803,50 @@
         function handleContractUpload() {
             const fileInput = document.getElementById('contractFile');
             if (!fileInput.files || fileInput.files.length === 0) {
-                alert('請先選擇要上傳的合約檔案！');
+                alert('請先選擇要上傳的合約檔案!');
                 return;
             }
             const caseIndex = myCasesData.findIndex(c => c.id === currentSigningCaseId);
             if (caseIndex !== -1) {
                 myCasesData[caseIndex].consignmentStatus = 'uploaded';
-                alert(`案件 ${currentSigningCaseId} 的合約已成功上傳！`);
-                renderMyCasesTable(myCasesData, true); 
+                alert(`案件 ${currentSigningCaseId} 的合約已成功上傳!`);
+                renderMyCasesTable(myCasesData, true, currentUserRole); 
                 closeConsignmentModal();
             }
         }
 
-        // --- MODIFIED: Online Signing Flow with Canvas ---
+        // Shop Distribution Modal
+        function openShopDistributionModal(caseId) {
+            currentShopCaseId = caseId;
+            const caseData = myCasesData.find(c => c.id === caseId);
+            if (!caseData) return;
+
+            document.getElementById('shopModalCaseInfo').textContent = `案件編號: ${caseData.id} - ${caseData.title}`;
+            document.getElementById('shopDistributionModal').classList.add('show');
+        }
+
+        function closeShopDistributionModal() {
+            document.getElementById('shopDistributionModal').classList.remove('show');
+            document.getElementById('shopDistributionFile').value = '';
+            currentShopCaseId = null;
+        }
+
+        function handleShopDistributionUpload() {
+            const fileInput = document.getElementById('shopDistributionFile');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('請先選擇要上傳的店配單檔案!');
+                return;
+            }
+            const caseIndex = myCasesData.findIndex(c => c.id === currentShopCaseId);
+            if (caseIndex !== -1) {
+                myCasesData[caseIndex].shopDistributionStatus = 'distributed';
+                alert(`案件 ${currentShopCaseId} 的店配單已成功上傳!`);
+                renderMyCasesTable(myCasesData, true, currentUserRole); 
+                closeShopDistributionModal();
+            }
+        }
+
+        // --- Online Signing Flow with Canvas ---
         const canvas = document.getElementById('signatureCanvas');
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
@@ -806,13 +910,13 @@
         
         function generateRandomTerms() {
             return `
-                <p><strong>第一條：定義</strong><br>在本合約中，「委託方」指土地所有權人，「受託方」指一如土地資訊平台。本合約旨在規範委託方委託受託方進行土地永續案件之代為銷售及相關事宜。</p>
-                <p><strong>第二條：委託期間</strong><br>本委託合約期間自簽署日起生效，為期一百八十（180）日。期滿前三十日內，若任一方未以書面提出反對，本合約將自動續約一百八十日。</p>
-                <p><strong>第三條：權利與義務</strong><br>委託方保證其為土地之合法所有權人，並擁有完全處分權。受託方應以善良管理人之注意義務，為委託方尋找適合之買方，並協助處理相關交易流程。</p>
-                <p><strong>第四條：服務費用</strong><br>成交後，委託方應支付成交總價之百分之四（4%）作為受託方之服務費用。此費用應於買賣雙方簽訂正式買賣契約並支付第一期款項時，由委託方支付予受託方。</p>
-                <p><strong>第五條：保密條款</strong><br>雙方對於因本合約而知悉或持有之對方商業秘密及個人資料，均負有保密義務，不得洩漏予任何第三方。</p>
-                <p><strong>第六條：準據法及管轄法院</strong><br>本合約之解釋與適用，以中華民國法律為準據法。因本合約所生之任何爭議，雙方同意以台灣台北地方法院為第一審管轄法院。</p>
-                <p><strong>第七條：其他事項</strong><br>本合約一式兩份，由雙方各執一份為憑。合約內容之任何修改，需經雙方書面同意後始生效力。請詳細閱讀以上條款，確認無誤後請捲動至最下方進行簽署。</p>
+                <p><strong>第一條:定義</strong><br>在本合約中,「委託方」指土地所有權人,「受託方」指一如土地資訊平台。本合約旨在規範委託方委託受託方進行土地永續案件之代為銷售及相關事宜。</p>
+                <p><strong>第二條:委託期間</strong><br>本委託合約期間自簽署日起生效,為期一百八十(180)日。期滿前三十日內,若任一方未以書面提出反對,本合約將自動續約一百八十日。</p>
+                <p><strong>第三條:權利與義務</strong><br>委託方保證其為土地之合法所有權人,並擁有完全處分權。受託方應以善良管理人之注意義務,為委託方尋找適合之買方,並協助處理相關交易流程。</p>
+                <p><strong>第四條:服務費用</strong><br>成交後,委託方應支付成交總價之百分之四(4%)作為受託方之服務費用。此費用應於買賣雙方簽訂正式買賣契約並支付第一期款項時,由委託方支付予受託方。</p>
+                <p><strong>第五條:保密條款</strong><br>雙方對於因本合約而知悉或持有之對方商業秘密及個人資料,均負有保密義務,不得洩漏予任何第三方。</p>
+                <p><strong>第六條:準據法及管轄法院</strong><br>本合約之解釋與適用,以中華民國法律為準據法。因本合約所生之任何爭議,雙方同意以台灣台北地方法院為第一審管轄法院。</p>
+                <p><strong>第七條:其他事項</strong><br>本合約一式兩份,由雙方各執一份為憑。合約內容之任何修改,需經雙方書面同意後始生效力。請詳細閱讀以上條款,確認無誤後請滑動至最下方進行簽署。</p>
             `;
         }
         
@@ -831,7 +935,6 @@
             const termsContent = document.getElementById('termsContent');
             termsContent.innerHTML = generateRandomTerms();
             
-            // Resize canvas to fit its CSS-defined size and handle high DPI
             resizeCanvas();
             clearCanvas();
             
@@ -855,8 +958,8 @@
             const caseIndex = myCasesData.findIndex(c => c.id === currentSigningCaseId);
             if (caseIndex !== -1) {
                 myCasesData[caseIndex].consignmentStatus = 'signed';
-                alert(`案件 ${currentSigningCaseId} 已完成線上簽署！`);
-                renderMyCasesTable(myCasesData, true); 
+                alert(`案件 ${currentSigningCaseId} 已完成線上簽署!`);
+                renderMyCasesTable(myCasesData, true, currentUserRole); 
                 closeConsignmentModal();
             }
         }
@@ -873,20 +976,29 @@
 
         function handleAddCaseSubmit(event) {
             event.preventDefault(); 
-            alert('案件已成功提交審核！');
+            
+            // 檢查是否有上傳店配單
+            const shopFileInput = document.getElementById('case-shop-distribution-file');
+            if (shopFileInput.files && shopFileInput.files.length > 0) {
+                console.log('已上傳店配單:', shopFileInput.files[0].name);
+            }
+            
+            alert('案件已成功提交審核!');
             closeAddCaseModal();
         }
 
         // --- PAGE INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', function() {
-            const isLoggedIn = sessionStorage.getItem('currentUser') !== null;
+            const storedUser = sessionStorage.getItem('currentUser');
+            const isLoggedIn = storedUser !== null;
             
             updateHeaderUI();
 
             if (isLoggedIn) {
-                renderMyCasesTable(myCasesData, true);
+                const currentUser = JSON.parse(storedUser);
+                renderMyCasesTable(myCasesData, true, currentUser.role);
             } else {
-                renderMyCasesTable([], false);
+                renderMyCasesTable([], false, null);
             }
             
             // --- Event listeners ---
@@ -894,19 +1006,24 @@
 
             // Consignment Modal Listeners
             const consignmentModal = document.getElementById('consignmentModal');
-            consignmentModal.querySelector('.close-modal-btn')?.addEventListener('click', closeConsignmentModal);
             consignmentModal.addEventListener('click', (e) => {
                 if (e.target === consignmentModal) closeConsignmentModal();
             });
+            
             const agreeTermsCheckbox = document.getElementById('agreeTerms');
             const onlineSignBtn = document.getElementById('onlineSignBtn');
             agreeTermsCheckbox?.addEventListener('change', () => {
                 onlineSignBtn.disabled = !agreeTermsCheckbox.checked;
             });
             
+            // Shop Distribution Modal Listeners
+            const shopDistributionModal = document.getElementById('shopDistributionModal');
+            shopDistributionModal.addEventListener('click', (e) => {
+                if (e.target === shopDistributionModal) closeShopDistributionModal();
+            });
+            
             // Add Case Modal Listeners
             const addCaseModal = document.getElementById('addCaseModal');
-            addCaseModal.querySelector('.close-modal-btn')?.addEventListener('click', closeAddCaseModal);
             addCaseModal.addEventListener('click', (e) => {
                 if(e.target === addCaseModal) closeAddCaseModal();
             });
@@ -924,4 +1041,4 @@
         });
     </script>
 </body>
-</html>```
+</html>
