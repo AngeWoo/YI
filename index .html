@@ -341,84 +341,79 @@
             height: 100%;
         }
 
-        /* 土地類型標籤 - 左上角 */
         .land-badge {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(220, 38, 38, 0.95);
+            background: rgba(220, 38, 38, 0.9);
             color: white;
-            padding: 5px 12px;
-            border-radius: 5px;
+            padding: 4px 12px;
+            border-radius: 4px;
             font-size: 0.75rem;
-            font-weight: 700;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-weight: 600;
+            z-index: 1000;
         }
 
-        /* 區域標籤 - 右上角 */
-        .map-location-text {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(51, 51, 51, 0.9);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.7rem;
-            color: white;
-            font-weight: 700;
-            max-width: 120px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        /* 房仲店配/一般標籤 - 左下角 */
         .agent-badge {
             position: absolute;
             bottom: 10px;
             left: 10px;
-            padding: 5px 12px;
-            border-radius: 5px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            z-index: 1000;
+            display: flex;
+            gap: 5px;
+            align-items: center;
         }
 
         .agent-badge.agent-type {
-            background: rgba(37, 99, 235, 0.95);
+            background: rgba(37, 99, 235, 0.9);
             color: white;
         }
 
         .agent-badge.general-type {
-            background: rgba(107, 114, 128, 0.95);
+            background: rgba(107, 114, 128, 0.9);
             color: white;
         }
 
-        /* 委託狀態標籤 - 右下角 */
         .delegation-badge {
             position: absolute;
             bottom: 10px;
             right: 10px;
-            padding: 5px 12px;
-            border-radius: 5px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            z-index: 1000;
         }
 
         .delegation-badge.delegated {
-            background: rgba(16, 185, 129, 0.95);
+            background: rgba(16, 185, 129, 0.9);
             color: white;
         }
 
         .delegation-badge.not-delegated {
-            background: rgba(245, 158, 11, 0.95);
+            background: rgba(245, 158, 11, 0.9);
             color: white;
+        }
+
+        .map-location-text {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: #333;
+            font-weight: 600;
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            z-index: 1000;
         }
 
         .leaflet-control-attribution {
@@ -608,7 +603,6 @@
         .land-table td {
             padding: 15px;
             border-bottom: 1px solid #f0f0f0;
-            vertical-align: middle;
         }
 
         .land-table tr:hover {
@@ -617,20 +611,21 @@
 
         .table-type-badge {
             display: inline-block;
-            padding: 5px 12px;
+            padding: 4px 10px;
             background: #DC2626;
             color: white;
-            border-radius: 5px;
+            border-radius: 4px;
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: 600;
         }
 
         .table-agent-badge {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 5px;
         }
 
         .table-agent-badge.agent-type {
@@ -645,11 +640,11 @@
 
         .table-delegation-badge {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            margin-top: 5px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            margin-left: 5px;
         }
 
         .table-delegation-badge.delegated {
@@ -971,6 +966,41 @@
 
         .form-switcher a:hover {
             text-decoration: underline;
+        }
+
+        .role-selection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .role-selection input[type="radio"] {
+            display: none;
+        }
+
+        .role-selection label {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+            min-width: 60px;
+        }
+
+        .role-selection input[type="radio"]:checked + label {
+            background: #DC2626;
+            color: white;
+            border-color: #DC2626;
+            font-weight: bold;
+        }
+
+        .role-selection label:hover {
+            border-color: #c4c4c4;
         }
 
         /* 會員身分選擇標籤 */
@@ -1595,32 +1625,44 @@
         let allLandData = [];
         let filteredData = [];
         let currentUser = null;
-        let currentMemberType = 'landlord';
-        let currentRegisterType = 'landlord';
+        let currentMemberType = 'landlord'; // 當前選擇的會員類型
+        let currentRegisterType = 'landlord'; // 當前註冊的會員類型
 
         // 切換登入身分標籤
         window.switchMemberTab = function(type) {
             currentMemberType = type;
+            
+            // 更新標籤樣式
             document.querySelectorAll('#loginForm .member-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
+            
+            // 隱藏所有內容
             document.querySelectorAll('#loginForm .tab-content').forEach(content => {
                 content.classList.remove('active');
             });
+            
+            // 顯示對應內容
             document.getElementById(`${type}-tab`).classList.add('active');
         };
 
         // 切換註冊身分標籤
         window.switchRegisterTab = function(type) {
             currentRegisterType = type;
+            
+            // 更新標籤樣式
             document.querySelectorAll('#registerForm .member-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
+            
+            // 隱藏所有內容
             document.querySelectorAll('#registerForm .tab-content').forEach(content => {
                 content.classList.remove('active');
             });
+            
+            // 顯示對應內容
             document.getElementById(`register-${type}-tab`).classList.add('active');
         };
 
@@ -1781,8 +1823,9 @@
             }
         }
 
-        // 全局函數
+        // 重要:將這些函數定義在全局作用域
         window.viewDetail = function(landId) {
+            // 檢查是否已登入
             if (!currentUser) {
                 alert('請先登入會員才能查看土地詳情!');
                 document.getElementById('loginModal').classList.add('show');
@@ -1791,12 +1834,16 @@
             
             const land = filteredData.find(l => l.id === landId);
             if (land) {
+                // 將土地資料存入 sessionStorage
                 sessionStorage.setItem('selectedLand', JSON.stringify(land));
+                // 在新分頁打開詳情頁面
                 window.open(`indexyi.html?landId=${landId}`, '_blank');
+                console.log('查看詳情被點擊,土地ID:', landId);
             }
         };
 
         window.viewMemberDetail = function(landId) {
+            // 檢查是否已登入
             if (!currentUser) {
                 alert('請先登入會員才能查看完整資訊!');
                 document.getElementById('loginModal').classList.add('show');
@@ -1805,16 +1852,24 @@
             
             const land = filteredData.find(l => l.id === landId);
             if (land) {
+                // 將土地資料存入 sessionStorage
                 sessionStorage.setItem('selectedLand', JSON.stringify(land));
+                // 在新分頁打開會員專屬頁面
                 window.open(`indexyi2.html?landId=${landId}`, '_blank');
+                console.log('會員查看被點擊,土地ID:', landId);
             }
         };
 
         window.showContactModal = function() {
-            document.getElementById('contactModal').classList.add('show');
+            const modal = document.getElementById('contactModal');
+            if (modal) {
+                modal.classList.add('show');
+                console.log('聯絡模態框已打開');
+            } else {
+                console.error('找不到聯絡模態框元素');
+            }
         };
 
-        // 生成隨機土地資料
         function generateRandomLand(id) {
             const districts = Object.keys(taipeiCoordinates);
             const types = ["建地", "農地", "工業地", "商業地"];
@@ -1828,10 +1883,10 @@
             const totalPrice = Math.round(area * pricePerPing);
             const selectedFeatures = features.sort(() => 0.5 - Math.random()).slice(0, 2);
 
-            // 添加房仲店配/一般標註 (50%機率)
-            const isAgentListing = Math.random() > 0.5;
+            // 添加房仲店配/一般標註
+            const isAgentListing = Math.random() > 0.5; // 50% 機率是房仲店配
             const agentType = isAgentListing ? "房仲店配" : "一般";
-            // 房仲店配才有委託狀態
+            // 如果是房仲店配,隨機分配已委託/未委託
             const delegationStatus = isAgentListing ? (Math.random() > 0.5 ? "已委託" : "未委託") : null;
 
             return {
@@ -1854,16 +1909,17 @@
             return price >= 10000 ? `${(price / 10000).toFixed(1)}億` : `${price}萬`;
         }
 
-        // 渲染卡片
         function renderLandCards(data) {
             const landGrid = document.getElementById('landGrid');
             landGrid.innerHTML = '';
             
-            data.forEach((land) => {
+            data.forEach((land, index) => {
                 const card = document.createElement('div');
                 card.className = 'land-card';
+                const tagsHTML = land.features.map(f => 
+                    `<span class="tag">${f}</span>`
+                ).join('');
                 
-                const tagsHTML = land.features.map(f => `<span class="tag">${f}</span>`).join('');
                 const mapId = `map-${land.id}`;
                 
                 // 生成房仲店配/一般標籤
@@ -1917,7 +1973,11 @@
                 
                 // 初始化地圖
                 setTimeout(() => {
-                    if (typeof L === 'undefined') return;
+                    // 確保 Leaflet 已載入
+                    if (typeof L === 'undefined') {
+                        console.warn('Leaflet not loaded yet');
+                        return;
+                    }
                     
                     try {
                         const coords = taipeiCoordinates[land.district];
@@ -1938,6 +1998,7 @@
                             maxZoom: 19
                         }).addTo(map);
                         
+                        // 添加紅色標記
                         const redIcon = L.icon({
                             iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iNDIiIHZpZXdCb3g9IjAgMCAzMiA0MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTYgMEMxMCAwIDUgNSA1IDExYzAgOCA5IDE5IDExIDMxIDItMTIgMTEtMjMgMTEtMzEgMC02LTUtMTEtMTEtMTF6IiBmaWxsPSIjREMyNjI2Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxMSIgcj0iNCIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==',
                             iconSize: [32, 42],
@@ -1952,14 +2013,15 @@
             });
         }
 
-        // 渲染表格
         function renderLandTable(data) {
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
             
             data.forEach(land => {
                 const row = document.createElement('tr');
-                const tagsHTML = land.features.map(f => `<span class="table-tag">${f}</span>`).join('');
+                const tagsHTML = land.features.map(f => 
+                    `<span class="table-tag">${f}</span>`
+                ).join('');
                 
                 // 生成房仲店配/一般標籤
                 const agentBadgeClass = land.agentType === "房仲店配" ? "agent-type" : "general-type";
@@ -2010,6 +2072,7 @@
         }
 
         function searchLand() {
+            // 獲取篩選條件
             const districtCheckboxes = document.querySelectorAll('.district-checkbox:checked');
             const typeCheckboxes = document.querySelectorAll('.type-checkbox:checked');
             const priceMin = document.getElementById('price-min').value;
@@ -2022,22 +2085,27 @@
             const typeAll = document.getElementById('type-all').checked;
             
             filteredData = allLandData.filter(land => {
+                // 區域篩選
                 if (!districtAll && districtCheckboxes.length > 0) {
                     const selectedDistricts = Array.from(districtCheckboxes).map(cb => cb.parentElement.textContent.trim());
                     if (!selectedDistricts.includes(land.district)) return false;
                 }
                 
+                // 類型篩選
                 if (!typeAll && typeCheckboxes.length > 0) {
                     const selectedTypes = Array.from(typeCheckboxes).map(cb => cb.parentElement.textContent.trim());
                     if (!selectedTypes.includes(land.type)) return false;
                 }
                 
+                // 價格篩選
                 if (priceMin && land.totalPrice < parseFloat(priceMin)) return false;
                 if (priceMax && land.totalPrice > parseFloat(priceMax)) return false;
                 
+                // 坪數篩選
                 if (areaMin && land.area < parseFloat(areaMin)) return false;
                 if (areaMax && land.area > parseFloat(areaMax)) return false;
                 
+                // 關鍵字篩選
                 if (keyword && !land.title.toLowerCase().includes(keyword) && 
                     !land.district.toLowerCase().includes(keyword)) return false;
                 
@@ -2100,6 +2168,7 @@
             });
         });
 
+        // 處理價格和坪數輸入框
         document.getElementById('price-all').addEventListener('change', function() {
             document.getElementById('price-min').disabled = this.checked;
             document.getElementById('price-max').disabled = this.checked;
@@ -2112,28 +2181,29 @@
 
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
-            // 生成50筆測試資料
             allLandData = Array.from({ length: 50 }, (_, i) => generateRandomLand(i + 1));
             filteredData = [...allLandData];
-            
-            // 顯示資料
             document.getElementById('result-count').textContent = filteredData.length;
             renderLandCards(filteredData);
             renderLandTable(filteredData);
 
             // 設置聯絡模態框事件
             const contactModal = document.getElementById('contactModal');
-            const closeContactBtn = contactModal.querySelector('.close-contact-modal');
-            
-            closeContactBtn.addEventListener('click', () => {
-                contactModal.classList.remove('show');
-            });
-            
-            contactModal.addEventListener('click', (e) => {
-                if (e.target === contactModal) {
-                    contactModal.classList.remove('show');
+            if (contactModal) {
+                const closeContactBtn = contactModal.querySelector('.close-contact-modal');
+                
+                if (closeContactBtn) {
+                    closeContactBtn.addEventListener('click', () => {
+                        contactModal.classList.remove('show');
+                    });
                 }
-            });
+                
+                contactModal.addEventListener('click', (e) => {
+                    if (e.target === contactModal) {
+                        contactModal.classList.remove('show');
+                    }
+                });
+            }
 
             // 設置登入模態框事件
             const loginModal = document.getElementById('loginModal');
@@ -2145,40 +2215,49 @@
             const showRegisterLink = document.getElementById('showRegisterLink');
             const showLoginLink = document.getElementById('showLoginLink');
             
-            loginNavButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginModal.classList.add('show');
-            });
+            if (loginNavButton) {
+                loginNavButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginModal.classList.add('show');
+                });
+            }
             
-            logoutButton.addEventListener('click', handleLogout);
+            if (logoutButton) {
+                logoutButton.addEventListener('click', handleLogout);
+            }
             
-            closeModalBtn.addEventListener('click', () => {
-                loginModal.classList.remove('show');
-            });
-            
-            loginModal.addEventListener('click', (e) => {
-                if (e.target === loginModal) {
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => {
                     loginModal.classList.remove('show');
-                }
-            });
+                });
+            }
             
-            showRegisterLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'block';
-            });
+            if (loginModal) {
+                loginModal.addEventListener('click', (e) => {
+                    if (e.target === loginModal) {
+                        loginModal.classList.remove('show');
+                    }
+                });
+            }
             
-            showLoginLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                registerForm.style.display = 'none';
-                loginForm.style.display = 'block';
-            });
+            if (showRegisterLink) {
+                showRegisterLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginForm.style.display = 'none';
+                    registerForm.style.display = 'block';
+                });
+            }
+            
+            if (showLoginLink) {
+                showLoginLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    registerForm.style.display = 'none';
+                    loginForm.style.display = 'block';
+                });
+            }
 
             // 更新用戶界面
             updateHeaderUI();
-            
-            // Debug: 檢查第一筆資料
-            console.log('第一筆土地資料:', allLandData[0]);
         });
     </script>
 </body>
