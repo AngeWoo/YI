@@ -298,8 +298,8 @@
         /* 卡片式顯示 */
         .land-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
             margin: 0 40px 30px;
             padding: 0;
         }
@@ -310,6 +310,7 @@
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             transition: all 0.3s;
+            width: 100%;
         }
 
         .land-card:hover {
@@ -323,9 +324,6 @@
             position: relative;
             overflow: hidden;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .map-preview {
@@ -341,84 +339,79 @@
             height: 100%;
         }
 
-        /* 土地類型標籤 - 左上角 */
         .land-badge {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(220, 38, 38, 0.95);
+            background: rgba(220, 38, 38, 0.9);
             color: white;
-            padding: 5px 12px;
-            border-radius: 5px;
+            padding: 4px 12px;
+            border-radius: 4px;
             font-size: 0.75rem;
-            font-weight: 700;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-weight: 600;
+            z-index: 1000;
         }
 
-        /* 區域標籤 - 右上角 */
+        .agent-badge {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            z-index: 1000;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .agent-badge.agent-type {
+            background: rgba(37, 99, 235, 0.9);
+            color: white;
+        }
+
+        .agent-badge.general-type {
+            background: rgba(107, 114, 128, 0.9);
+            color: white;
+        }
+
+        .delegation-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            z-index: 1000;
+        }
+
+        .delegation-badge.delegated {
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+        }
+
+        .delegation-badge.not-delegated {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
+        }
+
         .map-location-text {
             position: absolute;
             top: 10px;
             right: 10px;
             background: rgba(51, 51, 51, 0.9);
-            padding: 5px 10px;
-            border-radius: 5px;
+            padding: 4px 8px;
+            border-radius: 4px;
             font-size: 0.7rem;
             color: white;
-            font-weight: 700;
+            font-weight: 600;
             max-width: 120px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        /* 房仲店配/一般標籤 - 左下角 */
-        .agent-badge {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            padding: 5px 12px;
-            border-radius: 5px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .agent-badge.agent-type {
-            background: rgba(37, 99, 235, 0.95);
-            color: white;
-        }
-
-        .agent-badge.general-type {
-            background: rgba(107, 114, 128, 0.95);
-            color: white;
-        }
-
-        /* 委託狀態標籤 - 右下角 */
-        .delegation-badge {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            padding: 5px 12px;
-            border-radius: 5px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .delegation-badge.delegated {
-            background: rgba(16, 185, 129, 0.95);
-            color: white;
-        }
-
-        .delegation-badge.not-delegated {
-            background: rgba(245, 158, 11, 0.95);
-            color: white;
+            z-index: 1000;
         }
 
         .leaflet-control-attribution {
@@ -1032,12 +1025,11 @@
         }
 
         /* 後台管理區域 */
-        .admin-footer {
+        .admin-section {
             text-align: center;
-            padding: 40px 40px 60px;
-            margin-top: 50px;
-            background: #f8f9fa;
-            border-top: 1px solid #e2e8f0;
+            padding: 50px 40px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
         }
 
         .admin-button {
@@ -1059,10 +1051,113 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
+        /* Footer 區域 */
+        .main-footer {
+            background-color: #f5f5f5;
+            color: #333333;
+            padding: 50px 40px 30px;
+            border-top: 3px solid #DC2626;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #DC2626;
+            width: 100%;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #555555;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #DC2626;
+        }
+
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-contact li {
+            margin-bottom: 14px;
+            color: #555555;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .footer-contact .contact-icon {
+            margin-top: 2px;
+            color: #DC2626;
+        }
+
+        .footer-contact a {
+            color: #555555;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-contact a:hover {
+            color: #DC2626;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 25px;
+            border-top: 1px solid #dddddd;
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1400px) {
+            .land-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .land-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
             .land-grid {
                 grid-template-columns: 1fr;
-                padding: 0 20px;
+                gap: 20px;
                 margin: 0 20px 30px;
             }
 
@@ -1156,9 +1251,21 @@
                 padding: 10px;
             }
 
-            .admin-footer {
-                padding: 30px 20px 50px;
-                margin-top: 30px;
+            .main-footer {
+                padding: 40px 20px 20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .footer-section {
+                min-width: 100%;
+            }
+
+            .admin-section {
+                padding: 30px 20px;
             }
 
             .admin-button {
@@ -1408,8 +1515,69 @@
     </div>
 
     <!-- 後台管理區域 -->
-    <footer class="admin-footer">
+    <div class="admin-section">
         <a href="indexbackend.html" class="admin-button">🔧 後台管理</a>
+    </div>
+
+    <!-- Footer 區域 -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">關於我們</h3>
+                <ul class="footer-links">
+                    <li><a href="#">公司簡介</a></li>
+                    <li><a href="#">專業團隊</a></li>
+                    <li><a href="#">組織架構</a></li>
+                    <li><a href="#">最新消息</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">服務項目</h3>
+                <ul class="footer-links">
+                    <li><a href="#">土地開發</a></li>
+                    <li><a href="#">都市更新</a></li>
+                    <li><a href="#">不動產顧問</a></li>
+                    <li><a href="#">案例分享</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">聯絡資訊</h3>
+                <ul class="footer-contact">
+                    <li>
+                        <span class="contact-icon">📞</span>
+                        <a href="tel:+886227111232">02-2711-1232</a>
+                    </li>
+                    <li>
+                        <span class="contact-icon">📧</span>
+                        <a href="mailto:yirupr@yiru.com.tw">yirupr@yiru.com.tw</a>
+                    </li>
+                    <li>
+                        <span class="contact-icon">📧</span>
+                        <a href="mailto:ad@yiru.com.tw">ad@yiru.com.tw</a>
+                    </li>
+                    <li>
+                        <span class="contact-icon">📍</span>
+                        <span>台北市內湖區</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">快速連結</h3>
+                <ul class="footer-links">
+                    <li><a href="#">隱私權政策</a></li>
+                    <li><a href="#">使用條款</a></li>
+                    <li><a href="#">檔案下載</a></li>
+                    <li><a href="#">徵才資訊</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 一如永續股份有限公司 版權所有 | All Rights Reserved</p>
+        </div>
     </footer>
 
     <!-- 登入/註冊模態框 -->
@@ -2176,9 +2344,6 @@
 
             // 更新用戶界面
             updateHeaderUI();
-            
-            // Debug: 檢查第一筆資料
-            console.log('第一筆土地資料:', allLandData[0]);
         });
     </script>
 </body>
