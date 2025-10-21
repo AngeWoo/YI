@@ -501,6 +501,16 @@
             margin-left: 5px;
         }
 
+        .no-seller-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #f59e0b;
+            color: white;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
         .view-detail-btn {
             padding: 8px 16px;
             background: #DC2626;
@@ -653,6 +663,16 @@
         .table-delegation-badge.not-delegated {
             background: #f59e0b;
             color: white;
+        }
+
+        .table-no-seller-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #f59e0b;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
         }
 
         .table-tags {
@@ -1402,7 +1422,7 @@
                 </div>
                 <div class="range-inputs">
                     <input type="number" id="price-min" placeholder="最低" disabled>
-                    <span>～</span>
+                    <span>~</span>
                     <input type="number" id="price-max" placeholder="最高" disabled>
                     <span>萬</span>
                 </div>
@@ -1418,7 +1438,7 @@
                 </div>
                 <div class="range-inputs">
                     <input type="number" id="area-min" placeholder="最低" disabled>
-                    <span>～</span>
+                    <span>~</span>
                     <input type="number" id="area-max" placeholder="最高" disabled>
                     <span>坪</span>
                 </div>
@@ -1958,7 +1978,7 @@
             }
         }
 
-        // 全局函數
+        // 全域函數
         window.viewDetail = function(landId) {
             if (!currentUser) {
                 alert('請先登入會員才能查看土地詳情!');
@@ -2001,15 +2021,27 @@
             const region = "台北市";
             const area = (Math.random() * 200 + 10).toFixed(2);
             const type = types[Math.floor(Math.random() * types.length)];
-            let pricePerPing = Math.random() * 300 + 150;
-            const totalPrice = Math.round(area * pricePerPing);
+            
+            // 30% 機率沒有價格 (尚無賣家)
+            const hasPrice = Math.random() > 0.3;
+            let pricePerPing = null;
+            let totalPrice = null;
+            let isAgentListing = false;
+            let agentType = "一般";
+            let delegationStatus = null;
+            
+            if (hasPrice) {
+                pricePerPing = Math.random() * 300 + 150;
+                totalPrice = Math.round(area * pricePerPing);
+                
+                // 只有有價格的物件才可能是房仲店配 (50%機率)
+                isAgentListing = Math.random() > 0.5;
+                agentType = isAgentListing ? "房仲店配" : "一般";
+                // 房仲店配才有委託狀態
+                delegationStatus = isAgentListing ? (Math.random() > 0.5 ? "已委託" : "未委託") : null;
+            }
+            
             const selectedFeatures = features.sort(() => 0.5 - Math.random()).slice(0, 2);
-
-            // 添加房仲店配/一般標註 (50%機率)
-            const isAgentListing = Math.random() > 0.5;
-            const agentType = isAgentListing ? "房仲店配" : "一般";
-            // 房仲店配才有委託狀態
-            const delegationStatus = isAgentListing ? (Math.random() > 0.5 ? "已委託" : "未委託") : null;
 
             return {
                 id,
@@ -2018,16 +2050,18 @@
                 district,
                 type,
                 area: parseFloat(area),
-                pricePerPing: parseFloat(pricePerPing.toFixed(1)),
+                pricePerPing: pricePerPing ? parseFloat(pricePerPing.toFixed(1)) : null,
                 totalPrice,
                 features: selectedFeatures,
                 address: `${district}精華地段`,
                 agentType,
-                delegationStatus
+                delegationStatus,
+                hasPrice
             };
         }
 
         function formatPrice(price) {
+            if (!price) return null;
             return price >= 10000 ? `${(price / 10000).toFixed(1)}億` : `${price}萬`;
         }
 
@@ -2051,22 +2085,10 @@
                 const delegationBadgeHTML = land.delegationStatus ? 
                     `<div class="delegation-badge ${land.delegationStatus === '已委託' ? 'delegated' : 'not-delegated'}">${land.delegationStatus}</div>` : '';
                 
-                card.innerHTML = `
-                    <div class="land-image-container">
-                        <div class="map-preview">
-                            <div id="${mapId}" class="map-container"></div>
-                            <div class="map-location-text">${land.district}</div>
-                        </div>
-                        <div class="land-badge">${land.type}</div>
-                        ${agentBadgeHTML}
-                        ${delegationBadgeHTML}
-                    </div>
-                    <div class="land-info">
-                        <div class="land-title">${land.title}</div>
-                        <div class="land-location">📍 ${land.region} ${land.district} · ${land.address}</div>
-                        <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-                            ${tagsHTML}
-                        </div>
+                // 價格顯示或尚無賣家
+                let priceHTML;
+                if (land.hasPrice) {
+                    priceHTML = `
                         <div class="land-details-grid">
                             <div class="detail-item">
                                 <span class="detail-label">土地面積</span>
@@ -2088,6 +2110,48 @@
                                 <button class="contact-btn" onclick="showContactModal()">與我聯絡</button>
                             </div>
                         </div>
+                    `;
+                } else {
+                    priceHTML = `
+                        <div class="land-details-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">土地面積</span>
+                                <span class="detail-value">${land.area}坪</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">坪單價</span>
+                                <span class="detail-value">-</span>
+                            </div>
+                        </div>
+                        <div class="land-price">
+                            <div class="price-info">
+                                <span class="no-seller-badge">尚無賣家</span>
+                            </div>
+                            <div class="button-group">
+                                <button class="view-detail-btn" onclick="viewDetail(${land.id})">查看詳情</button>
+                                <button class="contact-btn" onclick="showContactModal()">與我聯絡</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    <div class="land-image-container">
+                        <div class="map-preview">
+                            <div id="${mapId}" class="map-container"></div>
+                            <div class="map-location-text">${land.district}</div>
+                        </div>
+                        <div class="land-badge">${land.type}</div>
+                        ${agentBadgeHTML}
+                        ${delegationBadgeHTML}
+                    </div>
+                    <div class="land-info">
+                        <div class="land-title">${land.title}</div>
+                        <div class="land-location">📍 ${land.region} ${land.district} · ${land.address}</div>
+                        <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+                            ${tagsHTML}
+                        </div>
+                        ${priceHTML}
                     </div>
                 `;
                 landGrid.appendChild(card);
@@ -2146,14 +2210,20 @@
                 const delegationBadgeHTML = land.delegationStatus ? 
                     `<br><span class="table-delegation-badge ${land.delegationStatus === '已委託' ? 'delegated' : 'not-delegated'}">${land.delegationStatus}</span>` : '';
                 
+                // 價格顯示
+                const pricePerPingDisplay = land.hasPrice ? `${land.pricePerPing.toFixed(1)}萬/坪` : '-';
+                const totalPriceDisplay = land.hasPrice ? 
+                    `<strong style="color: #DC2626;">${formatPrice(land.totalPrice)}</strong>` : 
+                    `<span class="table-no-seller-badge">尚無賣家</span>`;
+                
                 row.innerHTML = `
                     <td><strong>${land.title}</strong></td>
                     <td>${land.region} ${land.district}</td>
                     <td><span class="table-type-badge">${land.type}</span></td>
                     <td>${agentBadgeHTML}${delegationBadgeHTML}</td>
                     <td>${land.area}坪</td>
-                    <td>${land.pricePerPing.toFixed(1)}萬/坪</td>
-                    <td><strong style="color: #DC2626;">${formatPrice(land.totalPrice)}</strong></td>
+                    <td>${pricePerPingDisplay}</td>
+                    <td>${totalPriceDisplay}</td>
                     <td><div class="table-tags">${tagsHTML}</div></td>
                     <td>
                         <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
@@ -2209,8 +2279,11 @@
                     if (!selectedTypes.includes(land.type)) return false;
                 }
                 
-                if (priceMin && land.totalPrice < parseFloat(priceMin)) return false;
-                if (priceMax && land.totalPrice > parseFloat(priceMax)) return false;
+                // 價格篩選 - 只對有價格的物件進行篩選
+                if (land.hasPrice) {
+                    if (priceMin && land.totalPrice < parseFloat(priceMin)) return false;
+                    if (priceMax && land.totalPrice > parseFloat(priceMax)) return false;
+                }
                 
                 if (areaMin && land.area < parseFloat(areaMin)) return false;
                 if (areaMax && land.area > parseFloat(areaMax)) return false;
@@ -2231,10 +2304,20 @@
             
             switch(sortValue) {
                 case 'price-asc':
-                    filteredData.sort((a, b) => a.totalPrice - b.totalPrice);
+                    // 無價格的排在最後
+                    filteredData.sort((a, b) => {
+                        if (!a.hasPrice) return 1;
+                        if (!b.hasPrice) return -1;
+                        return a.totalPrice - b.totalPrice;
+                    });
                     break;
                 case 'price-desc':
-                    filteredData.sort((a, b) => b.totalPrice - a.totalPrice);
+                    // 無價格的排在最後
+                    filteredData.sort((a, b) => {
+                        if (!a.hasPrice) return 1;
+                        if (!b.hasPrice) return -1;
+                        return b.totalPrice - a.totalPrice;
+                    });
                     break;
                 case 'area-asc':
                     filteredData.sort((a, b) => a.area - b.area);
