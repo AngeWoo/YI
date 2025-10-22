@@ -700,6 +700,54 @@
         .map-container { height: 350px; border-radius: 8px; overflow: hidden; background: #e2e8f0; }
         .land-section { margin-bottom: 30px; }
         .building-section { margin-top: 30px; }
+        
+        /* MODIFICATION START: Added styles for amenities map */
+        .amenities-section {
+            margin-top: 40px;
+        }
+
+        .amenities-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .amenities-controls label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .amenities-controls input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #DC2626;
+        }
+
+        .amenity-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            width: 32px !important;
+            height: 32px !important;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        /* MODIFICATION END */
 
         @media (max-width: 968px) {
             .gis-grid { grid-template-columns: 1fr; }
@@ -758,6 +806,20 @@
             </div>
         </div>
 
+        <!-- MODIFICATION START: Added amenities map section -->
+        <div class="analysis-section amenities-section">
+            <h2 class="section-title">鄰近生活機能圖</h2>
+            <div class="amenities-controls">
+                <label><input type="checkbox" data-layer="transport" checked> 交通</label>
+                <label><input type="checkbox" data-layer="school" checked> 學校</label>
+                <label><input type="checkbox" data-layer="park" checked> 公園</label>
+                <label><input type="checkbox" data-layer="shopping" checked> 購物</label>
+                <label><input type="checkbox" data-layer="medical" checked> 醫療</label>
+            </div>
+            <div class="map-container" id="amenitiesMap" style="height: 500px;"></div>
+        </div>
+        <!-- MODIFICATION END -->
+
         <div class="streetview-section">
             <h2 class="section-title">Google 街景圖</h2>
             <div class="streetview-container" id="streetviewContainer"></div>
@@ -779,9 +841,7 @@
             <!-- 表格视图 -->
             <div id="realPriceTableView" class="real-price-view active">
                 <table class="analysis-table real-price-table">
-                    <!-- MODIFICATION START: Added '編號' header -->
                     <thead><tr><th>編號</th><th>交易時間</th><th>地址/地段</th><th>型態</th><th>總價</th><th>土地坪數</th><th>單價</th><th>備註</th></tr></thead>
-                    <!-- MODIFICATION END -->
                     <tbody id="realPriceTableBody"></tbody>
                 </table>
             </div>
@@ -977,7 +1037,11 @@
             renderRealPriceTable(land); 
             renderShareAnalysis(land);
             renderExpertAdvice(land);
-            setTimeout(() => { initializeMaps(land); initializeStreetView(land); }, 100);
+            setTimeout(() => { 
+                initializeMaps(land); 
+                initializeAmenitiesMap(); // MODIFICATION: Call new function
+                initializeStreetView(land); 
+            }, 100);
         });
 
         function renderLandTable(land) {
@@ -1037,11 +1101,9 @@
                 };
             });
 
-            // MODIFICATION START: Added 'data.id' to the table row
             window.realPriceData.forEach(data => {
                 contentHTML += `<tr><td class="center-align"><strong>${data.id}</strong></td><td class="center-align">${data.date}</td><td>${data.address}</td><td class="center-align">${data.type}</td><td class="center-align price-highlight">${(data.totalPrice/1000).toFixed(1)} 萬</td><td class="center-align">${data.area.toFixed(2)} 坪</td><td class="center-align price-highlight">${data.unitPrice.toFixed(1)} 萬/坪</td><td class="center-align">${data.note}</td></tr>`;
             });
-            // MODIFICATION END
             
             document.getElementById('realPriceTableBody').innerHTML = contentHTML;
         }
@@ -1213,6 +1275,87 @@
             const aerialMap = L.map('aerialMap').setView(coords, 18); L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(aerialMap); L.circle(coords, { color: '#059669', fillColor: '#10b981', fillOpacity: 0.3, radius: 50 }).addTo(aerialMap).bindPopup('土地位置');
             const overlayMap = L.map('overlayMap').setView(coords, 16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(overlayMap); L.polygon([[coords[0] + 0.001, coords[1] - 0.001], [coords[0] + 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] - 0.001]], { color: '#DC2626', fillColor: '#ffcdd2', fillOpacity: 0.4 }).addTo(overlayMap); L.polygon([[coords[0] + 0.0008, coords[1] - 0.0008], [coords[0] + 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] - 0.0008]], { color: '#2563eb', weight: 2, fillOpacity: 0 }).addTo(overlayMap); L.marker(coords).addTo(overlayMap).bindPopup('多圖層套圖預覽。<br>點擊上方按鈕開啟全功能分析。').openPopup();
         }
+        
+        // MODIFICATION START: Added amenities map function
+        function initializeAmenitiesMap() {
+            const coords = currentCoords;
+            const amenitiesMap = L.map('amenitiesMap').setView(coords, 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(amenitiesMap);
+
+            const amenitiesData = [
+                { name: '捷運市政府站', type: 'transport', lat: 25.0408, lng: 121.5645, icon: '🚇', color: '#0288d1' },
+                { name: '捷運台北101/世貿站', type: 'transport', lat: 25.0339, lng: 121.5645, icon: '🚇', color: '#0288d1' },
+                { name: '市府轉運站', type: 'transport', lat: 25.0403, lng: 121.5652, icon: '🚌', color: '#0288d1' },
+                { name: '臺北市信義區信義國民小學', type: 'school', lat: 25.0359, lng: 121.5701, icon: '🏫', color: '#f57c00' },
+                { name: '臺北市立信義國民中學', type: 'school', lat: 25.0318, lng: 121.5698, icon: '🏫', color: '#f57c00' },
+                { name: '博愛國小', type: 'school', lat: 25.0375, lng: 121.5714, icon: '🏫', color: '#f57c00' },
+                { name: '信義廣場 (中強公園)', type: 'park', lat: 25.0315, lng: 121.5665, icon: '🌳', color: '#388e3c' },
+                { name: '國父紀念館', type: 'park', lat: 25.0405, lng: 121.5592, icon: '🌳', color: '#388e3c' },
+                { name: '新光三越 台北信義新天地', type: 'shopping', lat: 25.0373, lng: 121.5663, icon: '🛍️', color: '#d32f2f' },
+                { name: '台北101購物中心', type: 'shopping', lat: 25.0336, lng: 121.5647, icon: '🛍️', color: '#d32f2f' },
+                { name: '微風信義', type: 'shopping', lat: 25.0390, lng: 121.5660, icon: '🛍️', color: '#d32f2f' },
+                { name: '臺北醫學大學附設醫院', type: 'medical', lat: 25.0261, lng: 121.5617, icon: '🏥', color: '#7b1fa2' },
+                { name: '信義運動中心', type: 'medical', lat: 25.0321, lng: 121.5715, icon: '💪', color: '#7b1fa2' }
+            ];
+
+            const targetIcon = L.divIcon({
+                className: 'target-marker',
+                html: '<div style="background: #dc2626; width: 30px; height: 30px; border-radius: 50%; border: 4px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;">📍</div>',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+            
+            L.marker(coords, { icon: targetIcon, zIndexOffset: 1000 })
+                .addTo(amenitiesMap)
+                .bindPopup('<div class="custom-popup"><div class="popup-header">📍 目標土地位置</div></div>');
+
+            const layers = {
+                transport: L.layerGroup(),
+                school: L.layerGroup(),
+                park: L.layerGroup(),
+                shopping: L.layerGroup(),
+                medical: L.layerGroup()
+            };
+
+            amenitiesData.forEach(amenity => {
+                if (!layers[amenity.type]) return;
+
+                const amenityIcon = L.divIcon({
+                    className: 'amenity-marker',
+                    html: `<div style="background-color:${amenity.color};" class="amenity-marker">${amenity.icon}</div>`,
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16]
+                });
+
+                L.marker([amenity.lat, amenity.lng], { icon: amenityIcon })
+                    .bindPopup(amenity.name)
+                    .addTo(layers[amenity.type]);
+            });
+
+            document.querySelectorAll('.amenities-controls input[type="checkbox"]:checked').forEach(checkbox => {
+                const layerName = checkbox.dataset.layer;
+                if (layers[layerName]) {
+                    layers[layerName].addTo(amenitiesMap);
+                }
+            });
+
+            document.querySelectorAll('.amenities-controls input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const layerName = e.target.dataset.layer;
+                    if (layers[layerName]) {
+                        if (e.target.checked) {
+                            amenitiesMap.addLayer(layers[layerName]);
+                        } else {
+                            amenitiesMap.removeLayer(layers[layerName]);
+                        }
+                    }
+                });
+            });
+        }
+        // MODIFICATION END
+
         function initializeStreetView(land) {
             const coords = currentCoords;
             const streetviewMap = L.map('streetviewContainer').setView(coords, 18); L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(streetviewMap);
