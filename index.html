@@ -1464,6 +1464,26 @@
             </div>
         </div>
 
+        <!-- MODIFICATION START: Added Status filter -->
+        <div class="filter-row">
+            <div class="filter-label">狀態</div>
+            <div class="filter-options">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="status-all" checked>
+                    <label for="status-all">不限</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="status-has-seller" class="status-checkbox">
+                    <label for="status-has-seller">有賣家</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="status-no-seller" class="status-checkbox">
+                    <label for="status-no-seller">尚無賣家</label>
+                </div>
+            </div>
+        </div>
+        <!-- MODIFICATION END -->
+
         <div class="filter-row">
             <div class="filter-label">售價</div>
             <div class="filter-options">
@@ -2328,6 +2348,11 @@
         function searchLand() {
             const districtCheckboxes = document.querySelectorAll('.district-checkbox:checked');
             const typeCheckboxes = document.querySelectorAll('.type-checkbox:checked');
+            // MODIFICATION START: Get status filter values
+            const statusHasSeller = document.getElementById('status-has-seller').checked;
+            const statusNoSeller = document.getElementById('status-no-seller').checked;
+            const statusAll = document.getElementById('status-all').checked;
+            // MODIFICATION END
             const priceMin = document.getElementById('price-min').value;
             const priceMax = document.getElementById('price-max').value;
             const areaMin = document.getElementById('area-min').value;
@@ -2348,6 +2373,18 @@
                     if (!selectedTypes.includes(land.type)) return false;
                 }
                 
+                // MODIFICATION START: Add status filtering logic
+                if (!statusAll) {
+                    if (statusHasSeller && !statusNoSeller) {
+                        if (!land.hasPrice) return false;
+                    }
+                    if (statusNoSeller && !statusHasSeller) {
+                        if (land.hasPrice) return false;
+                    }
+                    // If both are checked, effectively it's "all", so no filtering is needed.
+                }
+                // MODIFICATION END
+
                 // 價格篩選 - 只對有價格的物件進行篩選
                 if (land.hasPrice) {
                     if (priceMin && land.totalPrice < parseFloat(priceMin)) return false;
@@ -2402,45 +2439,60 @@
             renderLandTable(filteredData);
         }
 
-        // 處理全區/不限選項
-        document.getElementById('district-all').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.district-checkbox');
-            checkboxes.forEach(cb => cb.checked = false);
-        });
-
-        document.querySelectorAll('.district-checkbox').forEach(cb => {
-            cb.addEventListener('change', function() {
-                if (this.checked) {
-                    document.getElementById('district-all').checked = false;
-                }
-            });
-        });
-
-        document.getElementById('type-all').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.type-checkbox');
-            checkboxes.forEach(cb => cb.checked = false);
-        });
-
-        document.querySelectorAll('.type-checkbox').forEach(cb => {
-            cb.addEventListener('change', function() {
-                if (this.checked) {
-                    document.getElementById('type-all').checked = false;
-                }
-            });
-        });
-
-        document.getElementById('price-all').addEventListener('change', function() {
-            document.getElementById('price-min').disabled = this.checked;
-            document.getElementById('price-max').disabled = this.checked;
-        });
-
-        document.getElementById('area-all').addEventListener('change', function() {
-            document.getElementById('area-min').disabled = this.checked;
-            document.getElementById('area-max').disabled = this.checked;
-        });
-
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
+            // 處理全區/不限選項
+            document.getElementById('district-all').addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.district-checkbox');
+                checkboxes.forEach(cb => cb.checked = false);
+            });
+
+            document.querySelectorAll('.district-checkbox').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    if (this.checked) {
+                        document.getElementById('district-all').checked = false;
+                    }
+                });
+            });
+
+            document.getElementById('type-all').addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.type-checkbox');
+                checkboxes.forEach(cb => cb.checked = false);
+            });
+
+            document.querySelectorAll('.type-checkbox').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    if (this.checked) {
+                        document.getElementById('type-all').checked = false;
+                    }
+                });
+            });
+
+            // MODIFICATION START: Add event listeners for status checkboxes
+            document.getElementById('status-all').addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.status-checkbox');
+                checkboxes.forEach(cb => cb.checked = false);
+            });
+
+            document.querySelectorAll('.status-checkbox').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    if (this.checked) {
+                        document.getElementById('status-all').checked = false;
+                    }
+                });
+            });
+            // MODIFICATION END
+
+            document.getElementById('price-all').addEventListener('change', function() {
+                document.getElementById('price-min').disabled = this.checked;
+                document.getElementById('price-max').disabled = this.checked;
+            });
+
+            document.getElementById('area-all').addEventListener('change', function() {
+                document.getElementById('area-min').disabled = this.checked;
+                document.getElementById('area-max').disabled = this.checked;
+            });
+
             // 生成50筆測試資料
             allLandData = Array.from({ length: 50 }, (_, i) => generateRandomLand(i + 1));
             filteredData = [...allLandData];
