@@ -13,17 +13,19 @@
 
         body {
             font-family: 'Microsoft JhengHei', Arial, sans-serif;
-            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+            /* MODIFICATION: Changed background to light grey */
+            background: #f5f5f5;
             min-height: 100vh;
-            padding: 20px 0 0 0;
+            padding: 0; /* Adjusted for full-width header */
         }
 
         .header-container {
             position: relative;
-            background: rgba(255, 255, 255, 0.8);
+            /* MODIFICATION: Applied gradient background and adjusted layout */
+            background: linear-gradient(to right, #fff5f5, #ffdddd);
             padding: 20px 40px;
-            margin: 0 20px 20px 20px;
-            border-radius: 12px;
+            margin: 0 0 20px 0;
+            border-radius: 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
@@ -60,15 +62,17 @@
         }
 
         .header {
-            text-align: center;
-            color: white;
+            /* MODIFICATION: Aligned to left */
+            text-align: left;
+            color: #333;
         }
 
         .title-container {
             display: flex;
             align-items: center;
             gap: 15px;
-            justify-content: center;
+            /* MODIFICATION: Justified to left */
+            justify-content: flex-start;
             margin-bottom: 15px;
         }
 
@@ -88,7 +92,7 @@
         .header p {
             font-size: 1.1rem;
             opacity: 0.9;
-            color: #DC2626;
+            color: #555;
         }
 
         .page-content {
@@ -108,7 +112,6 @@
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -134,7 +137,6 @@
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -428,8 +430,8 @@
         }
 
         @media (max-width: 768px) {
-            body { padding: 10px 0 0 0; }
-            .header-container { padding: 15px 20px; margin: 0 10px 15px 10px; }
+            body { padding: 0; } 
+            .header-container { padding: 15px 20px; margin: 0 0 15px 0; border-radius: 0; }
             .header h1 { font-size: 1.5rem; } .header p { display: none; }
             .header-nav { position: static; transform: none; justify-content: center; width: 100%; margin-top: 15px; }
             .title-container { margin-bottom: 0; }

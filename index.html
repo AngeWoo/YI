@@ -20,7 +20,9 @@
 
         .header-container {
             position: relative;
-            background: white;
+            /* MODIFICATION START: Adjusted the left-to-right gradient */
+            background: linear-gradient(to right, #fff5f5, #ffdddd);
+            /* MODIFICATION END */
             padding: 20px 40px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
@@ -89,14 +91,14 @@
         }
         
         .header {
-            text-align: center;
+            text-align: left;
         }
 
         .title-container {
             display: flex;
             align-items: center;
             gap: 15px;
-            justify-content: center;
+            justify-content: flex-start;
             margin-bottom: 15px;
         }
 
