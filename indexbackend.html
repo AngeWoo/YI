@@ -181,26 +181,21 @@
             transition: all 0.3s;
             font-size: 14px;
             border: none;
-            display: inline-block;
+            display: inline-flex; /* MODIFICATION: for aligning icon */
+            align-items: center;
+            gap: 6px;
         }
         
-        .nav-btn.btn-home {
-            background: #2196F3;
-        }
-        .nav-btn.btn-home:hover {
-            background: #1976D2;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
-        }
+        .nav-btn.btn-home { background: #2196F3; }
+        .nav-btn.btn-home:hover { background: #1976D2; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3); }
         
-        .nav-btn.btn-manager {
-            background: #673AB7;
-        }
-        .nav-btn.btn-manager:hover {
-            background: #512DA8;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(103, 58, 183, 0.3);
-        }
+        .nav-btn.btn-manager { background: #673AB7; }
+        .nav-btn.btn-manager:hover { background: #512DA8; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(103, 58, 183, 0.3); }
+
+        /* MODIFICATION START: Added styles for the new War Room button */
+        .nav-btn.btn-war-room { background: #F59E0B; }
+        .nav-btn.btn-war-room:hover { background: #D97706; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); }
+        /* MODIFICATION END */
 
         .logout-btn {
             padding: 10px 20px;
@@ -407,7 +402,6 @@
                 <p>請使用管理員帳號登入</p>
             </div>
             
-            <!-- 測試帳號提醒 -->
             <div class="test-credentials">
                 <h3>⚠️ 測試帳號資訊</h3>
                 <p>帳號：<strong>admin</strong></p>
@@ -434,6 +428,9 @@
                 <span class="admin-info" id="adminName">管理員</span>
                 <a href="index.html" class="nav-btn btn-home">🏠 返回首頁</a>
                 <a href="indexmgr.html" class="nav-btn btn-manager">📈 案件進度管理</a>
+                <!-- MODIFICATION START: Added the War Room button -->
+                <a href="index7.html" class="nav-btn btn-war-room">🎯 戰情室</a>
+                <!-- MODIFICATION END -->
                 <button class="logout-btn" onclick="handleAdminLogout()">登出</button>
             </div>
         </header>
@@ -457,6 +454,7 @@
     </div>
 
     <script>
+        // ... (The rest of the JavaScript remains the same as before) ...
         let adminUser = null;
         let allLands = [];
         let filteredLands = [];

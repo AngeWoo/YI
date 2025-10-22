@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一如土地 - 戰情中心</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        .war-room-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 20px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .header h1 { color: #DC2626; font-size: 2rem; }
+        .header-nav a {
+            padding: 10px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 10px;
+        }
+        .nav-btn-backend { background-color: #673AB7; }
+        .nav-btn-backend:hover { background-color: #512DA8; }
+        .nav-btn-home { background-color: #2196F3; }
+        .nav-btn-home:hover { background-color: #1976D2; }
+
+        .dashboard-grid {
+            padding: 30px 40px;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(100px, auto);
+            gap: 25px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* KPI Cards */
+        .kpi-card { grid-column: span 3; }
+        .kpi-value { font-size: 2.5rem; font-weight: bold; margin-bottom: 5px; }
+        .kpi-change { font-size: 1rem; font-weight: 600; }
+        .kpi-change.up { color: #4CAF50; }
+        .kpi-change.down { color: #f44336; }
+
+        /* Larger Cards */
+        .leaderboard-card { grid-column: span 4; grid-row: span 2; }
+        .funnel-card { grid-column: span 8; grid-row: span 2; }
+        .region-card { grid-column: span 6; grid-row: span 3; }
+        .status-pie-card { grid-column: span 6; grid-row: span 3; }
+        .hot-listings-card { grid-column: span 12; }
+
+        /* Leaderboard styles */
+        .leaderboard-list { list-style: none; }
+        .leaderboard-item { display: flex; align-items: center; margin-bottom: 15px; }
+        .leaderboard-rank { font-size: 1.2rem; font-weight: bold; color: #999; width: 40px; }
+        .leaderboard-rank.top-1 { color: #FFD700; }
+        .leaderboard-rank.top-2 { color: #C0C0C0; }
+        .leaderboard-rank.top-3 { color: #CD7F32; }
+        .leaderboard-info { flex: 1; }
+        .leaderboard-name { font-weight: 600; }
+        .leaderboard-dept { font-size: 0.8rem; color: #888; }
+        .leaderboard-value { font-size: 1.1rem; font-weight: bold; color: #DC2626; }
+
+        /* Sales Funnel */
+        .funnel { display: flex; flex-direction: column; gap: 5px; }
+        .funnel-stage {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            clip-path: polygon(0% 0%, 100% 0%, 97% 50%, 100% 100%, 0% 100%);
+            transition: transform 0.2s;
+        }
+        .funnel-stage:hover { transform: scale(1.02); }
+        .funnel-stage .label { font-weight: bold; }
+        .funnel-stage .value { font-size: 1.1rem; }
+        .funnel-stage .conversion { font-size: 0.8rem; opacity: 0.8; }
+        
+        /* Region Performance - Bar Chart */
+        .bar-chart-container { list-style: none; }
+        .bar-chart-item { margin-bottom: 15px; }
+        .bar-chart-label { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; }
+        .bar-chart-bar-bg { background-color: #e0e0e0; border-radius: 5px; height: 10px; }
+        .bar-chart-bar { background: linear-gradient(90deg, #F59E0B, #D97706); height: 100%; border-radius: 5px; }
+        
+        /* Status Pie Chart */
+        .pie-chart-container { display: flex; align-items: center; gap: 20px; }
+        .pie-chart {
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(#4CAF50 0% 50%, #FF9800 50% 80%, #2196F3 80% 95%, #9C27B0 95% 100%);
+        }
+        .pie-legend { list-style: none; }
+        .pie-legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .legend-color { width: 15px; height: 15px; border-radius: 3px; }
+        
+        /* Hot Listings Table */
+        .hot-table { width: 100%; border-collapse: collapse; }
+        .hot-table th, .hot-table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        .hot-table th { font-size: 0.9rem; color: #888; }
+
+        @media (max-width: 1200px) {
+            .kpi-card { grid-column: span 6; }
+            .leaderboard-card { grid-column: span 12; grid-row: span 1; }
+            .funnel-card { grid-column: span 12; grid-row: span 1; }
+        }
+        @media (max-width: 768px) {
+            .header { padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
+            .dashboard-grid { padding: 20px; grid-template-columns: 1fr; }
+            .card { grid-column: span 1 !important; }
+            .kpi-value { font-size: 2rem; }
+            .pie-chart-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="war-room-container">
+        <header class="header">
+            <h1>🎯 一如土地 - 戰情中心 (War Room)</h1>
+            <nav class="header-nav">
+                <a href="indexbackend.html" class="nav-btn-backend">📊 返回後台</a>
+                <a href="index.html" class="nav-btn-home">🏠 返回首頁</a>
+            </nav>
+        </header>
+
+        <main class="dashboard-grid">
+            <!-- KPIs -->
+            <div class="card kpi-card">
+                <div class="card-title">📈 總案件價值 (潛在)</div>
+                <div class="kpi-value" id="kpi-total-value">0億</div>
+                <div class="kpi-change up" id="kpi-total-value-change">+5.2% 本月</div>
+            </div>
+            <div class="card kpi-card">
+                <div class="card-title">✅ 本月成交金額</div>
+                <div class="kpi-value" id="kpi-closed-value">0萬</div>
+                <div class="kpi-change up" id="kpi-closed-value-change">+120% 上月</div>
+            </div>
+            <div class="card kpi-card">
+                <div class="card-title">⏳ 平均成交週期</div>
+                <div class="kpi-value" id="kpi-cycle-time">0天</div>
+                <div class="kpi-change down" id="kpi-cycle-time-change">-3 天</div>
+            </div>
+            <div class="card kpi-card">
+                <div class="card-title">👥 今日活躍用戶</div>
+                <div class="kpi-value" id="kpi-active-users">0</div>
+                <div class="kpi-change up" id="kpi-active-users-change">即時更新中...</div>
+            </div>
+
+            <!-- Sales Funnel -->
+            <div class="card funnel-card">
+                <div class="card-title">💧 業務開發漏斗 (本季)</div>
+                <div class="funnel" id="sales-funnel">
+                    <!-- Funnel stages will be generated by JS -->
+                </div>
+            </div>
+
+            <!-- Sales Leaderboard -->
+            <div class="card leaderboard-card">
+                <div class="card-title">🏆 業務英雄榜 (本月成交額)</div>
+                <ul class="leaderboard-list" id="leaderboard">
+                    <!-- Leaderboard items will be generated by JS -->
+                </ul>
+            </div>
+            
+            <!-- Region Performance -->
+            <div class="card region-card">
+                <div class="card-title">🌍 地區熱度排行 (案件數量)</div>
+                <ul class="bar-chart-container" id="region-performance">
+                    <!-- Region bars will be generated by JS -->
+                </ul>
+            </div>
+
+            <!-- Case Status -->
+            <div class="card status-pie-card">
+                <div class="card-title">📊 線上平台案件狀態</div>
+                <div class="pie-chart-container">
+                    <div class="pie-chart" id="status-pie-chart"></div>
+                    <ul class="pie-legend" id="pie-legend">
+                        <!-- Legend items will be generated by JS -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Hot Listings -->
+            <div class="card hot-listings-card">
+                <div class="card-title">🔥 熱門競價案件 (近24小時)</div>
+                <table class="hot-table">
+                    <thead><tr><th>標題</th><th>地區</th><th>目前最高出價</th><th>出價次數</th><th>狀態</th></tr></thead>
+                    <tbody id="hot-listings-table">
+                        <!-- Table rows will be generated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            function generateAndRenderData() {
+                // --- Mock Data Generation ---
+                const regions = ["台北市", "新北市", "桃園市", "台中市", "台南市", "高雄市"];
+                const salesAgents = [
+                    { name: '王小明', department: '北區業務部', deals: Math.floor(Math.random() * 20), value: Math.floor(Math.random() * 50000) },
+                    { name: '李美華', department: '北區業務部', deals: Math.floor(Math.random() * 20), value: Math.floor(Math.random() * 50000) },
+                    { name: '陳建國', department: '中區業務部', deals: Math.floor(Math.random() * 20), value: Math.floor(Math.random() * 50000) },
+                    { name: '林淑芬', department: '中區業務部', deals: Math.floor(Math.random() * 20), value: Math.floor(Math.random() * 50000) },
+                    { name: '張志剛', department: '南區業務部', deals: Math.floor(Math.random() * 20), value: Math.floor(Math.random() * 50000) },
+                    { name: '黃雅琴', department: '南區業務部', deals: Math.floor(Math.random() * 20), value: Math.floor(Math.random() * 50000) }
+                ];
+                const funnelData = [
+                    { stage: '新案件', value: 125, amount: 25.6 },
+                    { stage: '初步接觸', value: 98, amount: 21.1 },
+                    { stage: '實地勘查', value: 65, amount: 18.2 },
+                    { stage: '議價中', value: 31, amount: 12.5 },
+                    { stage: '已成交', value: 15, amount: 8.9 }
+                ];
+                const platformStatus = { bidding: 28, negotiating: 6, sold: 18, overpriced: 12 };
+                const hotListingsData = [
+                    { title: '信義區商業用地A', region: '台北市', highestBid: 125000, bidCount: 58, status: '競價中' },
+                    { title: '西屯區重劃區B', region: '台中市', highestBid: 88000, bidCount: 45, status: '競價中' },
+                    { title: '左營區住宅建地C', region: '高雄市', highestBid: 56000, bidCount: 32, status: '一如協商' }
+                ];
+
+                const formatPrice = (price) => price >= 10000 ? `${(price / 10000).toFixed(1)}億` : `${price.toLocaleString()}萬`;
+                
+                // --- Render KPIs ---
+                document.getElementById('kpi-total-value').textContent = `${(Math.random() * 50 + 100).toFixed(1)}億`;
+                document.getElementById('kpi-closed-value').textContent = `${formatPrice(salesAgents.reduce((sum, a) => sum + a.value, 0))}`;
+                document.getElementById('kpi-cycle-time').textContent = `${Math.floor(Math.random() * 20 + 45)}天`;
+                document.getElementById('kpi-active-users').textContent = Math.floor(Math.random() * 200 + 150);
+                
+                // --- Render Sales Funnel ---
+                const funnelContainer = document.getElementById('sales-funnel');
+                funnelContainer.innerHTML = '';
+                for (let i = 0; i < funnelData.length; i++) {
+                    const item = funnelData[i];
+                    let conversionRate = '';
+                    if (i > 0) {
+                        const rate = ((item.value / funnelData[i-1].value) * 100).toFixed(1);
+                        conversionRate = `<span class="conversion">轉換率: ${rate}%</span>`;
+                    }
+                    funnelContainer.innerHTML += `
+                        <div class="funnel-stage" style="width: ${100 - i*8}%;">
+                            <span class="label">${item.stage}</span>
+                            <div style="text-align: right;">
+                                <span class="value">${item.value} 件 / ${item.amount} 億</span>
+                                ${conversionRate}
+                            </div>
+                        </div>`;
+                }
+
+                // --- Render Leaderboard ---
+                const leaderboardContainer = document.getElementById('leaderboard');
+                leaderboardContainer.innerHTML = '';
+                salesAgents.sort((a, b) => b.value - a.value).forEach((agent, i) => {
+                    const rankClass = i < 3 ? `top-${i+1}` : '';
+                    leaderboardContainer.innerHTML += `
+                        <li class="leaderboard-item">
+                            <div class="leaderboard-rank ${rankClass}">#${i+1}</div>
+                            <div class="leaderboard-info">
+                                <div class="leaderboard-name">${agent.name}</div>
+                                <div class="leaderboard-dept">${agent.department}</div>
+                            </div>
+                            <div class="leaderboard-value">${formatPrice(agent.value)}</div>
+                        </li>`;
+                });
+
+                // --- Render Region Performance ---
+                const regionContainer = document.getElementById('region-performance');
+                regionContainer.innerHTML = '';
+                const regionData = regions.map(r => ({ region: r, count: Math.floor(Math.random() * 100) })).sort((a,b) => b.count - a.count);
+                const maxCount = regionData[0].count;
+                regionData.forEach(item => {
+                    regionContainer.innerHTML += `
+                        <li class="bar-chart-item">
+                            <div class="bar-chart-label"><span>${item.region}</span><span>${item.count}件</span></div>
+                            <div class="bar-chart-bar-bg">
+                                <div class="bar-chart-bar" style="width: ${(item.count / maxCount) * 100}%;"></div>
+                            </div>
+                        </li>`;
+                });
+
+                // --- Render Status Pie Chart ---
+                const pieChart = document.getElementById('status-pie-chart');
+                const pieLegend = document.getElementById('pie-legend');
+                pieLegend.innerHTML = '';
+                const totalStatus = Object.values(platformStatus).reduce((sum, val) => sum + val, 0);
+                const statusColors = { bidding: '#4CAF50', negotiating: '#FF9800', sold: '#2196F3', overpriced: '#9C27B0' };
+                let gradientString = '';
+                let currentPercentage = 0;
+                Object.entries(platformStatus).forEach(([status, value]) => {
+                    const percentage = (value / totalStatus) * 100;
+                    gradientString += `${statusColors[status]} ${currentPercentage}% ${currentPercentage + percentage}%, `;
+                    currentPercentage += percentage;
+                    
+                    pieLegend.innerHTML += `
+                        <li class="pie-legend-item">
+                            <div class="legend-color" style="background-color: ${statusColors[status]};"></div>
+                            <span>${status.charAt(0).toUpperCase() + status.slice(1)} (${value}件, ${percentage.toFixed(1)}%)</span>
+                        </li>`;
+                });
+                pieChart.style.background = `conic-gradient(${gradientString.slice(0, -2)})`;
+
+                // --- Render Hot Listings Table ---
+                const hotTableBody = document.getElementById('hot-listings-table');
+                hotTableBody.innerHTML = '';
+                hotListingsData.forEach(item => {
+                    hotTableBody.innerHTML += `
+                        <tr>
+                            <td>${item.title}</td>
+                            <td>${item.region}</td>
+                            <td>${formatPrice(item.highestBid)}</td>
+                            <td>${item.bidCount}</td>
+                            <td><span style="color: ${item.status === '競價中' ? '#DC2626' : '#673AB7'}; font-weight: 600;">${item.status}</span></td>
+                        </tr>`;
+                });
+            }
+
+            // Initial render
+            generateAndRenderData();
+
+            // Simulate real-time update for active users
+            setInterval(() => {
+                const userCount = parseInt(document.getElementById('kpi-active-users').textContent);
+                const change = Math.floor(Math.random() * 10 - 5);
+                document.getElementById('kpi-active-users').textContent = Math.max(50, userCount + change);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
