@@ -100,6 +100,11 @@
             margin-bottom: 15px;
         }
 
+        .logo {
+            width: 60px;
+            height: auto;
+        }
+
         .header h1 {
             font-size: 2.5rem;
             margin: 0;
@@ -149,6 +154,40 @@
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .search-form-section {
+            flex: 1;
+        }
+
+        .search-image-section {
+            width: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-image-link {
+            display: block;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .search-image-link:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.2);
+        }
+
+        .search-image-link img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .search-title {
@@ -1154,6 +1193,23 @@
             color: #DC2626;
         }
 
+        .footer-external-links {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .footer-external-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #DC2626;
+            margin-bottom: 20px;
+        }
+
         .footer-bottom {
             text-align: center;
             padding-top: 25px;
@@ -1311,14 +1367,8 @@
         </nav>
         <div class="header">
             <div class="title-container">
+                <img src="logo.png" alt="一如 YIRU Logo" class="logo">
                 <h1>一如土地買賣平台</h1>
-            </div>
-            
-            <!-- 外部平台連結 -->
-            <div class="external-links">
-                <a href="https://land.591.com.tw/list?type=2&region=23&kind=11" target="_blank" class="external-link-btn">591土地 ↗</a>
-                <a href="https://www.yes319.com/memberlogin/?r=1017" target="_blank" class="external-link-btn">yes319 ↗</a>
-                <a href="https://commercial.rakuya.com.tw/land/buy?city=0&history=1" target="_blank" class="external-link-btn">樂屋網 ↗</a>
             </div>
             
             <p>輕鬆搜尋、篩選並找到您理想的土地</p>
@@ -1327,6 +1377,7 @@
 
     <!-- 搜尋區域 -->
     <div class="search-container">
+        <div class="search-form-section">
         <div class="search-title">🔍 搜尋理想土地</div>
         
         <div class="filter-row">
@@ -1452,6 +1503,14 @@
                 <button class="search-btn" onclick="searchLand()">搜尋</button>
             </div>
         </div>
+        </div>
+        
+        <!-- 右側圖片區域 -->
+        <div class="search-image-section">
+            <a href="indexS.html" class="search-image-link">
+                <img src="S1.png" alt="地號搜尋">
+            </a>
+        </div>
     </div>
 
     <!-- 結果控制列 -->
@@ -1541,6 +1600,16 @@
 
     <!-- Footer 區域 -->
     <footer class="main-footer">
+        <!-- 外部平台連結 -->
+        <div class="footer-external-links">
+            <h3 class="footer-external-title">合作平台</h3>
+            <div class="external-links">
+                <a href="https://land.591.com.tw/list?type=2&region=23&kind=11" target="_blank" class="external-link-btn">591土地 ↗</a>
+                <a href="https://www.yes319.com/memberlogin/?r=1017" target="_blank" class="external-link-btn">yes319 ↗</a>
+                <a href="https://commercial.rakuya.com.tw/land/buy?city=0&history=1" target="_blank" class="external-link-btn">樂屋網 ↗</a>
+            </div>
+        </div>
+        
         <div class="footer-content">
             <div class="footer-section">
                 <h3 class="footer-title">關於我們</h3>

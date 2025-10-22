@@ -305,6 +305,204 @@
             font-weight: bold;
         }
 
+        /* 实价登录视图切换样式 */
+        .real-price-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .view-toggle-buttons {
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 4px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .view-toggle-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-toggle-btn:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .view-toggle-btn.active {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+        }
+
+        .real-price-view {
+            display: none;
+        }
+
+        .real-price-view.active {
+            display: block;
+        }
+
+        /* 地图控制面板 */
+        .map-controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .price-legend {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .legend-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 14px;
+        }
+
+        .legend-items {
+            display: flex;
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .legend-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 4px rgba(0,0,0,0.3);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 20px;
+        }
+
+        .filter-controls label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #475569;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .filter-controls input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* 地图统计面板 */
+        .map-stats {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            display: inline-block;
+            font-size: 24px;
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        .stat-unit {
+            font-size: 14px;
+            color: #64748b;
+            margin-left: 4px;
+        }
+
+        /* 地图标记弹窗样式 */
+        .custom-popup {
+            min-width: 250px;
+        }
+
+        .custom-popup .popup-header {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 12px 15px;
+            margin: -15px -15px 12px -15px;
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .custom-popup .popup-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+        }
+
+        .custom-popup .popup-row:last-child {
+            border-bottom: none;
+        }
+
+        .custom-popup .popup-label {
+            color: #64748b;
+        }
+
+        .custom-popup .popup-value {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .custom-popup .popup-price {
+            color: #dc2626;
+            font-size: 16px;
+        }
+
         .share-analysis-section {
             margin-top: 40px;
         }
@@ -566,11 +764,83 @@
         </div>
 
         <div class="analysis-section real-price-section">
-            <h2 class="section-title">鄰近實價登錄資訊</h2>
-            <table class="analysis-table real-price-table">
-                <thead><tr><th>交易時間</th><th>地址/地段</th><th>型態</th><th>總價</th><th>土地坪數</th><th>單價</th><th>備註</th></tr></thead>
-                <tbody id="realPriceTableBody"></tbody>
-            </table>
+            <div class="real-price-header">
+                <h2 class="section-title">鄰近實價登錄資訊</h2>
+                <div class="view-toggle-buttons">
+                    <button class="view-toggle-btn active" onclick="switchRealPriceView('table')">
+                        📊 表格檢視
+                    </button>
+                    <button class="view-toggle-btn" onclick="switchRealPriceView('map')">
+                        🗺️ 地圖檢視
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 表格视图 -->
+            <div id="realPriceTableView" class="real-price-view active">
+                <table class="analysis-table real-price-table">
+                    <!-- MODIFICATION START: Added '編號' header -->
+                    <thead><tr><th>編號</th><th>交易時間</th><th>地址/地段</th><th>型態</th><th>總價</th><th>土地坪數</th><th>單價</th><th>備註</th></tr></thead>
+                    <!-- MODIFICATION END -->
+                    <tbody id="realPriceTableBody"></tbody>
+                </table>
+            </div>
+            
+            <!-- 地图视图 -->
+            <div id="realPriceMapView" class="real-price-view">
+                <div class="map-controls">
+                    <div class="price-legend">
+                        <div class="legend-title">單價區間 (萬/坪)</div>
+                        <div class="legend-items">
+                            <div class="legend-item">
+                                <span class="legend-marker" style="background: #10b981;"></span>
+                                <span>150以下</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-marker" style="background: #f59e0b;"></span>
+                                <span>150-200</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-marker" style="background: #ef4444;"></span>
+                                <span>200以上</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-controls">
+                        <label>
+                            <input type="checkbox" id="filterResidential" checked onchange="updateMapMarkers()"> 住宅用地
+                        </label>
+                        <label>
+                            <input type="checkbox" id="filterCommercial" checked onchange="updateMapMarkers()"> 商業用地
+                        </label>
+                        <label>
+                            <input type="checkbox" id="filterIndustrial" checked onchange="updateMapMarkers()"> 工業用地
+                        </label>
+                    </div>
+                </div>
+                <div class="map-container" id="realPriceMap" style="height: 600px; border-radius: 12px;"></div>
+                <div class="map-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">顯示交易數</span>
+                        <span class="stat-value" id="mapTransactionCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">平均單價</span>
+                        <span class="stat-value" id="mapAvgPrice">0</span>
+                        <span class="stat-unit">萬/坪</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">最高單價</span>
+                        <span class="stat-value" id="mapMaxPrice">0</span>
+                        <span class="stat-unit">萬/坪</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">最低單價</span>
+                        <span class="stat-value" id="mapMinPrice">0</span>
+                        <span class="stat-unit">萬/坪</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="analysis-section share-analysis-section">
@@ -625,9 +895,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <script>
         const PING_TO_M2 = 3.305785;
-        let currentCoords = [25.0330, 121.5654];
+        let currentCoords = [25.0355, 121.565]; 
         
-        // MODIFIED: This function ensures all data fields are complete, fixing 'undefined' issues.
         function getLandData() {
             const storedData = sessionStorage.getItem('selectedLand');
             let baseData = {};
@@ -636,15 +905,15 @@
             }
 
             const defaults = {
-                id: new URLSearchParams(window.location.search).get('landId') || Math.floor(Math.random() * 100) + 1,
-                title: "桃園市八德區廣福段一小段1001地號",
-                region: "桃園市", district: "八德區", area: 179.6,
-                pricePerPing: parseFloat(((Math.random() * 50) + 100).toFixed(1)),
-                landUseZone: ["住宅區", "商業區", "工業一", "農業區", "保護區"][Math.floor(Math.random() * 5)],
+                id: new URLSearchParams(window.location.search).get('landId') || 101,
+                title: "臺北市信義區信義段五小段101地號",
+                region: "臺北市", district: "信義區", area: 150.5,
+                pricePerPing: 165.0,
+                landUseZone: "商業區",
                 ownerCount: Math.floor(Math.random() * 20) + 1,
                 shareNumerator: 1,
                 shareDenominator: Math.floor(Math.random() * 20) + 2,
-                marketPrice: parseFloat(((Math.random() * 60) + 110).toFixed(1))
+                marketPrice: 175.0
             };
             
             const finalData = { ...defaults, ...baseData };
@@ -695,7 +964,6 @@
             }
         }
         
-        // MODIFIED: Centralized logic to decide if a building exists for consistency.
         document.addEventListener('DOMContentLoaded', function() {
             const land = getLandData();
 
@@ -729,21 +997,178 @@
                 document.getElementById('buildingTableBody').innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 20px; color: #666;">此筆土地無地上物</td></tr>`; return;
             }
             const buildingAreaPing = (Math.random() * 20 + 10).toFixed(2), buildingAreaM2 = (buildingAreaPing * PING_TO_M2).toFixed(2), buildingOwners = Math.floor(Math.random() * 15) + 1, buildingShareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0, buildingShareAreaM2 = (buildingAreaM2 * buildingShareRatio).toFixed(2), buildingShareAreaPing = (buildingAreaPing * buildingShareRatio).toFixed(2), buildingSharePercentage = (buildingShareRatio * 100).toFixed(2);
-            const fullAddress = `${land.region}${land.district}${[ "中正路", "中山路", "成功路"][Math.floor(Math.random()*3)]}${Math.floor(Math.random()*200)+1}巷${Math.floor(Math.random()*50)+1}號`;
+            const fullAddress = `${land.region}${land.district}${[ "信義路", "松智路", "莊敬路"][Math.floor(Math.random()*3)]}${Math.floor(Math.random()*200)+1}巷${Math.floor(Math.random()*50)+1}號`;
             document.getElementById('buildingAddress').innerHTML = `<strong>地址:${fullAddress}</strong>`;
             document.getElementById('buildingTableBody').innerHTML = `<tr><td rowspan="2">${land.buildingId}</td><td>1</td><td rowspan="2">${buildingOwners}</td><td>${(buildingAreaM2 / 2).toFixed(2)}</td><td>${(buildingAreaPing / 2).toFixed(2)}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${(buildingShareAreaM2 / 2).toFixed(2)}</td><td>${(buildingShareAreaPing / 2).toFixed(2)}</td><td>${buildingSharePercentage}%</td><td rowspan="2"></td></tr><tr><td>2</td><td>${(buildingAreaM2 / 2).toFixed(2)}</td><td>${(buildingAreaPing / 2).toFixed(2)}</td><td>${land.shareNumerator}</td><td>${land.shareDenominator}</td><td>${(buildingShareAreaM2 / 2).toFixed(2)}</td><td>${(buildingShareAreaPing / 2).toFixed(2)}</td><td>${buildingSharePercentage}%</td></tr><tr class="subtotal-row"><td colspan="3">小計</td><td>${buildingAreaM2}</td><td>${buildingAreaPing}</td><td colspan="2"></td><td>${buildingShareAreaM2}</td><td>${buildingShareAreaPing}</td><td>${(parseFloat(buildingSharePercentage) * 2).toFixed(2)}%</td><td></td></tr>`;
         }
+
         function renderRealPriceTable(land) {
             let contentHTML = '';
-            for (let i = 0; i < 8; i++) {
+            
+            const hardcodedData = [
+                { id: 1, lat: 25.040, lng: 121.558, address: "光復南路2xx號", type: "住宅用地", unitPrice: 145.0, area: 45.2, note: "" },
+                { id: 2, lat: 25.040, lng: 121.560, address: "仁愛路四段505號", type: "公共設施用地", unitPrice: 130.0, area: 150.0, note: "特殊交易" },
+                { id: 3, lat: 25.037, lng: 121.564, address: "松高路1x號", type: "商業用地", unitPrice: 180.0, area: 120.5, note: "" },
+                { id: 4, lat: 25.037, lng: 121.566, address: "忠孝東路五段68號", type: "商業用地", unitPrice: 210.0, area: 95.8, note: "" },
+                { id: 5, lat: 25.035, lng: 121.566, address: "松壽路2x號", type: "商業用地", unitPrice: 148.0, area: 88.0, note: "" },
+                { id: 6, lat: 25.034, lng: 121.566, address: "松壽路12號", type: "商業用地", unitPrice: 140.0, area: 110.3, note: "" },
+                { id: 7, lat: 25.033, lng: 121.568, address: "莊敬路1xx號", type: "住宅用地", unitPrice: 125.0, area: 35.6, note: "" },
+                { id: 8, lat: 25.030, lng: 121.568, address: "莊敬路4xx號", type: "住宅用地", unitPrice: 120.0, area: 40.1, note: "親友交易" },
+                { id: 9, lat: 25.028, lng: 121.565, address: "吳興街1xx巷", type: "住宅用地", unitPrice: 115.0, area: 28.9, note: "" }
+            ];
+
+            window.realPriceData = hardcodedData.map(item => {
                 const transactionDate = `114/${String(Math.floor(Math.random() * 5) + 1).padStart(2, '0')}`;
-                const address = `${land.district}${[ "中正路", "中山路", "成功路", "大業路", "文心路", "中華路"][Math.floor(Math.random()*6)]}${Math.floor(Math.random()*200)+1}號`;
-                const type = ["住宅用地/建", "商業用地/商", "工業用地/工"][Math.floor(Math.random()*3)];
-                const area = land.area * (1 + (Math.random() - 0.5) * 0.8), unitPrice = land.pricePerPing * (1 + (Math.random() - 0.5) * 0.6), totalPrice = area * unitPrice;
-                contentHTML += `<tr><td class="center-align">${transactionDate}</td><td>${address}</td><td class="center-align">${type}</td><td class="center-align price-highlight">${(totalPrice/1000).toFixed(1)} 萬</td><td class="center-align">${area.toFixed(2)} 坪</td><td class="center-align price-highlight">${unitPrice.toFixed(1)} 萬/坪</td><td class="center-align">${Math.random() > 0.85 ? "親友交易" : ""}</td></tr>`;
-            }
+                const totalPrice = item.area * item.unitPrice;
+                const typeRaw = item.type;
+                
+                return {
+                    id: item.id,
+                    date: transactionDate,
+                    address: item.address,
+                    type: typeRaw,
+                    typeCategory: typeRaw.includes('住宅') ? 'residential' : typeRaw.includes('商業') ? 'commercial' : 'industrial',
+                    totalPrice: totalPrice,
+                    area: item.area,
+                    unitPrice: item.unitPrice,
+                    note: item.note,
+                    lat: item.lat,
+                    lng: item.lng
+                };
+            });
+
+            // MODIFICATION START: Added 'data.id' to the table row
+            window.realPriceData.forEach(data => {
+                contentHTML += `<tr><td class="center-align"><strong>${data.id}</strong></td><td class="center-align">${data.date}</td><td>${data.address}</td><td class="center-align">${data.type}</td><td class="center-align price-highlight">${(data.totalPrice/1000).toFixed(1)} 萬</td><td class="center-align">${data.area.toFixed(2)} 坪</td><td class="center-align price-highlight">${data.unitPrice.toFixed(1)} 萬/坪</td><td class="center-align">${data.note}</td></tr>`;
+            });
+            // MODIFICATION END
+            
             document.getElementById('realPriceTableBody').innerHTML = contentHTML;
         }
+
+        let realPriceMapInstance = null;
+        let mapMarkers = [];
+        
+        function switchRealPriceView(viewType) {
+            const tableView = document.getElementById('realPriceTableView');
+            const mapView = document.getElementById('realPriceMapView');
+            const buttons = document.querySelectorAll('.view-toggle-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            if (viewType === 'table') {
+                tableView.classList.add('active');
+                mapView.classList.remove('active');
+                buttons[0].classList.add('active');
+            } else {
+                tableView.classList.remove('active');
+                mapView.classList.add('active');
+                buttons[1].classList.add('active');
+                if (!realPriceMapInstance) {
+                    initRealPriceMap();
+                }
+            }
+        }
+
+        function initRealPriceMap() {
+            realPriceMapInstance = L.map('realPriceMap').setView(currentCoords, 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(realPriceMapInstance);
+            
+            const targetIcon = L.divIcon({
+                className: 'target-marker',
+                html: '<div style="background: #dc2626; width: 30px; height: 30px; border-radius: 50%; border: 4px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;">📍</div>',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+            
+            L.marker(currentCoords, { icon: targetIcon })
+                .addTo(realPriceMapInstance)
+                .bindPopup('<div class="custom-popup"><div class="popup-header">📍 目標土地位置</div></div>');
+            
+            updateMapMarkers();
+        }
+
+        function updateMapMarkers() {
+            if (!realPriceMapInstance || !window.realPriceData) return;
+            
+            mapMarkers.forEach(marker => realPriceMapInstance.removeLayer(marker));
+            mapMarkers = [];
+            
+            const showResidential = document.getElementById('filterResidential')?.checked ?? true;
+            const showCommercial = document.getElementById('filterCommercial')?.checked ?? true;
+            const showIndustrial = document.getElementById('filterIndustrial')?.checked ?? true;
+            
+            let filteredData = window.realPriceData.filter(data => {
+                if (data.typeCategory === 'residential' && !showResidential) return false;
+                if (data.typeCategory === 'commercial' && !showCommercial) return false;
+                if (data.typeCategory === 'industrial' && !showIndustrial) return false;
+                return true;
+            });
+            
+            if (filteredData.length > 0) {
+                const prices = filteredData.map(d => d.unitPrice);
+                const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
+                const maxPrice = Math.max(...prices);
+                const minPrice = Math.min(...prices);
+                
+                document.getElementById('mapTransactionCount').textContent = filteredData.length;
+                document.getElementById('mapAvgPrice').textContent = avgPrice.toFixed(1);
+                document.getElementById('mapMaxPrice').textContent = maxPrice.toFixed(1);
+                document.getElementById('mapMinPrice').textContent = minPrice.toFixed(1);
+            }
+            
+            filteredData.forEach(data => {
+                let color = '#10b981'; 
+                if (data.unitPrice > 200) {
+                    color = '#ef4444'; 
+                } else if (data.unitPrice > 150) {
+                    color = '#f59e0b'; 
+                }
+                
+                const markerIcon = L.divIcon({
+                    className: 'price-marker',
+                    html: `<div style="background: ${color}; width: 28px; height: 28px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">${data.id}</div>`,
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                });
+                
+                const popupContent = `
+                    <div class="custom-popup">
+                        <div class="popup-header">地點 ${data.id} - ${data.type}</div>
+                        <div class="popup-row">
+                            <span class="popup-label">交易時間</span>
+                            <span class="popup-value">${data.date}</span>
+                        </div>
+                        <div class="popup-row">
+                            <span class="popup-label">地址</span>
+                            <span class="popup-value">${data.address}</span>
+                        </div>
+                        <div class="popup-row">
+                            <span class="popup-label">土地面積</span>
+                            <span class="popup-value">${data.area.toFixed(2)} 坪</span>
+                        </div>
+                        <div class="popup-row">
+                            <span class="popup-label">總價</span>
+                            <span class="popup-value popup-price">${(data.totalPrice/1000).toFixed(1)} 萬</span>
+                        </div>
+                        <div class="popup-row">
+                            <span class="popup-label">單價</span>
+                            <span class="popup-value popup-price">${data.unitPrice.toFixed(1)} 萬/坪</span>
+                        </div>
+                        ${data.note ? `<div class="popup-row"><span class="popup-label">備註</span><span class="popup-value">${data.note}</span></div>` : ''}
+                    </div>
+                `;
+                
+                const marker = L.marker([data.lat, data.lng], { icon: markerIcon })
+                    .addTo(realPriceMapInstance)
+                    .bindPopup(popupContent);
+                
+                mapMarkers.push(marker);
+            });
+        }
+
         function renderShareAnalysis(land) {
             const shareRatio = land.shareDenominator > 0 ? (land.shareNumerator / land.shareDenominator) : 0; const shareAreaPing = land.area * shareRatio; const sharePercentage = (shareRatio * 100).toFixed(2);
             document.getElementById('ownerCountDisplay').innerHTML = `${land.ownerCount} 人`; document.getElementById('shareRatioDisplay').innerHTML = `${land.shareNumerator}/${land.shareDenominator} (${sharePercentage}%)`; document.getElementById('shareAreaDisplay').innerHTML = `${shareAreaPing.toFixed(2)} 坪`;
@@ -781,7 +1206,7 @@
             adviceContainer.innerHTML = `<h3>一、優勢分析</h3><ul>${strengths || "<li>尚無顯著優勢</li>"}</ul><h3>二、風險評估</h3><ul>${risks || "<li>尚無顯著風險</li>"}</ul><h3>三、綜合建議與策略</h3>${recommendation}`;
         }
         function initializeMaps(land) {
-            let coords = [25.0330, 121.5654]; if (land.region === "桃園市") coords = [24.9936, 121.3010]; else if (land.region === "台中市") coords = [24.1477, 120.6736]; else if (land.region === "台南市") coords = [22.9997, 120.2270]; else if (land.region === "高雄市") coords = [22.6273, 120.3014]; currentCoords = coords;
+            const coords = currentCoords;
             const zoningMap = L.map('zoningMap').setView(coords, 16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(zoningMap); L.polygon([[coords[0] + 0.001, coords[1] - 0.001], [coords[0] + 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] - 0.001]], { color: '#DC2626', fillColor: '#ffcdd2', fillOpacity: 0.5 }).addTo(zoningMap).bindPopup(`使用分區:${land.landUseZone}<br>面積:${land.area}坪`);
             const cadastralMap = L.map('cadastralMap').setView(coords, 17); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(cadastralMap); L.marker(coords).addTo(cadastralMap).bindPopup(`地號:${land.id}<br>${land.title}`); L.polygon([[coords[0] + 0.0008, coords[1] - 0.0008], [coords[0] + 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] - 0.0008]], { color: '#2563eb', weight: 2, fillOpacity: 0.1 }).addTo(cadastralMap);
             const topographicMap = L.map('topographicMap').setView(coords, 15); L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png').addTo(topographicMap); L.marker(coords).addTo(topographicMap).bindPopup(`地形位置<br>${land.region}${land.district}`);
@@ -789,7 +1214,7 @@
             const overlayMap = L.map('overlayMap').setView(coords, 16); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(overlayMap); L.polygon([[coords[0] + 0.001, coords[1] - 0.001], [coords[0] + 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] + 0.001], [coords[0] - 0.001, coords[1] - 0.001]], { color: '#DC2626', fillColor: '#ffcdd2', fillOpacity: 0.4 }).addTo(overlayMap); L.polygon([[coords[0] + 0.0008, coords[1] - 0.0008], [coords[0] + 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] + 0.0008], [coords[0] - 0.0008, coords[1] - 0.0008]], { color: '#2563eb', weight: 2, fillOpacity: 0 }).addTo(overlayMap); L.marker(coords).addTo(overlayMap).bindPopup('多圖層套圖預覽。<br>點擊上方按鈕開啟全功能分析。').openPopup();
         }
         function initializeStreetView(land) {
-            let coords = [25.0330, 121.5654]; if (land.region === "桃園市") coords = [24.9936, 121.3010]; else if (land.region === "台中市") coords = [24.1477, 120.6736];
+            const coords = currentCoords;
             const streetviewMap = L.map('streetviewContainer').setView(coords, 18); L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(streetviewMap);
             const marker = L.marker(coords).addTo(streetviewMap); const streetviewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${coords[0]},${coords[1]}`;
             marker.bindPopup(`<div style="text-align: center;"><strong>${land.title}</strong><br><a href="${streetviewUrl}" target="_blank" style="display:inline-block;margin-top:10px;padding:8px 16px;background:linear-gradient(135deg, #4285f4 0%, #34a853 100%);color:white;text-decoration:none;border-radius:6px;font-weight:600;">🌐 開啟 Google 街景</a></div>`).openPopup();
