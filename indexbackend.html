@@ -40,10 +40,28 @@
             margin-bottom: 30px;
         }
 
+        /* MODIFICATION START: Styles for Logo Container */
+        .title-container-backend {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-backend {
+            width: 50px;
+            height: auto;
+        }
+        
+        .login-header .title-container-backend {
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        /* MODIFICATION END */
+
         .login-header h1 {
             color: #DC2626;
             font-size: 2rem;
-            margin-bottom: 10px;
+            margin-bottom: 0; /* MODIFICATION: Adjusted margin */
         }
 
         .login-header p {
@@ -192,10 +210,8 @@
         .nav-btn.btn-manager { background: #673AB7; }
         .nav-btn.btn-manager:hover { background: #512DA8; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(103, 58, 183, 0.3); }
 
-        /* MODIFICATION START: Added styles for the new War Room button */
         .nav-btn.btn-war-room { background: #F59E0B; }
         .nav-btn.btn-war-room:hover { background: #D97706; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); }
-        /* MODIFICATION END */
 
         .logout-btn {
             padding: 10px 20px;
@@ -374,10 +390,12 @@
             .backend-header { 
                 padding: 15px 20px; 
             }
-            .backend-header h1 {
-                font-size: 1.4rem;
+            .backend-header .title-container-backend {
                 width: 100%;
                 margin-bottom: 10px;
+            }
+            .backend-header h1 {
+                font-size: 1.4rem;
             }
             .header-right {
                 width: 100%;
@@ -398,7 +416,12 @@
     <div class="login-container" id="loginScreen">
         <div class="login-box">
             <div class="login-header">
-                <h1>🔐 後台管理系統</h1>
+                <!-- MODIFICATION START: Logo Added to Login -->
+                <div class="title-container-backend">
+                    <img src="logo.png" alt="一如 YIRU Logo" class="logo-backend">
+                    <h1>🔐 後台管理系統</h1>
+                </div>
+                <!-- MODIFICATION END -->
                 <p>請使用管理員帳號登入</p>
             </div>
             
@@ -423,14 +446,17 @@
     <!-- Backend Dashboard -->
     <div class="backend-container" id="backendDashboard">
         <header class="backend-header">
-            <h1>📊 土地管理後台</h1>
+            <!-- MODIFICATION START: Logo Added to Dashboard Header -->
+            <div class="title-container-backend">
+                <img src="logo.png" alt="一如 YIRU Logo" class="logo-backend">
+                <h1>📊 土地管理後台</h1>
+            </div>
+            <!-- MODIFICATION END -->
             <div class="header-right">
                 <span class="admin-info" id="adminName">管理員</span>
                 <a href="index.html" class="nav-btn btn-home">🏠 返回首頁</a>
                 <a href="indexmgr.html" class="nav-btn btn-manager">📈 案件進度管理</a>
-                <!-- MODIFICATION START: Added the War Room button -->
                 <a href="index7.html" class="nav-btn btn-war-room">🎯 戰情室</a>
-                <!-- MODIFICATION END -->
                 <button class="logout-btn" onclick="handleAdminLogout()">登出</button>
             </div>
         </header>

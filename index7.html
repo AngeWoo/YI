@@ -30,6 +30,19 @@
             top: 0;
             z-index: 1000;
         }
+
+        /* MODIFICATION START: Logo Styles */
+        .title-container-war-room {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-war-room {
+            width: 50px;
+            height: auto;
+        }
+        /* MODIFICATION END */
+
         .header h1 { color: #DC2626; font-size: 2rem; }
         .header-nav a {
             padding: 10px 20px;
@@ -153,7 +166,12 @@
 <body>
     <div class="war-room-container">
         <header class="header">
-            <h1>🎯 一如土地 - 戰情中心 (War Room)</h1>
+            <!-- MODIFICATION START: Logo and title container added -->
+            <div class="title-container-war-room">
+                <img src="logo.png" alt="一如 YIRU Logo" class="logo-war-room">
+                <h1>🎯 一如土地 - 戰情中心</h1>
+            </div>
+            <!-- MODIFICATION END -->
             <nav class="header-nav">
                 <a href="indexbackend.html" class="nav-btn-backend">📊 返回後台</a>
                 <a href="index.html" class="nav-btn-home">🏠 返回首頁</a>
