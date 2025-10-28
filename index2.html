@@ -95,25 +95,67 @@
             padding: 0 20px 20px 20px;
         }
 
+        /* MODIFICATION START: Updated styles for market summary cards */
         .market-summary {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
             margin-bottom: 30px;
         }
 
         .summary-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid; /* Colored border will be applied here */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .summary-card h3 { font-size: 0.9rem; color: #666; margin-bottom: 10px; }
-        .summary-card .value { font-size: 1.8rem; font-weight: bold; margin-bottom: 5px; }
-        .summary-card .change { font-size: 0.9rem; font-weight: bold; }
+        .summary-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .summary-card h3 {
+            font-size: 1.1rem;
+            color: #4A5568;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .summary-card .value {
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .summary-card .change {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .summary-card.bidding { border-color: #F59E0B; }
+        .summary-card.negotiating { border-color: #8B5CF6; }
+        .summary-card.sold { border-color: #10B981; }
+        .summary-card.premium { border-color: #3B82F6; }
+
+        .summary-card .value-bidding { color: #D97706; }
+        .summary-card .value-negotiating { color: #7C3AED; }
+        .summary-card .value-sold { color: #059669; }
+        .summary-card .value-premium { color: #2563EB; }
+
+        .trend-up { color: #10B981; }
+        .trend-down { color: #EF4444; }
+        /* MODIFICATION END */
 
         .dashboard {
             background: white; 
@@ -276,7 +318,6 @@
         .contact-value a { color: #059669; text-decoration: none; transition: color 0.2s; }
         .contact-value a:hover { color: #047857; text-decoration: underline; }
         
-        /* MODIFICATION START: Added Footer Styles */
         .admin-section {
             text-align: center;
             padding: 50px 40px;
@@ -349,7 +390,6 @@
         .footer-external-links { max-width: 1200px; margin: 0 auto 40px; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center; }
         .footer-external-title { font-size: 1.2rem; font-weight: 700; color: #DC2626; margin-bottom: 20px; }
         .footer-bottom { text-align: center; padding-top: 25px; border-top: 1px solid #dddddd; color: #666666; font-size: 0.9rem; }
-        /* MODIFICATION END */
 
         @media (max-width: 768px) {
             body { padding: 0; }
@@ -366,7 +406,6 @@
             .table-container { box-shadow: none; border-radius: 12px; margin-top: 15px; }
             .contact-modal-content { width: 95%; padding: 25px 20px; }
             
-            /* MODIFICATION START: Added Footer Responsive Styles */
             .admin-section { padding: 30px 20px; }
             .admin-button { padding: 12px 25px; font-size: 0.9rem; }
             .main-footer { padding: 40px 20px 20px; }
@@ -374,7 +413,6 @@
             .footer-section { min-width: 100%; }
             .external-links { gap: 8px; margin: 12px 0; }
             .external-link-btn { padding: 6px 14px; font-size: 0.8rem; }
-            /* MODIFICATION END */
         }
     </style>
 </head>
@@ -400,28 +438,30 @@
     </header>
 
     <div class="page-content">
+        <!-- MODIFICATION START: Updated HTML for summary cards -->
         <div class="market-summary">
-            <div class="summary-card">
-                <h3>進行中競價</h3>
-                <div class="value" style="color: #FF9800;">28</div>
+            <div class="summary-card bidding">
+                <h3>⚖️ 進行中競價</h3>
+                <div class="value value-bidding">28</div>
                 <div class="change trend-down">-6 筆減少</div>
             </div>
-            <div class="summary-card">
-                <h3>一如協商中</h3>
-                <div class="value" style="color: #9C27B0;">6</div>
+            <div class="summary-card negotiating">
+                <h3>🤝 一如協商中</h3>
+                <div class="value value-negotiating">6</div>
                 <div class="change trend-up">+6 筆新增</div>
             </div>
-            <div class="summary-card">
-                <h3>今日成交</h3>
-                <div class="value" style="color: #4CAF50;">18</div>
+            <div class="summary-card sold">
+                <h3>✅ 今日成交</h3>
+                <div class="value value-sold">18</div>
                 <div class="change trend-up">+12 (+200%)</div>
             </div>
-            <div class="summary-card">
-                <h3>平均溢價率</h3>
-                <div class="value" style="color: #2196F3;">+8.2%</div>
+            <div class="summary-card premium">
+                <h3>📈 平均溢價率</h3>
+                <div class="value value-premium">+8.2%</div>
                 <div class="change trend-up">+2.1%</div>
             </div>
         </div>
+        <!-- MODIFICATION END -->
 
         <div class="dashboard">
             <div class="filters">
@@ -535,7 +575,6 @@
         </div>
     </div>
 
-    <!-- MODIFICATION START: Added Footer HTML -->
     <div class="admin-section">
         <a href="indexbackend.html" class="admin-button">🔧 後台管理</a>
     </div>
@@ -590,10 +629,9 @@
             <p>&copy; 2025 一如永續股份有限公司 版權所有 | All Rights Reserved</p>
         </div>
     </footer>
-    <!-- MODIFICATION END -->
 
     <script>
-        // ... (This is the CORRECT script for index2.html)
+        // ... (JavaScript remains the same as provided)
         const lastUpdateOptions = ["剛剛", "2分鐘前", "10分鐘前", "30分鐘前", "1小時前", "今天", "昨天"];
         
         function generateRandomLand(id) {
