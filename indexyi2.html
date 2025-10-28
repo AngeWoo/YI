@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>產調分析表 - 一如土地交易競價看板</title>
+    <title>產調分析表 (會員進階版) - 一如土地</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
     <style>
         /* --- 全局與字體設定 --- */
@@ -12,8 +12,8 @@
             --secondary-color: #059669;
             --text-dark: #1e293b;
             --text-light: #64748b;
-            --bg-light: #f7f9fc;
-            --bg-white: #ffffff;
+            --bg-page: #f1f5f9;
+            --bg-card: #ffffff;
             --border-color: #e2e8f0;
         }
 
@@ -25,17 +25,25 @@
 
         body {
             font-family: 'Microsoft JhengHei', 'Segoe UI', Roboto, Arial, sans-serif;
-            background-color: #f1f5f9;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='hexagons' fill='%23d1dce9' fill-opacity='0.4' fill-rule='nonzero'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.99-7.5L26 15v18.5l-13 7.5L0 33.5V15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-color: var(--bg-page);
         }
+
+        /* MODIFICATION START: Main container for content */
+        .page-container {
+            width: 95%;
+            margin: 25px auto;
+        }
+        /* MODIFICATION END */
 
         /* --- 頂部橫幅設計 (MODIFIED) --- */
         .header {
             background: linear-gradient(to right, #fff5f5, #ffdddd);
-            color: var(--text-dark); /* Changed for readability */
-            padding: 30px 5%;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: var(--text-dark);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             border-bottom: 4px solid var(--primary-color);
         }
         
@@ -43,64 +51,83 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            justify-content: center;
-            margin-bottom: 15px;
         }
 
         .logo {
-            width: 60px;
+            width: 50px;
             height: auto;
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            font-size: 2.2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.05);
             margin: 0;
-            color: var(--primary-color); /* Set title color */
+            color: var(--primary-color);
         }
 
-        .back-button {
+        /* MODIFICATION START: Action buttons moved into header */
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-button {
             display: inline-block;
-            padding: 12px 25px;
-            background: var(--secondary-color);
-            color: white;
+            padding: 10px 25px;
             text-decoration: none;
-            border-radius: 50px;
+            border-radius: 6px;
             font-weight: 600;
+            font-size: 0.95rem;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             border: 2px solid transparent;
+            cursor: pointer;
         }
 
-        .back-button:hover {
-            transform: translateY(-3px);
-            background: #06c284;
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
-        }
-
-        /* --- 全寬內容區塊 --- */
-        .analysis-section {
-            background: var(--bg-white);
-            margin: 20px auto;
-            padding: 30px 5%; /* Responsive padding */
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-            border-radius: 12px;
-            overflow: hidden;
+        .btn-back {
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+            border-color: #dee2e6;
         }
         
-        .analysis-section:nth-of-type(even) {
-            background: var(--bg-light);
+        .btn-back:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        
+        .btn-print {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-print:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
+        /* MODIFICATION END */
+
+        /* --- 內容區塊卡片化設計 --- */
+        .analysis-section {
+            background: var(--bg-card);
+            margin-bottom: 25px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.07);
+            border-radius: 16px;
+            overflow: hidden;
         }
 
         .section-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: var(--text-dark);
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
         
         /* --- 通用元件樣式 --- */
@@ -108,6 +135,7 @@
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
+            gap: 15px;
             padding: 12px 18px;
             background: #f8fafc;
             border-radius: 8px;
@@ -115,16 +143,21 @@
             border: 1px solid var(--border-color);
             font-weight: 600;
             color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .analysis-table-container { /* Added container for horizontal scroll */
+            overflow-x: auto;
         }
 
         .analysis-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            background: var(--bg-white);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             overflow: hidden;
+            min-width: 1000px; /* Ensure table has a minimum width */
         }
 
         .analysis-table th, .analysis-table td {
@@ -132,16 +165,22 @@
             padding: 12px 10px;
             text-align: center;
             vertical-align: middle;
+            white-space: nowrap;
         }
 
-        .analysis-table th {
-            background-color: #f1f5f9;
+        .analysis-table thead th {
+            background-color: #f8fafc;
             font-weight: 600;
+            color: var(--text-dark);
         }
         
         .analysis-table .sub-header {
-            background-color: #f8fafc;
+            background-color: #f1f5f9;
             font-size: 12px;
+        }
+
+        .analysis-table tbody tr:hover {
+            background-color: #f7f9fc;
         }
 
         .analysis-table .zone-cell {
@@ -153,6 +192,7 @@
         .analysis-table .subtotal-row td {
             background-color: #fefce8;
             font-weight: bold;
+            color: var(--text-dark);
         }
 
         .gis-grid {
@@ -166,28 +206,27 @@
             border-radius: 12px;
             overflow: hidden;
             background: var(--border-color);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
         }
 
         .gis-card {
-            background: var(--bg-white);
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
             transition: all 0.3s ease;
         }
         
         .gis-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: var(--secondary-color);
         }
 
         .gis-card h3 {
-            color: var(--secondary-color);
+            color: var(--text-dark);
             margin-bottom: 15px;
             font-size: 1.2rem;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--secondary-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -213,14 +252,9 @@
             filter: brightness(1.1);
         }
         
-        .real-price-table th {
+        .real-price-table thead th {
             background-color: var(--secondary-color);
             color: white;
-        }
-        
-        .amenities-section .map-container,
-        .streetview-section .streetview-container {
-             margin-top: 20px;
         }
         
         .share-info-grid {
@@ -230,7 +264,7 @@
         }
         
         .share-info-card {
-            background: var(--bg-white);
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.07);
@@ -253,157 +287,22 @@
             color: var(--text-dark);
         }
         
-        .external-links {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-        }
-
-        .external-link-btn {
-            padding: 8px 20px;
-            background: #f8f9fa;
-            color: #2563eb;
-            text-decoration: none;
-            border-radius: 6px;
-            border: 2px solid #e5e7eb;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .external-link-btn:hover {
-            color: #1d4ed8;
-            background: #eff6ff;
-            border-color: #2563eb;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
-        }
-
-        .main-footer {
-            background-color: #f5f5f5;
-            color: #333333;
-            padding: 50px 5% 30px;
-            border-top: 3px solid var(--primary-color);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-section {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .footer-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 3px solid var(--primary-color);
-            width: 100%;
-        }
-
-        .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: #555555;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary-color);
-        }
-
-        .footer-contact {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .footer-contact li {
-            margin-bottom: 14px;
-            color: #555555;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .footer-contact .contact-icon {
-            margin-top: 2px;
-            color: var(--primary-color);
-        }
-
-        .footer-contact a {
-            color: #555555;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-contact a:hover {
-            color: var(--primary-color);
-        }
-
-        .footer-external-links {
-            max-width: 1200px;
-            margin: 0 auto 40px;
-            padding: 30px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-
-        .footer-external-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 25px;
-            border-top: 1px solid #dddddd;
-            color: #666666;
-            font-size: 0.9rem;
-        }
-
         /* --- 響應式調整 --- */
-        @media (max-width: 768px) {
-            .header h1 { font-size: 2rem; }
-            .analysis-section { padding: 20px; }
-            .section-title { font-size: 1.5rem; }
+        @media (max-width: 992px) {
             .gis-grid, .share-info-grid { grid-template-columns: 1fr; }
-            .analysis-table { font-size: 12px; }
-            .analysis-table th, .analysis-table td { padding: 8px 5px; }
+        }
+
+        @media (max-width: 768px) {
+            .page-container { width: 100%; margin: 0; }
+            .header { padding: 15px 20px; flex-direction: column; align-items: stretch; gap: 15px; }
+            .title-container { justify-content: center; }
+            .header-actions { justify-content: center; }
+            .header h1 { font-size: 1.6rem; text-align: center; }
+            .logo { width: 40px; }
+            .analysis-section { padding: 20px 15px; margin-bottom: 10px; border-radius: 0; }
+            .section-title { font-size: 1.4rem; }
             .streetview-container, .map-container { height: 350px; }
-            
-            .external-links { gap: 8px; }
-            .external-link-btn { padding: 6px 14px; font-size: 0.8rem; }
-            .main-footer { padding: 40px 20px 20px; }
-            .footer-content { flex-direction: column; gap: 30px; }
-            .footer-section { min-width: 100%; }
+            .property-info { flex-direction: column; align-items: flex-start; }
         }
         
         /* Leaflet 地圖相關樣式 */
@@ -453,32 +352,39 @@
             <img src="logo.png" alt="一如 YIRU Logo" class="logo">
             <h1>一如永續產調分析表 (會員進階版)</h1>
         </div>
-        <a href="index.html" class="back-button">← 返回競價看板</a>
+        <div class="header-actions">
+            <a href="index.html" class="action-button btn-back">← 返回看板</a>
+            <button class="action-button btn-print" onclick="window.print()">🖨️ 友善列印/下載</button>
+        </div>
     </header>
 
-    <main>
+    <main class="page-container">
         <section class="analysis-section land-section">
             <h2 class="section-title">📜 土地部份</h2>
-            <div class="property-info"><span><strong>土地標的</strong></span><span id="landAddress" style="max-width: 70%;"><strong>地段: 載入中...</strong></span></div>
-            <table class="analysis-table">
-                <thead>
-                    <tr><th rowspan="2">地號</th><th rowspan="2">土地<br>分區</th><th>公告現值 (114年)</th><th colspan="2">面積</th><th rowspan="2">所有權<br>人數</th><th colspan="2">土地持分</th><th colspan="3">伊土地持分面積</th><th colspan="1">有無地上物</th></tr>
-                    <tr class="sub-header"><th>元/m²</th><th>m²</th><th>坪</th><th>分子</th><th>分母</th><th>m²</th><th>坪</th><th>比例</th><th>地上物建號</th></tr>
-                </thead>
-                <tbody id="landTableBody"></tbody>
-            </table>
+            <div class="property-info"><span><strong>土地標的</strong></span><span id="landAddress"><strong>地段: 載入中...</strong></span></div>
+            <div class="analysis-table-container">
+                <table class="analysis-table">
+                    <thead>
+                        <tr><th rowspan="2">地號</th><th rowspan="2">土地<br>分區</th><th>公告現值 (114年)</th><th colspan="2">面積</th><th rowspan="2">所有權<br>人數</th><th colspan="2">土地持分</th><th colspan="3">伊土地持分面積</th><th colspan="1">有無地上物</th></tr>
+                        <tr class="sub-header"><th>元/m²</th><th>m²</th><th>坪</th><th>分子</th><th>分母</th><th>m²</th><th>坪</th><th>比例</th><th>地上物建號</th></tr>
+                    </thead>
+                    <tbody id="landTableBody"></tbody>
+                </table>
+            </div>
         </section>
 
         <section class="analysis-section building-section">
             <h2 class="section-title">🏗️ 地上物部份</h2>
             <div class="property-info"><span><strong>地上物地址</strong></span><span id="buildingAddress"><strong>地址: 載入中...</strong></span></div>
-            <table class="analysis-table">
-                <thead>
-                    <tr><th rowspan="2">建號</th><th rowspan="2">所含樓<br>層</th><th rowspan="2">建物所有權<br>人數</th><th colspan="2">建物面積</th><th colspan="2">建物持分</th><th colspan="3">建物持分面積</th><th rowspan="2">備註</th></tr>
-                    <tr class="sub-header"><th>m²</th><th>坪</th><th>分子</th><th>分母</th><th>m²</th><th>坪</th><th>比例</th></tr>
-                </thead>
-                <tbody id="buildingTableBody"></tbody>
-            </table>
+            <div class="analysis-table-container">
+                <table class="analysis-table">
+                    <thead>
+                        <tr><th rowspan="2">建號</th><th rowspan="2">所含樓<br>層</th><th rowspan="2">建物所有權<br>人數</th><th colspan="2">建物面積</th><th colspan="2">建物持分</th><th colspan="3">建物持分面積</th><th rowspan="2">備註</th></tr>
+                        <tr class="sub-header"><th>m²</th><th>坪</th><th>分子</th><th>分母</th><th>m²</th><th>坪</th><th>比例</th></tr>
+                    </thead>
+                    <tbody id="buildingTableBody"></tbody>
+                </table>
+            </div>
         </section>
 
         <section class="analysis-section gis-section">
@@ -517,10 +423,12 @@
                 </div>
             </div>
             <div id="realPriceTableView" class="real-price-view active">
-                <table class="analysis-table real-price-table">
-                    <thead><tr><th>編號</th><th>交易時間</th><th>地址/地段</th><th>型態</th><th>總價</th><th>土地坪數</th><th>單價</th><th>備註</th></tr></thead>
-                    <tbody id="realPriceTableBody"></tbody>
-                </table>
+                <div class="analysis-table-container">
+                    <table class="analysis-table real-price-table">
+                        <thead><tr><th>編號</th><th>交易時間</th><th>地址/地段</th><th>型態</th><th>總價</th><th>土地坪數</th><th>單價</th><th>備註</th></tr></thead>
+                        <tbody id="realPriceTableBody"></tbody>
+                    </table>
+                </div>
             </div>
             <div id="realPriceMapView" class="real-price-view">
                 <div class="map-controls">
@@ -571,75 +479,6 @@
             </div>
         </section>
     </main>
-    
-    <footer class="main-footer">
-        <div class="footer-external-links">
-            <h3 class="footer-external-title">合作平台</h3>
-            <div class="external-links">
-                <a href="https://land.591.com.tw/list?type=2&region=23&kind=11" target="_blank" class="external-link-btn">591土地 ↗</a>
-                <a href="https://www.yes319.com/memberlogin/?r=1017" target="_blank" class="external-link-btn">yes319 ↗</a>
-                <a href="https://commercial.rakuya.com.tw/land/buy?city=0&history=1" target="_blank" class="external-link-btn">樂屋網 ↗</a>
-            </div>
-        </div>
-        
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3 class="footer-title">關於我們</h3>
-                <ul class="footer-links">
-                    <li><a href="#">公司簡介</a></li>
-                    <li><a href="#">專業團隊</a></li>
-                    <li><a href="#">組織架構</a></li>
-                    <li><a href="#">最新消息</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3 class="footer-title">服務項目</h3>
-                <ul class="footer-links">
-                    <li><a href="#">土地開發</a></li>
-                    <li><a href="#">都市更新</a></li>
-                    <li><a href="#">不動產顧問</a></li>
-                    <li><a href="#">案例分享</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3 class="footer-title">聯絡資訊</h3>
-                <ul class="footer-contact">
-                    <li>
-                        <span class="contact-icon">📞</span>
-                        <a href="tel:+886227111232">02-2711-1232</a>
-                    </li>
-                    <li>
-                        <span class="contact-icon">📧</span>
-                        <a href="mailto:yirupr@yiru.com.tw">yirupr@yiru.com.tw</a>
-                    </li>
-                    <li>
-                        <span class="contact-icon">📧</span>
-                        <a href="mailto:ad@yiru.com.tw">ad@yiru.com.tw</a>
-                    </li>
-                    <li>
-                        <span class="contact-icon">📍</span>
-                        <span>台北市內湖區</span>
-                    </li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3 class="footer-title">快速連結</h3>
-                <ul class="footer-links">
-                    <li><a href="#">隱私權政策</a></li>
-                    <li><a href="#">使用條款</a></li>
-                    <li><a href="#">檔案下載</a></li>
-                    <li><a href="#">徵才資訊</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 一如永續股份有限公司 版權所有 | All Rights Reserved</p>
-        </div>
-    </footer>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <script>
